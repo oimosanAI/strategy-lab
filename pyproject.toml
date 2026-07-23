@@ -1,0 +1,29 @@
+[project]
+name = "strategy-lab"
+version = "0.1.0"
+description = "Algorithmic trading strategy portfolio: pairs trading & multi-factor models with rigorous backtesting"
+authors = [
+    {name = "oimosanAI",email = "oimosan4444@gmail.com"}
+]
+requires-python = "^3.11"
+dependencies = [
+    "matplotlib (>=3.11.1,<4.0.0)",
+    "seaborn (>=0.13.2,<0.14.0)",
+    "plotly (>=6.9.0,<7.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "pytest (>=9.1.1,<10.0.0)",
+    "pytest-cov (>=7.1.0,<8.0.0)",
+    "black (>=26.5.1,<27.0.0)",
+    "ruff (>=0.15.22,<0.16.0)",
+    "mypy (>=2.3.0,<3.0.0)",
+    "jupyter (>=1.1.1,<2.0.0)",
+    "pandas-stubs (>=3.0.3.260530,<4.0.0.0)"
+]
