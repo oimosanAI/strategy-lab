@@ -21,6 +21,10 @@
 
 Phase 3の実データE2E検証では、いずれもユニットテストの粒度では検出できない、実運用に直結する問題を発見した。
 
+![OOS Equity Curve Comparison](reports/figures/equity_curves_comparison.png)
+
+上図：3戦略のOOS区間の累積リターンを実データで重ね書きしたもの。pairs_trading（AEP-FE）は狭い2セクタープールでの参考情報であり、全宇宙補正では統計的に有意でない（凡例に明記）。3戦略のいずれも安定して右肩上がりではなく、以下で述べる個別の発見と整合する。軸は3系列とも共通スケール（0%起点）で、恣意的な拡大・縮小は行っていない。生成スクリプト：[scripts/generate_figures.py](scripts/generate_figures.py)。
+
 ### 3-1. 多重検定問題（ペアトレード）
 
 候補ペアのスクリーニングにおいて、検定対象を2セクター（54銘柄）に限定した場合と、全11セクター（503銘柄）に拡張した場合とで、統計的結論が反転する現象を実データで確認した。
@@ -30,7 +34,11 @@ Phase 3の実データE2E検証では、いずれもユニットテストの粒�
 | 2セクター（54銘柄） | 308 | 1（AEP-FE） |
 | 全宇宙（495銘柄） | 5,551 | **0** |
 
-同一の生データ・同一の生p値（7.666e-05）が、検定族の定義次第で「有意」（adjusted p=0.024）にも「有意でない」（adjusted p=0.43）にもなる。「候補プールを広げれば良いペアが見つかりやすくなる」という直感は、多重検定補正の厳格化と正面から相殺するという教訓を、実データで定量的に示した。詳細は[strategies/pairs_trading/README.md](strategies/pairs_trading/README.md)。
+同一の生データ・同一の生p値（7.666e-05）が、検定族の定義次第で「有意」（adjusted p=0.024）にも「有意でない」（adjusted p=0.43）にもなる。「候補プールを広げれば良いペアが見つかりやすくなる」という直感は、多重検定補正の厳格化と正面から相殺するという教訓を、実データで定量的に示した。
+
+![Multiple Testing: Bonferroni-Adjusted p-value vs n_tests](reports/figures/multiple_testing_bonferroni.png)
+
+左図：同一の生p値に対し、検定数（n_tests）が増えるほどBonferroni補正後のp値が上昇し、alpha=0.05の基準を跨いで「有意」から「有意でない」へ反転する様子。右図：補正前後の生存ペア数の対比（2セクター：18→1、全宇宙：237→0）。詳細は[strategies/pairs_trading/README.md](strategies/pairs_trading/README.md)。
 
 ### 3-2. ポジションサイジングのスケール見落とし（マルチファクター）
 
@@ -71,7 +79,25 @@ Phase 3拡張として、VIXと実現ボラティリティの乖離（Volatility
 
 VRPタイミングシグナルは、単純に「常に持っておく」場合と比べて**明確に負の価値を追加していた**。これは他の2発見（統計的に中立な「エッジなし」）とは質的に異なる、より強いネガティブな結果である（統計的には有意でない）。原因（trailing RVという設計上の制約、`vrp_threshold`の根拠の弱さ、`SVXY`固有の値動き、のどれが主要因か）は今回の検証だけでは切り分けられていない。続けてwalk-forward分析を実施したところ、OOS Sharpeはウィンドウごとに-1.38〜+1.72まで振動し、上記の単一分割の結果が広い分布からの一標本に過ぎなかったことが、pairs_trading・factor_momentumに続き3戦略目でも確認された。詳細は[strategies/vol_arbitrage/README.md](strategies/vol_arbitrage/README.md)。
 
-### 3-5. 生成済みレポート
+### 3-5. 可視化：Walk-Forwardとパラメータ感度分析
+
+![Walk-Forward OOS Sharpe by Window](reports/figures/walk_forward_oos_sharpe.png)
+
+上図：3戦略それぞれのanchored 4ウィンドウにおけるOOS Sharpeの推移。pairs_trading（全宇宙）はwindow 2・3で統計的に正当化された候補が0本のためギャップとして表示している（補間していない）。3戦略ともウィンドウ間でSharpeが大きく振動しており、単一分割の結果が広い分布からの一標本に過ぎないことを視覚的に示す。
+
+![Sensitivity Grids](reports/figures/sensitivity_grids.png)
+
+上図：factor_momentumのlong/short percentileとvol_arbitrageのvrp_thresholdの感度分析グリッド。デフォルト値（四角マーカー）は他の点と同じ色・サイズで、強調やランキングは行っていない（`core.evaluation.sensitivity.render_sensitivity_report`と同じ設計思想）。
+
+pairs_tradingのentry_threshold × exit_thresholdについては、実際にテストした15グリッド点をそのまま3D散布図としてプロットしている（補間サーフェスなし）。
+
+![Pairs Trading Entry/Exit Threshold 3D Scatter](reports/figures/pairs_trading_entry_exit_3d.png)
+
+インタラクティブ版（plotly、ダウンロードしてブラウザで開くと回転・ホバー操作が可能）：[reports/figures/interactive/pairs_trading_entry_exit_3d.html](reports/figures/interactive/pairs_trading_entry_exit_3d.html)
+
+生成スクリプト：[scripts/generate_figures.py](scripts/generate_figures.py)（`DataLoader`/`YFinanceProvider`/`UniverseLoader`を通じて実データを取得し直す、フレッシュクローンからも再現可能な構成。ただしpairs_trading全宇宙walk-forwardと多重検定の2スキャン点は、5,551検定×4ウィンドウの再実行が非現実的なコストのため、`strategies/pairs_trading/README.md`記載の実測値をそのまま転記している——詳細はスクリプト内のコメントを参照）。
+
+### 3-6. 生成済みレポート
 
 上記の検証で実際に`core.evaluation.report`から生成したMarkdownレポートを[`reports/`](reports/)に格納している。
 
