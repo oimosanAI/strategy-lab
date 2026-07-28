@@ -1,0 +1,88 @@
+{
+  "as_of": "2026-07-24",
+  "pairs_trading_candidate": [
+    "AEP",
+    "FE"
+  ],
+  "pairs_trading_walk_forward": [
+    {
+      "label": "Window 1 (MTB-SCHW)",
+      "oos_sharpe": -0.73,
+      "permutation_p": 0.697
+    },
+    {
+      "label": "Window 2",
+      "oos_sharpe": null,
+      "permutation_p": null
+    },
+    {
+      "label": "Window 3",
+      "oos_sharpe": null,
+      "permutation_p": null
+    },
+    {
+      "label": "Window 4 (AVGO-FLEX)",
+      "oos_sharpe": -0.62,
+      "permutation_p": 0.613
+    }
+  ],
+  "factor_momentum_walk_forward": [
+    {
+      "label": "Window 1",
+      "oos_sharpe": 0.9426417187822047,
+      "permutation_p": 0.25737131434282856
+    },
+    {
+      "label": "Window 2",
+      "oos_sharpe": -0.08525551664196339,
+      "permutation_p": 0.5152423788105946
+    },
+    {
+      "label": "Window 3",
+      "oos_sharpe": -0.9206237152698128,
+      "permutation_p": 0.7391304347826086
+    },
+    {
+      "label": "Window 4",
+      "oos_sharpe": 1.8648132814975398,
+      "permutation_p": 0.09495252373813093
+    }
+  ],
+  "vol_arbitrage_walk_forward": [
+    {
+      "label": "Window 1",
+      "oos_sharpe": -1.3033605613954429,
+      "permutation_p": 0.8085957021489255
+    },
+    {
+      "label": "Window 2",
+      "oos_sharpe": -1.3771077405620407,
+      "permutation_p": 0.8290854572713643
+    },
+    {
+      "label": "Window 3",
+      "oos_sharpe": 1.7203532870399247,
+      "permutation_p": 0.11394302848575712
+    },
+    {
+      "label": "Window 4",
+      "oos_sharpe": -0.18080854549033135,
+      "permutation_p": 0.5707146426786607
+    }
+  ],
+  "raw_p": 7.666e-05,
+  "bonferroni_scans": [
+    {
+      "n_tests": 308,
+      "survivors_before": 18,
+      "survivors_after": 1,
+      "label": "2-sector"
+    },
+    {
+      "n_tests": 5551,
+      "survivors_before": 237,
+      "survivors_after": 0,
+      "label": "full-universe"
+    }
+  ]
+}

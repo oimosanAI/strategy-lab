@@ -60,3 +60,9 @@ dev = [
     "jupyter (>=1.1.1,<2.0.0)",
     "pandas-stubs (>=3.0.3.260530,<4.0.0.0)"
 ]
+
+[tool.poetry.group.dashboard]
+optional = true
+
+[tool.poetry.group.dashboard.dependencies]
+streamlit = ">=1.38,<2.0"

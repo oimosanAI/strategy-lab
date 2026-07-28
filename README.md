@@ -2,7 +2,7 @@
 
 ![CI](https://github.com/oimosanAI/strategy-lab/actions/workflows/ci.yml/badge.svg)
 [![codecov](https://codecov.io/gh/oimosanAI/strategy-lab/graph/badge.svg)](https://codecov.io/gh/oimosanAI/strategy-lab)
-![tests](https://img.shields.io/badge/tests-304%20passed-brightgreen)
+![tests](https://img.shields.io/badge/tests-319%20passed-brightgreen)
 ![Python](https://img.shields.io/badge/python-3.12+-blue.svg)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 ![ruff](https://img.shields.io/badge/lint-ruff-blue.svg)
@@ -117,14 +117,15 @@ pairs_tradingのentry_threshold × exit_thresholdについては、実際にテ�
 core/
 ├── data/         DataLoader・キャッシュ・S&P500ユニバース取得
 ├── backtest/     バックテストエンジン（look-ahead防止、取引コスト、ポジションサイジング、IS/OOS分割）
-└── evaluation/   評価指標（Sharpe/Sortino/Calmar等）・統計的有意性検定・レポート生成
+└── evaluation/   評価指標（Sharpe/Sortino/Calmar等）・統計的有意性検定・レポート生成・可視化
 strategies/
 ├── pairs_trading/     統計的裁定（Engle-Granger/Johansen共和分検定、Bonferroni補正、静的/Kalmanヘッジ）
 ├── factor_momentum/   マルチファクター（12-1モメンタム＋60日低ボラティリティ、月次リバランス）
 └── vol_arbitrage/     Volatility Risk Premium（VIX vs SPY実現ボラティリティ、SVXYロングオンリー、Phase 3拡張）
+dashboard/        Streamlitインタラクティブダッシュボード（app.pyから起動、§5-1参照）
 ```
 
-主要ライブラリ：`pandas` / `numpy` / `statsmodels` / `scipy`（数値計算・統計検定）、`yfinance`（データ取得）、`matplotlib` / `seaborn` / `plotly`（可視化）、`pytest`（テスト、304件・カバレッジ99%）、`ruff` / `black` / `mypy`（静的検査・整形）、`poetry`（依存管理）。
+主要ライブラリ：`pandas` / `numpy` / `statsmodels` / `scipy`（数値計算・統計検定）、`yfinance`（データ取得）、`matplotlib` / `seaborn` / `plotly`（可視化）、`streamlit`（インタラクティブダッシュボード、任意グループ）、`pytest`（テスト、319件・カバレッジ99%）、`ruff` / `black` / `mypy`（静的検査・整形）、`poetry`（依存管理）。
 
 ## 5. 再現手順
 
@@ -134,6 +135,21 @@ cd strategy-lab
 poetry install
 poetry run pytest --cov=core --cov=strategies
 ```
+
+### 5-1. インタラクティブダッシュボード（Streamlit）
+
+これまで静的なMarkdown/PNGでしか見せられなかった検証結果（特にwalk-forward・パラメータ感度分析）を、実際に操作できる形で提供するダッシュボードを用意している。3戦略それぞれのページで、事前計算済みの厳密な検証結果（Tier 1、操作不可）と、凍結データスナップショット上でライブ再計算するパラメータスライダー（Tier 2）を分けて表示する——ライブyfinance取得は行わず、`scripts/generate_dashboard_data.py`で生成した固定データ基準日のスナップショット上で完結する設計（詳細は同スクリプトのdocstring参照）。
+
+`streamlit`はメインの依存関係とは分離した任意グループ（`dashboard`）に含めており、通常の開発・テストでは追加インストール不要：
+
+```bash
+poetry install --with dashboard
+poetry run streamlit run app.py
+```
+
+起動後、ブラウザで表示されるローカルURL（既定では`http://localhost:8501`）にアクセスする。
+
+**現時点ではStreamlit Community Cloud等での公開URLは存在せず、ローカル起動が必要**。パブリックホスティングは今後の対応予定。
 
 ## 6. 既知の限界
 
