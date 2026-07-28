@@ -93,6 +93,21 @@ def test_get_sp500_tickers_returns_normalized_list() -> None:
     assert tickers == ["AAPL", "MSFT", "BRK-B"]
 
 
+def test_get_constituents_returns_full_table_with_normalized_tickers() -> None:
+    # Arrange: Phase 3 (pairs trading) needs sector info, deferred back in
+    # Phase 0 until it was actually needed -- this is that addition.
+    source = FakeUniverseSource(_sample_constituents())
+    loader = UniverseLoader(source=source, cache=None, sleep_fn=NO_SLEEP)
+
+    # Act
+    constituents = loader.get_constituents()
+
+    # Assert: same normalization as get_sp500_tickers, but the full table.
+    assert list(constituents.columns) == ["ticker", "security", "gics_sector", "gics_sub_industry"]
+    assert constituents["ticker"].tolist() == ["AAPL", "MSFT", "BRK-B"]
+    assert constituents.loc[constituents["ticker"] == "BRK-B", "gics_sector"].iloc[0] == "Financials"
+
+
 # ---------------------------------------------------------------------------
 # 2 & 3. Cache freshness / expiry
 # ---------------------------------------------------------------------------

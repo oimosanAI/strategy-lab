@@ -166,6 +166,21 @@ class UniverseLoader:
         data = self._get_constituents()
         return [_normalize_ticker(ticker) for ticker in data["ticker"]]
 
+    def get_constituents(self) -> pd.DataFrame:
+        """Return the full constituent table (ticker, security,
+        gics_sector, gics_sub_industry), ticker normalized for yfinance.
+
+        Added in Phase 3 for pairs-trading sector-based candidate
+        generation -- deferred back in Phase 0 (per (A): "get_constituents()
+        は今回追加せず...Phase 3で実際に必要になった時点で追加してください")
+        until it was actually needed. Shares the same
+        cache/retry/fallback machinery as get_sp500_tickers(); see the
+        module docstring for the Level A survivorship-bias limitation.
+        """
+        data = self._get_constituents().copy()
+        data["ticker"] = data["ticker"].map(_normalize_ticker)
+        return data
+
     def _get_constituents(self) -> pd.DataFrame:
         if self._cache is not None:
             fresh = self._cache.read_if_fresh()
@@ -220,3 +235,14 @@ def get_sp500_tickers() -> list[str]:
         fallback_path=DEFAULT_FALLBACK_PATH,
     )
     return loader.get_sp500_tickers()
+
+
+def get_sp500_constituents() -> pd.DataFrame:
+    """Convenience wrapper for UniverseLoader.get_constituents(), mirroring
+    get_sp500_tickers()'s default configuration."""
+    loader = UniverseLoader(
+        source=WikipediaUniverseSource(),
+        cache=UniverseCache(DEFAULT_CACHE_PATH),
+        fallback_path=DEFAULT_FALLBACK_PATH,
+    )
+    return loader.get_constituents()

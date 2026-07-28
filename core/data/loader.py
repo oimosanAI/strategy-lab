@@ -15,6 +15,7 @@ from datetime import date, timedelta
 from typing import Protocol, Sequence
 
 import pandas as pd
+import yfinance as yf
 
 from core.data.cache import CacheBackend, CachedSeries
 
@@ -36,6 +37,52 @@ class DataProvider(Protocol):
         has no data in the range, e.g. a request predating its IPO.
         """
         ...
+
+
+_YFINANCE_COLUMN_MAP = {
+    "Open": "open",
+    "High": "high",
+    "Low": "low",
+    "Close": "close",
+    "Adj Close": "adj_close",
+    "Volume": "volume",
+}
+
+
+class YFinanceProvider:
+    """Concrete DataProvider backed by yfinance.
+
+    Empty (not an exception) is returned for a ticker with no data in the
+    range -- e.g. a delisted/mistyped ticker or a range predating a
+    listing -- matching yfinance's own behaviour and the DataProvider
+    contract. Network/parsing failures are wrapped as DataProviderError.
+    """
+
+    def fetch(self, ticker: str, start: date, end: date) -> pd.DataFrame:
+        try:
+            # yfinance's `end` is exclusive; DataProvider.fetch's is inclusive.
+            raw = yf.download(
+                ticker,
+                start=start,
+                end=end + timedelta(days=1),
+                progress=False,
+                auto_adjust=False,
+                actions=False,
+            )
+        except Exception as exc:  # noqa: BLE001 - yfinance raises assorted, undocumented types
+            raise DataProviderError(f"Failed to fetch {ticker} from yfinance: {exc}") from exc
+
+        if raw.empty:
+            return _empty_price_frame()
+
+        if isinstance(raw.columns, pd.MultiIndex):
+            raw = raw.copy()
+            raw.columns = raw.columns.get_level_values(0)
+
+        out = pd.DataFrame({"date": pd.to_datetime(raw.index)})
+        for yf_col, our_col in _YFINANCE_COLUMN_MAP.items():
+            out[our_col] = raw[yf_col].to_numpy()
+        return out.reset_index(drop=True)
 
 
 def _empty_price_frame() -> pd.DataFrame:
