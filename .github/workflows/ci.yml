@@ -27,10 +27,10 @@ jobs:
         run: poetry run ruff check .
 
       - name: Type check (mypy)
-        run: poetry run mypy core
+        run: poetry run mypy core strategies scripts
 
       - name: Test with coverage
-        run: poetry run pytest --cov=core --cov-report=xml
+        run: poetry run pytest --cov=core --cov=strategies --cov-report=xml --ignore=tests/dashboard
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
@@ -38,3 +38,22 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
           fail_ci_if_error: true
+
+  dashboard-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install Poetry
+        run: pipx install poetry
+
+      - name: Install dependencies (with dashboard group)
+        run: poetry install --no-interaction --with dashboard
+
+      - name: Test dashboard
+        run: poetry run pytest tests/dashboard
