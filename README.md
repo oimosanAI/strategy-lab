@@ -2,7 +2,11 @@
 
 ![CI](https://github.com/oimosanAI/strategy-lab/actions/workflows/ci.yml/badge.svg)
 [![codecov](https://codecov.io/gh/oimosanAI/strategy-lab/graph/badge.svg)](https://codecov.io/gh/oimosanAI/strategy-lab)
-![tests](https://img.shields.io/badge/tests-283%20passed-brightgreen)
+![tests](https://img.shields.io/badge/tests-304%20passed-brightgreen)
+![Python](https://img.shields.io/badge/python-3.12+-blue.svg)
+[![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+![ruff](https://img.shields.io/badge/lint-ruff-blue.svg)
+![black](https://img.shields.io/badge/code%20style-black-000000.svg)
 <!-- tests badge is static -- update the count manually (`poetry run pytest -q`) whenever new tests are added -->
 
 ## 1. プロジェクト概要
@@ -120,7 +124,7 @@ strategies/
 └── vol_arbitrage/     Volatility Risk Premium（VIX vs SPY実現ボラティリティ、SVXYロングオンリー、Phase 3拡張）
 ```
 
-主要ライブラリ：`pandas` / `numpy` / `statsmodels` / `scipy`（数値計算・統計検定）、`yfinance`（データ取得）、`pytest`（テスト、283件・カバレッジ98%）、`ruff` / `mypy`（静的検査）、`poetry`（依存管理）。
+主要ライブラリ：`pandas` / `numpy` / `statsmodels` / `scipy`（数値計算・統計検定）、`yfinance`（データ取得）、`matplotlib` / `seaborn` / `plotly`（可視化）、`pytest`（テスト、304件・カバレッジ99%）、`ruff` / `black` / `mypy`（静的検査・整形）、`poetry`（依存管理）。
 
 ## 5. 再現手順
 
