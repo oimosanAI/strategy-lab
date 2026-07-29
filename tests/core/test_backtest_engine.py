@@ -31,16 +31,20 @@ covered in test_engine.py).
 
 from __future__ import annotations
 
+import warnings
+
 import numpy as np
 import pandas as pd
 import pytest
 
 from core.backtest.engine import (
     BacktestConfig,
+    BacktestResult,
     LookAheadError,
     assert_backtest_causal,
     run_backtest,
 )
+from core.backtest.portfolio import ExposureLimitError, ExposureLimitWarning
 from core.backtest.position_sizing import PositionSizingConfig, VolTargetSizer
 from tests.core.test_position_sizing import _FullSampleVolSizer
 
@@ -205,3 +209,121 @@ def test_costs_are_correctly_subtracted() -> None:
     assert no_cost.equity_curve.tolist() == pytest.approx(
         [1.0, 1.0, 1.0, 0.9889948432055751, 0.9692149463414635, 0.9498306474146343]
     )
+
+
+# ---------------------------------------------------------------------------
+# 5. Exposure-limit enforcement (structural, wired into run_backtest)
+# ---------------------------------------------------------------------------
+
+
+class _AllLongStrategy:
+    """Every ticker gets the SAME sign (+1.0) -- a stand-in for
+    factor_momentum's original un-normalized gross-exposure blowout (see
+    strategies/factor_momentum/README.md): no offsetting short leg, so
+    gross and net grow together as more tickers are added."""
+
+    name = "all-long"
+
+    def generate_signals(self, prices: pd.DataFrame) -> pd.DataFrame:
+        return pd.DataFrame(1.0, index=prices.index, columns=prices.columns)
+
+
+def _blowout_fixture(n_tickers: int = 5, n_days: int = 8) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """n_tickers, each with constant +1%/day growth (realized vol -> 0
+    once SIZER's vol_window warms up), so VolTargetSizer clips EVERY
+    ticker to +max_leverage (2.0). Combined with _AllLongStrategy (all
+    signal=+1.0, no offsetting leg), gross = net = n_tickers * 2.0 once
+    warmed up -- 10.0 for n_tickers=5, deliberately exceeding
+    BacktestConfig's default ExposureLimits(max_gross=5.0, max_net=5.0)."""
+    idx = pd.bdate_range("2020-01-01", periods=n_days)
+    tickers = [f"T{i}" for i in range(n_tickers)]
+    close = pd.DataFrame({t: [100.0 * 1.01**d for d in range(n_days)] for t in tickers}, index=idx)
+    open_ = close.copy()
+    return close, open_
+
+
+def test_backtest_config_default_exposure_limits_are_5_and_5() -> None:
+    config = BacktestConfig()
+
+    assert config.exposure_limits.max_gross == 5.0
+    assert config.exposure_limits.max_net == 5.0
+    assert config.exposure_limits.max_per_ticker is None
+    assert config.exposure_limits_strict is False
+
+
+def test_run_backtest_populates_exposure_violations_when_default_limits_breached() -> None:
+    close, open_ = _blowout_fixture(n_tickers=5)
+    config = BacktestConfig()
+
+    result = run_backtest(close, open_, _AllLongStrategy(), SIZER, config)
+
+    assert len(result.exposure_violations) > 0
+    assert any(v.kind == "gross" for v in result.exposure_violations)
+    assert any(v.kind == "net" for v in result.exposure_violations)
+
+
+def test_run_backtest_exposure_violations_empty_when_within_limits() -> None:
+    close, open_ = _e2e_fixture()
+    config = BacktestConfig()
+
+    result = run_backtest(close, open_, _FixedLongShortStrategy(), SIZER, config)
+
+    assert result.exposure_violations == []
+
+
+def test_run_backtest_warns_once_per_violation_kind_not_once_per_date() -> None:
+    close, open_ = _blowout_fixture(n_tickers=5, n_days=10)
+    config = BacktestConfig()
+
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        run_backtest(close, open_, _AllLongStrategy(), SIZER, config)
+
+    exposure_warnings = [w for w in caught if issubclass(w.category, ExposureLimitWarning)]
+    # Exactly one warning per violation KIND (gross, net), never one per
+    # violating date -- with 10 violating days x 2 kinds, a naive
+    # per-violation warn() would emit 20, not 2.
+    assert len(exposure_warnings) == 2
+    messages = [str(w.message) for w in exposure_warnings]
+    assert sum("gross" in m for m in messages) == 1
+    assert sum("net" in m for m in messages) == 1
+
+
+def test_run_backtest_emits_no_exposure_warning_when_within_limits() -> None:
+    close, open_ = _e2e_fixture()
+    config = BacktestConfig()
+
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        run_backtest(close, open_, _FixedLongShortStrategy(), SIZER, config)
+
+    exposure_warnings = [w for w in caught if issubclass(w.category, ExposureLimitWarning)]
+    assert exposure_warnings == []
+
+
+def test_run_backtest_strict_mode_raises_exposure_limit_error() -> None:
+    close, open_ = _blowout_fixture(n_tickers=5)
+    config = BacktestConfig(exposure_limits_strict=True)
+
+    with pytest.raises(ExposureLimitError):
+        run_backtest(close, open_, _AllLongStrategy(), SIZER, config)
+
+
+def test_run_backtest_strict_mode_does_not_raise_when_within_limits() -> None:
+    close, open_ = _e2e_fixture()
+    config = BacktestConfig(exposure_limits_strict=True)
+
+    result = run_backtest(close, open_, _FixedLongShortStrategy(), SIZER, config)
+
+    assert isinstance(result, BacktestResult)
+
+
+def test_run_backtest_non_strict_returns_full_result_despite_violations() -> None:
+    close, open_ = _blowout_fixture(n_tickers=5)
+    config = BacktestConfig()  # exposure_limits_strict=False (default)
+
+    result = run_backtest(close, open_, _AllLongStrategy(), SIZER, config)
+
+    assert isinstance(result, BacktestResult)
+    assert len(result.returns) == len(close)
+    assert not result.returns.isna().all()

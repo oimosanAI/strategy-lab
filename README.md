@@ -2,7 +2,7 @@
 
 ![CI](https://github.com/oimosanAI/strategy-lab/actions/workflows/ci.yml/badge.svg)
 [![codecov](https://codecov.io/gh/oimosanAI/strategy-lab/graph/badge.svg)](https://codecov.io/gh/oimosanAI/strategy-lab)
-![tests](https://img.shields.io/badge/tests-319%20passed-brightgreen)
+![tests](https://img.shields.io/badge/tests-327%20passed-brightgreen)
 ![Python](https://img.shields.io/badge/python-3.12+-blue.svg)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 ![ruff](https://img.shields.io/badge/lint-ruff-blue.svg)
@@ -53,7 +53,7 @@ Phase 3の実データE2E検証では、いずれもユニットテストの粒�
 | Gross exposure（中央値/最大） | 39.9x / 56.3x | 1.20x / 1.48x |
 | max_drawdown | -100.02%（数学的に無意味） | -12.52%（妥当） |
 
-「非現実的に良すぎる数値」だけでなく「数学的に不可能なほど悪い数値」も、look-ahead bias以外の設計層（ポジションサイジング・ポートフォリオ構築）を疑う調査対象であるべき、という一般化可能な教訓を得た。詳細は[strategies/factor_momentum/README.md](strategies/factor_momentum/README.md)。
+「非現実的に良すぎる数値」だけでなく「数学的に不可能なほど悪い数値」も、look-ahead bias以外の設計層（ポジションサイジング・ポートフォリオ構築）を疑う調査対象であるべき、という一般化可能な教訓を得た。この時点では`check_exposure_limits()`をE2Eスクリプト内で明示的に呼び出すだけの一回限りの対応だったが、後日`run_backtest()`自体に恒久的に組み込み、全戦略共通のデフォルトとして強制化した（§6参照）。詳細は[strategies/factor_momentum/README.md](strategies/factor_momentum/README.md)。
 
 ### 3-3. セクター中立化：設計目的の達成とバックテスト成績のトレードオフ
 
@@ -125,7 +125,7 @@ strategies/
 dashboard/        Streamlitインタラクティブダッシュボード（app.pyから起動、§5-1参照）
 ```
 
-主要ライブラリ：`pandas` / `numpy` / `statsmodels` / `scipy`（数値計算・統計検定）、`yfinance`（データ取得）、`matplotlib` / `seaborn` / `plotly`（可視化）、`streamlit`（インタラクティブダッシュボード、任意グループ）、`pytest`（テスト、319件・カバレッジ99%）、`ruff` / `black` / `mypy`（静的検査・整形）、`poetry`（依存管理）。
+主要ライブラリ：`pandas` / `numpy` / `statsmodels` / `scipy`（数値計算・統計検定）、`yfinance`（データ取得）、`matplotlib` / `seaborn` / `plotly`（可視化）、`streamlit`（インタラクティブダッシュボード、任意グループ）、`pytest`（テスト、327件・カバレッジ99%）、`ruff` / `black` / `mypy`（静的検査・整形）、`poetry`（依存管理）。
 
 ## 5. 再現手順
 
@@ -156,7 +156,7 @@ poetry run streamlit run app.py
 - **サバイバーシップバイアス（Level A）**：現在のS&P 500構成銘柄のみを使用しており、上場廃止・合併銘柄は候補から除外されている。
 - **Walk-forwardは実施済みだが、成績の振れ幅・選定の不安定性が残る**：anchored 4ウィンドウでのwalk-forward検証（両戦略）を実施済み。pairs_tradingは「勝者」のペアがウィンドウごとに入れ替わる選定の不安定性、factor_momentumはOOS Sharpeが-0.92〜+1.87まで振動する結果の不安定性が判明しており、単一分割の限界は解消したが新たな限界として記録している。
 - **セクター中立化は実装済みだが副作用がある**：セクター集中抑制という設計目的（§3-3）は実データで確認済みだが、IS→OOS劣化が悪化する副作用が観測されており、現時点でglobalモードに対する明確な優位性は確認できていない。
-- **`check_exposure_limits()`は事後モニターであり強制ではない**：将来の設定変更で同種のスケール問題が再発しても、バックテスト自体は警告なく実行される。
+- **`check_exposure_limits()`は`run_backtest()`に恒久的に組み込まれ、強制化済み**：デフォルト`ExposureLimits(max_gross=5.0, max_net=5.0)`が全戦略のバックテストに自動適用される（`PositionSizingConfig.max_leverage`から逆算した、特定戦略の実測値に依存しない安全網——詳細は`strategies/factor_momentum/README.md` Step H参照）。3戦略の実際のE2Eバックテストで再検証し、いずれも`exposure_violations`が0件（実測最大値はデフォルトの1/3〜1/5程度）であることを確認済み。ただしデフォルトでは違反があっても警告のみで継続する設計（`exposure_limits_strict=True`で例外による即時停止に変更可能）のため、「異常値を出力しない」ことまでは保証しない。
 - **Vol Arbitrageもwalk-forward・パラメータ感度分析済み**：anchored 4ウィンドウでOOS Sharpeが-1.38〜+1.72まで振動することを確認し、`vrp_threshold`感度分析（5点グリッド、負の閾値含む）ではフィルタを弱めても改善しないことを確認した。原因の切り分け（trailing RVの設計上の制約か、SVXY固有の値動きか）は依然として未解決。
 
 各限界の詳細は[strategies/pairs_trading/README.md](strategies/pairs_trading/README.md)・[strategies/factor_momentum/README.md](strategies/factor_momentum/README.md)・[REQUIREMENTS.md](REQUIREMENTS.md)を参照。

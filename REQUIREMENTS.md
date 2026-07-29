@@ -228,6 +228,12 @@ strategy-lab/
 
 続けてwalk-forward分析（anchored 4ウィンドウ、既存の汎用`evaluate_walk_forward_windows`を再利用しプロダクションコード追加ゼロ）と`vrp_threshold`感度分析（5点グリッド、負の閾値を含む）をvol_arbitrageにも適用した。OOS Sharpeはウィンドウごとに-1.38〜+1.72まで振動し、「単一分割の結果は広い分布からの一標本に過ぎない」という教訓がpairs_trading・factor_momentumに続き3戦略目でも再現された。感度分析ではデフォルト（0.0）が5点中最良ではなかったが、負の閾値（フィルタをほぼ無効化）にしてもOOS Sharpeは劇的に改善せず、「フィルタを弱めれば常時保有の成績に近づく」という仮説も支持されなかった。詳細は`strategies/vol_arbitrage/README.md`を参照。
 
+### 7.6 `check_exposure_limits()`の恒久的な強制化
+
+§7.4で発見したgross exposure暴走（56倍）の根本原因は、`check_exposure_limits()`がPhase 1で実装済みでありながら一度も呼び出されていなかったことだった。この限界を解消するため、`check_exposure_limits()`を`core.backtest.engine.run_backtest()`に構造的に組み込み、デフォルト`ExposureLimits(max_gross=5.0, max_net=5.0)`を全戦略共通で自動適用するようにした。この値はfactor_momentumの実測値（`max_gross=2.0, max_net=1.5`）をそのまま流用したものではなく、`PositionSizingConfig.max_leverage`（全戦略共通のサイザー自体の銘柄別上限、デフォルト2.0）から逆算した、3戦略のどの正当な動作も踏まない「破局的事態のみを捕まえる安全網」として再設計したものである——factor_momentumの実測値をそのまま流用していた場合、単一銘柄ロングオンリーのvol_arbitrage（net=grossが構造的に発生する）で誤検知を招いていたことが設計討議・実データ検証の両方で確認された。
+
+違反時の挙動はデフォルト（`exposure_limits_strict=False`）では日付ごとではなく種別（gross/net/per_ticker）ごとに集約した1件の警告（`ExposureLimitWarning`）を発行しつつバックテストは継続し、オプトインで`exposure_limits_strict=True`にすると新規例外`ExposureLimitError`で即座に停止する。3戦略の実際のE2Eバックテストを新しいデフォルト設定で再実行し、いずれも`exposure_violations`が0件（実測最大値がデフォルトの1/3〜1/5程度）であることを確認した。詳細は`strategies/factor_momentum/README.md` Step H・§4-5を参照。
+
 ---
 
 ## 8. マイルストーン（叩き台）

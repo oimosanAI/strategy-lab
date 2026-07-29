@@ -28,6 +28,7 @@ bar to reference.
 
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass
 from typing import cast
 
@@ -99,6 +100,22 @@ class ExposureLimits:
     max_per_ticker: float | None = None
 
 
+class ExposureLimitWarning(UserWarning):
+    """Raised (via warnings.warn) by run_backtest when exposure_limits are
+    breached and exposure_limits_strict=False (the default): loud enough
+    to notice, but never stops a batch job (walk-forward/sensitivity grids,
+    an interactive dashboard slider) the way an exception would."""
+
+
+class ExposureLimitError(RuntimeError):
+    """Raised by run_backtest instead of warning when
+    BacktestConfig.exposure_limits_strict=True. Opt-in hard-stop for
+    contexts (e.g. a CI gate) that want a breach to fail loudly rather
+    than merely warn -- mirrors PairSelectionConfig.multiple_testing_
+    correction's pattern of making a policy trade-off an explicit config
+    choice rather than a single global decision."""
+
+
 @dataclass(frozen=True)
 class ExposureViolation:
     date: pd.Timestamp
@@ -168,3 +185,32 @@ def check_exposure_limits(positions: pd.DataFrame, limits: ExposureLimits) -> li
                 )
 
     return violations
+
+
+def enforce_exposure_limits(violations: list[ExposureViolation], *, strict: bool) -> None:
+    """Given already-computed violations (from check_exposure_limits),
+    resolve the policy question that function deliberately leaves open:
+    raise (strict=True) or emit one AGGREGATED warning per violation kind
+    (strict=False, the default). check_exposure_limits itself stays an
+    unmodified, pure fact-finder -- this is the only place a raise/warn
+    choice is made."""
+    if not violations:
+        return
+
+    if strict:
+        kinds = sorted({v.kind for v in violations})
+        raise ExposureLimitError(f"Exposure limit(s) breached: {', '.join(kinds)} (see BacktestResult.exposure_violations for detail)")
+
+    by_kind: dict[str, list[ExposureViolation]] = {}
+    for v in violations:
+        by_kind.setdefault(v.kind, []).append(v)
+
+    for kind, kind_violations in by_kind.items():
+        max_value = max(v.value for v in kind_violations)
+        limit = kind_violations[0].limit
+        n_days = len({v.date for v in kind_violations})
+        warnings.warn(
+            f"{kind} exposure exceeded limit on {n_days} day(s): max={max_value:.2f}, limit={limit:.2f}",
+            ExposureLimitWarning,
+            stacklevel=3,
+        )

@@ -27,12 +27,13 @@ from a single price Series to a multi-ticker price panel:
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import numpy as np
 import pandas as pd
 
 from core.backtest import portfolio
+from core.backtest.portfolio import ExposureLimits
 from core.backtest.position_sizing import PositionSizer
 from strategies.base import Strategy
 
@@ -111,7 +112,7 @@ def _frame_equal_elementwise(a: pd.DataFrame, b: pd.DataFrame) -> pd.DataFrame:
 
 @dataclass(frozen=True)
 class BacktestConfig:
-    """Execution frictions and capital scale.
+    """Execution frictions, capital scale, and portfolio exposure policy.
 
     Attributes
     ----------
@@ -121,11 +122,48 @@ class BacktestConfig:
         together as a single cost_rate = commission + slippage.
     initial_capital:
         Starting capital for the equity curve; affects scale only.
+    exposure_limits:
+        Portfolio-level gross/net exposure caps, checked automatically by
+        run_backtest (see portfolio.check_exposure_limits). Defaults to a
+        deliberately generous "catastrophic sanity net" (max_gross=5.0,
+        max_net=5.0) -- NOT a per-strategy-tuned value. It is derived from
+        PositionSizingConfig.max_leverage's own default (2.0) times the
+        largest number of simultaneously-uncancelled legs any of this
+        project's current strategies can have (2, for pairs_trading),
+        plus headroom, so it never fires under any of the 3 strategies'
+        legitimate operation while still catching a repeat of the
+        historical factor_momentum blowout (median 39.9x, max 56.3x
+        gross -- see strategies/factor_momentum/README.md) almost
+        immediately. max_net equals max_gross rather than a tighter value
+        because net <= gross always holds; a tighter default would
+        misfire on vol_arbitrage, whose long-only single-ticker design
+        makes net == gross by construction, not by malfunction.
+        max_per_ticker defaults to None (unchecked) because
+        PositionSizingConfig.max_leverage already clips each ticker at
+        the sizing stage -- a default here would be redundant, not
+        additional protection.
+    exposure_limits_strict:
+        False (default): a breach emits ONE aggregated warnings.warn()
+        per violation kind (gross/net/per_ticker) via
+        portfolio.ExposureLimitWarning, and the backtest still completes
+        normally with the breach recorded in
+        BacktestResult.exposure_violations -- matching this project's
+        walk-forward/sensitivity convention of never letting one bad
+        configuration abort a batch run. True: raises
+        portfolio.ExposureLimitError instead, for contexts (e.g. a CI
+        gate) that want a breach to fail loudly. Note: if True, a
+        perturbation trial inside assert_backtest_causal that happens to
+        push exposure over the limit would raise ExposureLimitError
+        instead of confirming causality -- harmless under the default
+        False, since no causality test in this project opts into strict
+        mode.
     """
 
     commission: float = 0.00005
     slippage: float = 0.0005
     initial_capital: float = 1.0
+    exposure_limits: ExposureLimits = field(default_factory=lambda: ExposureLimits(max_gross=5.0, max_net=5.0))
+    exposure_limits_strict: bool = False
 
 
 @dataclass(frozen=True)
@@ -148,6 +186,11 @@ class BacktestResult:
         Portfolio-level (summed across tickers) series; see
         core.backtest.portfolio for how turnover and per-ticker returns
         are computed.
+    exposure_violations:
+        Always present (empty list if config.exposure_limits found
+        nothing to flag, or if exposure_limits itself is unchecked). See
+        BacktestConfig.exposure_limits/.exposure_limits_strict for the
+        policy this is checked against.
     """
 
     signals: pd.DataFrame
@@ -158,6 +201,7 @@ class BacktestResult:
     gross_returns: pd.Series
     returns: pd.Series
     equity_curve: pd.Series
+    exposure_violations: list[portfolio.ExposureViolation]
 
 
 def run_backtest(
@@ -197,6 +241,17 @@ def run_backtest(
     position = target_position.shift(EXECUTION_LAG).fillna(0.0)
     # ========================================================================
 
+    # === EXPOSURE-LIMIT GUARD ===============================================
+    # Checked on `position` (actually held, post-lag) rather than
+    # target_position: that is the economically real exposure that earns
+    # or loses money, and matches the level at which the factor_momentum
+    # gross-exposure blowout was originally diagnosed. check_exposure_
+    # limits itself stays a pure fact-finder; enforce_exposure_limits is
+    # the only place the raise/warn policy decision is made.
+    exposure_violations = portfolio.check_exposure_limits(position, config.exposure_limits)
+    portfolio.enforce_exposure_limits(exposure_violations, strict=config.exposure_limits_strict)
+    # ========================================================================
+
     per_ticker_returns = pd.DataFrame(
         {
             ticker: portfolio.compute_ticker_returns(position[ticker], open_prices[ticker], prices[ticker])
@@ -220,6 +275,7 @@ def run_backtest(
         gross_returns=gross_returns,
         returns=net_returns,
         equity_curve=equity_curve,
+        exposure_violations=exposure_violations,
     )
 
 

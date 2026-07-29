@@ -1,7 +1,7 @@
 # Pairs Trading — E2E検証記録
 
 **ステータス**: 実装完了、実データでのE2E検証済み
-**最終更新**: 2026-07-28
+**最終更新**: 2026-07-29
 
 このドキュメントは `strategies/pairs_trading/` のユニットテストでは検出できない、実データ特有の問題（多重検定、閾値の妥当性、数値の現実性）を確認するために行ったE2E検証の記録である。単一の「うまくいった結果」ではなく、検証の全経緯——特に結論が覆った経緯——をそのまま残す。
 
@@ -136,3 +136,4 @@ Walk-forwardは「検定族」の考え方が時間軸にも当てはまるこ�
 - **Walk-forwardは実施済みだが、選定プロセス自体の不安定性が残る**：anchored 4ウィンドウでのwalk-forward検証を実施し（§3-2参照）、単一分割の限界は解消した。ただし、ウィンドウごとに「勝者」のペアが入れ替わる（選定プロセスそのものの時間的不安定性）ことが判明しており、単一分割だけでは見えなかった新たな限界として記録する。ウィンドウの境界（6ヶ月ステップ、4本）自体の選び方に対する感度分析は未実施。
 - **Johansen検定側の多重検定補正は未実施**：`statsmodels.coint_johansen`が固定の90/95/99%臨界値のみを返す仕様のため、Engle-Granger側のp値のみをBonferroni補正している。`require_both_tests_agree`のAND条件はEngle-Granger側の補正の恩恵を受けるが、厳密な同時補正ではない（`strategies/pairs_trading/cointegration.py`のモジュールdocstring参照）。
 - **GICSセクターという単一のグルーピング定義**：セクター内ペアのみを候補としており、セクターをまたぐ経済的に妥当なペア（例：サプライチェーンで密接な企業同士）は最初から候補に入っていない。
+- **`check_exposure_limits()`が`run_backtest()`に恒久的に組み込まれた**（詳細は`strategies/factor_momentum/README.md` Step H参照）：デフォルト`ExposureLimits(max_gross=5.0, max_net=5.0)`が本戦略にも自動適用される。pairs_trading（AEP-FE）は常に2銘柄（1ペア）のみを保有する構造上、元々このスケール問題が顕在化したことはなかったが、実際に実データで再検証したところ観測gross exposureは中央値0.644・最大1.648、観測net exposureは中央値0.268・最大1.089で、いずれもデフォルト値の範囲内（`exposure_violations`は0件）だった。
