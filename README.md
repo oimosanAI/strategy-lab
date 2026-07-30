@@ -2,7 +2,7 @@
 
 ![CI](https://github.com/oimosanAI/strategy-lab/actions/workflows/ci.yml/badge.svg)
 [![codecov](https://codecov.io/gh/oimosanAI/strategy-lab/graph/badge.svg)](https://codecov.io/gh/oimosanAI/strategy-lab)
-![tests](https://img.shields.io/badge/tests-327%20passed-brightgreen)
+![tests](https://img.shields.io/badge/tests-335%20passed-brightgreen)
 ![Python](https://img.shields.io/badge/python-3.12+-blue.svg)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 ![ruff](https://img.shields.io/badge/lint-ruff-blue.svg)
@@ -111,6 +111,27 @@ pairs_tradingのentry_threshold × exit_thresholdについては、実際にテ�
 - [`reports/strategy_comparison.md`](reports/strategy_comparison.md) — `render_comparison_report`によるペアトレード vs マルチファクターの横並び比較
 - [`reports/vol_arbitrage_vrp.md`](reports/vol_arbitrage_vrp.md) — Vol Arbitrage（VRP戦略）単体レポート
 
+### 3-7. コードレビューで発覚した、検証機構自体の欠陥（`assert_backtest_causal`の1バー検出漏れ）
+
+`core/backtest/`に対する`/code-review`（2026-07-30実施）で、3戦略の実データ検証結果の信頼性の土台そのものに関わる欠陥が見つかった。詳細な経緯・実測データは会話記録に残しているため、ここでは要点のみ記す。
+
+**発見**：`assert_backtest_causal`（sizing・ポートフォリオ集計を含むパイプライン全体のcausalityガード）は、`position`と`returns`（`EXECUTION_LAG`適用**後**の量）のみを比較しており、シグナルが1バー先の価格を覗く典型的なlook-ahead biasを検出できなかった。`EXECUTION_LAG`のシフトが、ちょうどその1バー分の覗きを打ち消してしまい、検出をすり抜ける構造だった。合成データで実証したところ、`close[t+1]`を覗くだけの戦略（Sharpe **18.05**）がこのガードを**PASSED**した。
+
+さらに調査の過程で、**`assert_backtest_causal`を3戦略の実際の本番クラス・本番設定に対して直接呼び出すテストが、これまで一度もpytestに存在しなかった**ことも判明した。各戦略READMEに記載してきた「`assert_backtest_causal`はPASSED」という記述は、開発時の対話セッションでの手動実行結果であり、CIで継続検証される回帰テストではなかった。
+
+**修正**：比較対象に`EXECUTION_LAG`適用**前**の`signals`・`target_position`を追加（`core/backtest/engine.py`）。1バー覗きを仕込んだ負の対照テストを追加し、実際に検出することを確認。加えて、pairs_trading（static/kalman両モード）・factor_momentum・vol_arbitrageの4本番構成に対して`assert_backtest_causal`を直接実行するテストを新規に追加し、修正後も全構成でPASSEDであることを実測で確認した——各戦略READMEの既存の「PASSED」記述（factor_momentum README Step A・§3-3・§4-1、vol_arbitrage README Step D）は、この再検証により裏付けが強化された。`run_backtest`自体のロジックは無変更（比較対象タプルの拡張のみ）のため、reports/配下の既存数値への影響はない。
+
+**その他、同レビューで発見・対応した項目**：
+
+| 項目 | 内容 | 対応 |
+|---|---|---|
+| `VolTargetSizer`のvol=0挙動 | realized_volがちょうど0（stale/frozen価格）のとき`max_leverage`にクリップされる。既存テスト（`test_vol_target_sizer_clips_to_max_leverage_when_vol_near_zero`）がこれを意図的な設計として明示的に固定しているため、sizer自体は変更せず、「stale価格検出はデータ品質の関心事であり`core.data`側で対処すべき」という既知の限界として`position_sizing.py`・`core/data/loader.py`のdocstringに記録した。 | ドキュメント化のみ |
+| `equity_curve`に破産の床がない | `net_returns < -1.0`の日（高レバレッジ下の急落）でequity_curveが負に転じ、以降のプラスのリターンが状況を悪化させるという非物理的挙動があった。`BacktestResult`に`ruin_date`を追加し、破産後は0.0に固定するよう修正。`equity_curve`は`assert_backtest_causal`の比較対象に含めない設計とし（破産後は摂動しても値が変化せず検出漏れを生むため）、多シード実験でこの判断の正しさを実証（`equity_curve`のみ比較する反実仮想ガード：0/15検出 vs 実際にデプロイされているガードの比較対象：10/15検出）。3戦略の本番設定を再実行し、`ruin_date`が全てNoneであること（既存結果への影響なし）を確認。 | コード修正 |
+| `compute_ticker_returns`のNaN漏れ | open価格が欠損した日、`new_return`項に`carried`/`exited`と同じ`.fillna(0.0)`パターンを機械的に適用する当初案を検討したが、フラット建玉での構造的ゼロと、本当に価格不明な新規建玉（黙って0を返すと危険）を区別できないことが判明。`new==0`の場合のみ0にマスクし、`new!=0`かつopen欠損の場合はNaNを伝播させるよう修正。 | コード修正 |
+| `run_backtest`の入力検証欠如 | `prices`と`open_prices`のindex/columns不一致を検証しておらず、pandasが暗黙にアラインして尤もらしいが誤った結果を返し得た。ダッシュボードの独立parquetスナップショット（`dashboard/data.py`）が、片方だけ再生成された場合に不整合を検出する手段がない実在するリスク箇所であることを確認した上で、`run_backtest`冒頭に明示的な検証を追加。 | コード修正 |
+
+**今後の既知の課題として記録**：`assert_selection_ignores_out_of_sample`（pair選定・Kalmanハイパーパラメータ較正のIS/OOS境界ガード、`core/backtest/sample_split.py`）に3つの検出力の弱さ（NaN比較での誤検出、OOS区間が価格indexと交差しない場合の見かけ上のPASS、`assert_causal`と異なり単一摂動試行のみ）が見つかった。このガードは`select_pairs`・`calibrate_kalman_hyperparameters`のテスト専用検証であり、walk-forward・sensitivity・ダッシュボード生成のいずれのプロダクションランタイム経路からも呼ばれていないため、reports/配下の数値汚染リスクはない。ただし将来の設定変更で検証ガード自体が黙って無意味化しうる、テストインフラの信頼性に関わる課題として、次回以降の対応候補に残す。
+
 ## 4. 技術スタック・アーキテクチャ概要
 
 ```
@@ -125,7 +146,7 @@ strategies/
 dashboard/        Streamlitインタラクティブダッシュボード（app.pyから起動、§5-1参照）
 ```
 
-主要ライブラリ：`pandas` / `numpy` / `statsmodels` / `scipy`（数値計算・統計検定）、`yfinance`（データ取得）、`matplotlib` / `seaborn` / `plotly`（可視化）、`streamlit`（インタラクティブダッシュボード、任意グループ）、`pytest`（テスト、327件・カバレッジ99%）、`ruff` / `black` / `mypy`（静的検査・整形）、`poetry`（依存管理）。
+主要ライブラリ：`pandas` / `numpy` / `statsmodels` / `scipy`（数値計算・統計検定）、`yfinance`（データ取得）、`matplotlib` / `seaborn` / `plotly`（可視化）、`streamlit`（インタラクティブダッシュボード、任意グループ）、`pytest`（テスト、335件・カバレッジ99%）、`ruff` / `black` / `mypy`（静的検査・整形）、`poetry`（依存管理）。
 
 ## 5. 再現手順
 
@@ -158,5 +179,7 @@ poetry run streamlit run app.py
 - **セクター中立化は実装済みだが副作用がある**：セクター集中抑制という設計目的（§3-3）は実データで確認済みだが、IS→OOS劣化が悪化する副作用が観測されており、現時点でglobalモードに対する明確な優位性は確認できていない。
 - **`check_exposure_limits()`は`run_backtest()`に恒久的に組み込まれ、強制化済み**：デフォルト`ExposureLimits(max_gross=5.0, max_net=5.0)`が全戦略のバックテストに自動適用される（`PositionSizingConfig.max_leverage`から逆算した、特定戦略の実測値に依存しない安全網——詳細は`strategies/factor_momentum/README.md` Step H参照）。3戦略の実際のE2Eバックテストで再検証し、いずれも`exposure_violations`が0件（実測最大値はデフォルトの1/3〜1/5程度）であることを確認済み。ただしデフォルトでは違反があっても警告のみで継続する設計（`exposure_limits_strict=True`で例外による即時停止に変更可能）のため、「異常値を出力しない」ことまでは保証しない。
 - **Vol Arbitrageもwalk-forward・パラメータ感度分析済み**：anchored 4ウィンドウでOOS Sharpeが-1.38〜+1.72まで振動することを確認し、`vrp_threshold`感度分析（5点グリッド、負の閾値含む）ではフィルタを弱めても改善しないことを確認した。原因の切り分け（trailing RVの設計上の制約か、SVXY固有の値動きか）は依然として未解決。
+- **`VolTargetSizer`はstale/frozen価格を低ボラティリティ資産と区別できない**（§3-7参照）：realized_volがちょうど0のとき`max_leverage`にクリップする挙動は、意図的な設計判断として既存テストに固定されているため変更していない。データフィードが停止した銘柄（halt・vendor障害）でも数式上は「真に低ボラティリティな資産」と同一の入力になり、この2つを`realized_vol`のみから区別することはできない。正しい対処は`core.data`側でのstale価格検出（連続同値close等）であり、現時点では未実装の既知の限界として記録する。
+- **`assert_selection_ignores_out_of_sample`（IS/OOS境界ガード）の検出力に3つの弱さがある**（§3-7参照）：pair選定・Kalmanハイパーパラメータ較正のテスト専用ガードに、NaN比較での誤検出・OOS区間が空の場合の見かけ上のPASS・単一摂動試行のみという弱さが見つかった。プロダクションランタイム経路からは呼ばれないためreports/配下の数値汚染リスクはないが、テストインフラ自体の信頼性に関わる課題として未対応のまま残す。
 
 各限界の詳細は[strategies/pairs_trading/README.md](strategies/pairs_trading/README.md)・[strategies/factor_momentum/README.md](strategies/factor_momentum/README.md)・[REQUIREMENTS.md](REQUIREMENTS.md)を参照。

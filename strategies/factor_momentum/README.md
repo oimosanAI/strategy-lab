@@ -32,7 +32,7 @@ IS/OOS分割はpairs_tradingと同一（IS 2023-01-03〜2024-12-31、OOS 2025-01
 - `equity_curve`が2025-05-12にほぼゼロまで低下し、以降390日中302日がゼロ以下で張り付く
 - `annualized_return=-1.0`（`metrics.py`の`total_growth<=0`時のフロア処理が発動）、`max_drawdown=-1.0002`（ドローダウンが-100%を超過、数学的に単一の非レバレッジ資産では起こり得ない値）
 
-`assert_backtest_causal`は**PASSED**しており、look-ahead biasではないことは確認済みだった。
+`assert_backtest_causal`は**PASSED**しており、look-ahead biasではないことは確認済みだった。※後日の`/code-review`で、このガードに1バー分のlook-ahead検出漏れがあったことが判明し修正済み（詳細は`README.md`§3-7）。当時のこの結論自体はStep Bの独立した原因究明（正規化漏れという別レイヤーの問題）で裏付けられており撤回の必要はないが、ガード修正後に現在の（正規化済み）`FactorMomentumStrategy`本番設定を再実行し、`assert_backtest_causal`がPASSEDであることを実測で再確認している。
 
 ### Step B: 原因分析——「銘柄数に応じた正規化の欠如」
 
@@ -127,7 +127,7 @@ IS→OOS劣化の程度が大きく異なる理由についての考察：pairs_
 
 **セクター集中度の抑制という設計目的は達成された**：globalモードではUtilities（+0.22）・Financials（+0.14）に明確な偏りがあったが、sector_neutralモードでは全セクターが±0.09以内に収まった。
 
-**しかし副作用として、IS→OOS劣化が大幅に悪化した**（0.24→1.44）。sector_neutralのIS Sharpe（1.47）はglobalモード（0.68）より高く見えるが、OOSではほぼゼロ（0.026、permutation p=0.495、有意でない）まで崩壊する。`assert_backtest_causal`は両モードともPASSED済みであり、look-ahead biasではない。2つの解釈を提示する：
+**しかし副作用として、IS→OOS劣化が大幅に悪化した**（0.24→1.44）。sector_neutralのIS Sharpe（1.47）はglobalモード（0.68）より高く見えるが、OOSではほぼゼロ（0.026、permutation p=0.495、有意でない）まで崩壊する。`assert_backtest_causal`は両モードともPASSED済みであり、look-ahead biasではない（※`README.md`§3-7の通り、このガードは後日修正されているが、修正後もglobal/sector_neutral両モードの再検証でPASSEDを確認済み）。2つの解釈を提示する：
 
 1. **過学習リスクの増大**：セクターごとのquintileは全宇宙横断のquintile（約100銘柄/レッグ）よりも遥かに少ない銘柄数（例：Energy 21銘柄→quintile約4銘柄）で構成されるため、個々のセクター内バスケットの分散が薄く、IS期間中の銘柄固有ノイズを拾いやすい（過学習しやすい）。
 2. **globalモードの好成績がセクターベットの産物だった可能性**：globalモードのSharpe 0.44は、Utilities・Financialsへの明確な偏りを伴っている。この期間（2025-2026）にたまたまこれらのセクターが好調だった場合、globalモードの相対的な好成績は「純粋なモメンタム/低ボラティリティ・ファクターのエッジ」ではなく「セクタータイミングの偶然の当たり」を反映している可能性がある。セクター中立化はまさにこの種の偶然のセクター寄与を排除するために存在する機能であり、排除した結果OOSでエッジが消えたという事実は、globalモードの見かけ上の優位性の一部がセクターベットの産物だったという解釈を支持する。
@@ -173,7 +173,7 @@ globalモードで4ウィンドウのwalk-forward検証を実施した結果：
 
 本プロジェクトの既存の方針（ユーザーの個人設定にも明記）は「良すぎる結果はバグを疑う」——極端に高いSharpe比が出た場合はlook-ahead biasを再点検する、というものだった。今回のfactor_momentum初回実行では、この逆方向——**annualized_return=-1.0、max_drawdown=-100.02%という、数学的に単一の非レバレッジ資産では起こり得ないほど悪い数値**——が発生した。
 
-この「悪すぎる数値」は最初、look-ahead biasを疑う対象になった（`assert_backtest_causal`で確認したが、実際にはPASSEDだった）。しかし根本原因は時間的因果性の問題ではなく、**ポートフォリオ構築時の正規化漏れ**という、全く別の設計層の問題だった。
+この「悪すぎる数値」は最初、look-ahead biasを疑う対象になった（`assert_backtest_causal`で確認したが、実際にはPASSEDだった）。しかし根本原因は時間的因果性の問題ではなく、**ポートフォリオ構築時の正規化漏れ**という、全く別の設計層の問題だった（このガード自体の1バー検出漏れと事後修正については`README.md`§3-7参照。当時の非causality判定という結論は、この後段Step Bの独立した原因究明によって裏付けられている）。
 
 一般化できる教訓は次の通り：
 
@@ -212,3 +212,4 @@ Step Hでの再設計は、「動いている値をそのまま別の場所に�
 - **`check_exposure_limits()`は`run_backtest()`に恒久的に組み込まれ、強制化済み**（Step H参照）：デフォルト`ExposureLimits(max_gross=5.0, max_net=5.0)`が全ての`run_backtest()`呼び出しに自動的に適用される。ただし`exposure_limits_strict=False`（デフォルト）では違反があっても警告のみでバックテストは継続するため、「異常値を出力しない」ことまでは保証しない——`BacktestResult.exposure_violations`を明示的に確認するか、`exposure_limits_strict=True`にしない限り、致命的な誤りとしては扱われない。
 - **`min_names_per_sector=10`の妥当性は実データで部分的にしか検証していない**：全11セクター（最小Energy 21銘柄）はいずれも通常時この閾値を上回るため、今回の検証では「セクター除外」が実際に発動する頻度・影響までは確認できていない。
 - **`long_percentile`/`short_percentile`の感度分析は実施済みだが、デフォルトが最良ではない**：5点グリッド（p=0.10〜0.40）で感度分析を実施し（§3-5参照）、デフォルト（quintile 0.20）が5点中最良でないことが判明した。ただし最良に見えたp=0.30も統計的に有意ではなく、デフォルトを変更する根拠にはならない。`momentum_lookback_days`・`momentum_skip_days`・`low_vol_window`の感度分析は未実施。
+- **`assert_backtest_causal`に1バー分の検出漏れがあったことが後日発覚し、修正済み**：`/code-review`（2026-07-30）で発見。本ドキュメント中の「PASSED」記述はいずれも修正後に再検証済み。詳細は`README.md`§3-7を参照。

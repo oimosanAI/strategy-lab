@@ -7,6 +7,25 @@ injected -- and it knows nothing about the storage format used to avoid
 redundant API calls -- that is confined to whatever `CacheBackend` is
 injected. Swapping data vendors or cache storage later means writing a new
 adapter, not touching this module.
+
+Known limitation (not yet implemented): no stale/frozen-price detection.
+A ticker whose feed has stopped updating (halted, delisted, a vendor
+outage) currently passes through unchanged -- a run of identical daily
+closes looks, to every downstream consumer, like a real zero-volatility
+asset. This matters concretely for
+core.backtest.position_sizing.VolTargetSizer, which clips to
++/-max_leverage whenever realized_vol == 0.0 exactly, with no way to
+distinguish "genuinely flat" from "feed broken" from realized_vol alone
+(see that module's docstring). The correct fix is here, not in the
+sizer: something like "flag any ticker with N consecutive identical
+closes" is a data-quality check that belongs at the point prices enter
+the system, the same way CacheBackend/DataProvider validation already
+does, not a numeric threshold bolted onto a sizing formula downstream.
+Deferred rather than implemented now for the same reason
+core.backtest.portfolio.ExposureLimits leaves sector-concentration
+limits out: it needs infrastructure (here, a staleness-tracking policy
+decision: how many consecutive identical closes count as stale, per
+asset class) that hasn't been scoped yet.
 """
 
 from __future__ import annotations

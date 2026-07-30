@@ -66,7 +66,17 @@ def compute_ticker_returns(position: pd.Series, open_: pd.Series, close: pd.Seri
     # structurally 0 there (prev_position is forced to 0), but 0 * NaN is
     # NaN, not 0 -- clean up that arithmetic artifact explicitly.
     carry_return = (carried * (close / prev_close - 1.0)).fillna(0.0)
-    new_return = new * (close / open_ - 1.0)
+    # new_return multiplies open_, which can be NaN on a data gap. Unlike
+    # carried/exited (whose NaN-triggering factor, prev_close, is NaN only
+    # on the very first bar -- where prev_position is ALSO structurally
+    # forced to 0), open_ can be NaN on ANY bar, independent of whether
+    # that bar has a real entry (new != 0). So a blanket .fillna(0.0)
+    # would silently zero out a genuine unpriceable trade, not just the
+    # 0 * NaN arithmetic artifact. Mask only where new is structurally
+    # zero (no entry that day); let a real entry with a missing open
+    # price propagate as NaN rather than being hidden as a phantom 0.0
+    # return.
+    new_return = (new * (close / open_ - 1.0)).where(new != 0, 0.0)
     exit_return = (exited * (open_ / prev_close - 1.0)).fillna(0.0)
 
     return carry_return + new_return + exit_return

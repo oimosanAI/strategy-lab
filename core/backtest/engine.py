@@ -185,12 +185,34 @@ class BacktestResult:
     turnover, costs, gross_returns, returns, equity_curve:
         Portfolio-level (summed across tickers) series; see
         core.backtest.portfolio for how turnover and per-ticker returns
-        are computed.
+        are computed. equity_curve is floored at 0.0 from ruin_date
+        onward (see ruin_date below) -- returns itself is left
+        unmodified, since it is a per-day rate and remains a faithful
+        record of what the (still fully leveraged, unrealistically
+        continuing) position would have returned; only the compounded
+        equity_curve is nonsensical past total loss and is what gets
+        floored.
     exposure_violations:
         Always present (empty list if config.exposure_limits found
         nothing to flag, or if exposure_limits itself is unchecked). See
         BacktestConfig.exposure_limits/.exposure_limits_strict for the
         policy this is checked against.
+    ruin_date:
+        The first date on which the RAW (unfloored) equity curve would
+        reach <= 0.0, or None if it never does. exposure_limits (even at
+        strict=False's aggregated-warning default) is meant to catch
+        this long before it happens; ruin_date existing at all on a real
+        run is itself a signal something upstream is badly misconfigured
+        -- see BacktestConfig.exposure_limits's docstring for why the
+        default (max_gross=max_net=5.0) is sized as a catastrophic
+        sanity net, not a per-strategy-tuned value. NOT compared by
+        assert_backtest_causal (see that function's docstring for why:
+        equity_curve floors to a constant 0.0 for every date from
+        ruin_date onward regardless of what happens to prices afterward,
+        which would make a look-ahead bug occurring entirely within an
+        already-ruined stretch invisible to a perturbation test that
+        only inspects equity_curve -- returns and the other compared
+        fields are NOT floored and remain fully sensitive to such a bug).
     """
 
     signals: pd.DataFrame
@@ -202,6 +224,7 @@ class BacktestResult:
     returns: pd.Series
     equity_curve: pd.Series
     exposure_violations: list[portfolio.ExposureViolation]
+    ruin_date: pd.Timestamp | None
 
 
 def run_backtest(
@@ -228,7 +251,32 @@ def run_backtest(
     config:
         Execution frictions and capital scale; defaults to
         BacktestConfig().
+
+    Raises
+    ------
+    ValueError
+        If ``prices`` and ``open_prices`` do not share the same
+        (index, columns). Without this check, pandas would silently
+        align the two DataFrames on their shared dates/tickers -- close
+        and open panels loaded from two independently-fetched or
+        independently-regenerated sources (e.g. dashboard/data.py's
+        close/open snapshots, saved as two separate parquet files) can
+        drift apart with no runtime signal otherwise, producing a
+        plausible-looking but silently wrong result rather than an
+        error at the boundary where the mistake was made.
     """
+    if not prices.index.equals(open_prices.index):
+        raise ValueError(
+            "prices and open_prices must share the same index (dates); "
+            f"got {len(prices.index)} vs {len(open_prices.index)} rows, "
+            "first mismatch may be due to independently loaded/regenerated panels"
+        )
+    if not prices.columns.equals(open_prices.columns):
+        raise ValueError(
+            f"prices and open_prices must share the same columns (tickers) in the same order; "
+            f"got {list(prices.columns)} vs {list(open_prices.columns)}"
+        )
+
     config = config or BacktestConfig()
 
     signals = strategy.generate_signals(prices)
@@ -264,7 +312,21 @@ def run_backtest(
     turnover = portfolio.compute_turnover(position)
     costs = turnover * (config.commission + config.slippage)
     net_returns = gross_returns - costs
-    equity_curve = (1.0 + net_returns).cumprod() * config.initial_capital
+
+    # === RUIN FLOOR ==========================================================
+    # (1 + net_returns).cumprod() alone has no floor: a single day with
+    # net_returns < -1.0 (a >100% loss -- possible under leverage, and
+    # what exposure_limits exists to make rare, not impossible) sends
+    # equity negative, after which a POSITIVE return makes equity worse,
+    # not better. `ever_ruined` is a purely left-to-right cumulative scan
+    # (each date depends only on raw equity at or before it), so this
+    # introduces no look-ahead of its own.
+    raw_equity_curve = (1.0 + net_returns).cumprod() * config.initial_capital
+    ruined = raw_equity_curve <= 0.0
+    ever_ruined = ruined.cummax()
+    equity_curve = raw_equity_curve.where(~ever_ruined, 0.0)
+    ruin_date = raw_equity_curve.index[int(ruined.to_numpy().argmax())] if ruined.any() else None
+    # ========================================================================
 
     return BacktestResult(
         signals=signals,
@@ -276,6 +338,7 @@ def run_backtest(
         returns=net_returns,
         equity_curve=equity_curve,
         exposure_violations=exposure_violations,
+        ruin_date=ruin_date,
     )
 
 
@@ -296,16 +359,30 @@ def assert_backtest_causal(
     A bug could still be introduced later -- in position sizing (e.g. a
     volatility estimate that reads the whole sample) or in portfolio
     accounting -- and slip past that check entirely. This perturbs both
-    close and open prices after a cut point ``k`` and asserts that
-    ``BacktestResult.position`` and ``.returns`` (what any downstream
-    evaluation would consume) are unchanged at or before ``k``, covering
-    the sizing and accounting stages assert_causal alone doesn't reach.
+    close and open prices after a cut point ``k`` and asserts that every
+    stage of ``BacktestResult`` -- ``signals`` and ``target_position``
+    (pre-EXECUTION_LAG) as well as ``position`` and ``returns``
+    (post-lag, what any downstream evaluation would consume) -- is
+    unchanged at or before ``k``, covering the sizing and accounting
+    stages assert_causal alone doesn't reach.
+
+    ``signals``/``target_position`` must be compared in addition to
+    ``position``/``returns``, not instead of them: EXECUTION_LAG shifts
+    ``target_position`` forward by exactly one bar before it becomes
+    ``position``, which means a signal that peeks exactly one bar into
+    the future produces a ``position`` that is *still* causal by
+    construction -- the lag absorbs precisely that one bar of leakage.
+    Comparing only the post-lag fields would let a one-bar look-ahead in
+    signal generation or sizing pass this guard silently; comparing the
+    pre-lag fields as well closes that gap. See the negative control in
+    tests/core/test_backtest_engine.py that plants exactly this bug.
 
     Raises
     ------
     LookAheadError
-        If position or returns at or before a cut point change when only
-        prices after that cut point are altered.
+        If signals, target_position, position, or returns at or before a
+        cut point change when only prices after that cut point are
+        altered.
     """
     n = len(close_prices)
     if n < 3:
@@ -330,7 +407,7 @@ def assert_backtest_causal(
 
         perturbed = run_backtest(shocked_close, shocked_open, strategy, sizer, config)
 
-        for field_name in ("position", "returns"):
+        for field_name in ("signals", "target_position", "position", "returns"):
             before = getattr(baseline, field_name).iloc[: k + 1]
             after = getattr(perturbed, field_name).iloc[: k + 1]
             if not before.equals(after):

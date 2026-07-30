@@ -44,7 +44,7 @@ TDD実装完了後、`assert_causal`の負の対照テスト（`_LookaheadVRPStr
 
 `SVXY`・`^VIX`・`SPY`を実データで取得（IS 2023-01-03〜2024-12-31、OOS 2025-01-02〜2026-07-24、pairs_trading/factor_momentumと同一の分割）。単一の欠損日（2026-05-25、Memorial Day——米国市場休場日が営業日レンジに誤って含まれたもの）をデータ衛生上の理由で除外した。`SVXY`は2018年のVolmageddon後にレバレッジが-1倍から-0.5倍に変更されているが、対象期間（2023-2026）は変更後の期間に完全に収まっており、期間内でのレバレッジ変更・ティッカー変更等の連続性の問題は確認されなかった。
 
-`assert_backtest_causal`はPASSED。OOS区間の結果を、単純な`Buy & Hold SVXY`・`VolTargetSizer適用の常にロング（タイミングシグナルなし）`と比較する3段階分解を行い、VRPシグナル自体の寄与を分離した（詳細は§3-5）。
+`assert_backtest_causal`はPASSED（※このガードには後日1バー分の検出漏れが発覚し修正済み——詳細は`README.md`§3-7。修正後、現在の`VolArbitrageStrategy`本番設定を再実行し、PASSEDであることを実測で再確認している）。OOS区間の結果を、単純な`Buy & Hold SVXY`・`VolTargetSizer適用の常にロング（タイミングシグナルなし）`と比較する3段階分解を行い、VRPシグナル自体の寄与を分離した（詳細は§3-5）。
 
 ### Step E: Walk-Forward分析・パラメータ感度分析（実データ）
 
@@ -154,3 +154,4 @@ Black-Scholesで実現ボラティリティから理論価格を計算し、そ�
 - **Walk-forwardは実施済みだが、成績の振れ幅が大きい**：anchored 4ウィンドウでのwalk-forward検証を実施し（§3-6参照）、単一分割のみという限界は解消した。ただしOOS Sharpeがウィンドウごとに-1.38〜+1.72まで振動しており、pairs_trading・factor_momentumと同様、単一分割の結果は広い分布からの一標本に過ぎなかったことが確認されている。ウィンドウの境界（6ヶ月ステップ、4本）自体の選び方に対する感度分析は未実施。
 - **パラメータ感度分析は`vrp_threshold`のみ実施済み**：5点グリッド（-0.05〜0.05）で実施し（§3-6参照）、デフォルト値が頑健であることの確認・「フィルタを弱めても改善しない」ことの確認はできたが、`rv_window`（21日固定）に対する感度分析は未実施。
 - **`check_exposure_limits()`が`run_backtest()`に恒久的に組み込まれた**（詳細は`strategies/factor_momentum/README.md` Step H参照）：デフォルト`ExposureLimits(max_gross=5.0, max_net=5.0)`が本戦略にも自動適用される。vol_arbitrageは単一銘柄（SVXY）・ロングオンリー設計のため、net exposureがgross exposureと構造的に一致する（ショートレッグが存在しないため）——これはまさに、factor_momentumの実測値（`max_net=1.5`）をそのままデフォルトに流用していたら誤検知（正常な動作を違反と誤判定）を招いていたはずのケースである。実データで再検証したところ、観測gross/net exposureはともに中央値0.483・最大0.974で、net=grossが実測でも正確に一致することを確認し、デフォルト値（5.0）の範囲内であること（`exposure_violations`は0件）も確認した。
+- **`assert_backtest_causal`に1バー分の検出漏れがあったことが後日発覚し、修正済み**：`/code-review`（2026-07-30）で発見。本ドキュメント中の「PASSED」記述は修正後に再検証済み。詳細は`README.md`§3-7を参照。

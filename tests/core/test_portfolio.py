@@ -38,6 +38,7 @@ obviously wrong number rather than coincidentally matching.
 
 from __future__ import annotations
 
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -96,6 +97,42 @@ def test_exit_day_captures_overnight_gap() -> None:
     # Assert: the exit still captures the close(0)->open(1) overnight gap;
     # it is not zero, and it is not based on close(1).
     assert returns.iloc[1] == pytest.approx(97.0 / 100.0 - 1.0)
+
+
+def test_flat_book_with_nan_open_returns_zero_not_nan() -> None:
+    # Arrange: position is flat (0.0) for the whole series -- `new` is
+    # structurally 0 on every bar regardless of what open_ contains. A
+    # NaN open_ (a data gap) on a day with nothing to price must not leak
+    # into the return via 0 * NaN = NaN.
+    position = _series([0.0, 0.0, 0.0, 0.0])
+    open_ = pd.Series([100.0, np.nan, 102.0, 103.0], index=position.index)
+    close = _series([100.0, 101.0, 102.0, 103.0])
+
+    # Act
+    returns = compute_ticker_returns(position, open_, close)
+
+    # Assert
+    assert returns.tolist() == pytest.approx([0.0, 0.0, 0.0, 0.0])
+
+
+def test_real_entry_with_nan_open_propagates_nan_not_silently_zero() -> None:
+    # Arrange: a GENUINE entry (new != 0) lands on exactly the bar whose
+    # open_ is missing -- the trade is real but unpriceable. This must
+    # surface as NaN, not be silently masked to 0.0 the way the
+    # structural (position == 0) case above is: that would hide a real
+    # accounting gap behind a phantom "no return" result.
+    position = _series([0.0, 1.0, 1.0, 1.0])
+    open_ = pd.Series([100.0, np.nan, 102.0, 103.0], index=position.index)
+    close = _series([100.0, 101.0, 102.0, 103.0])
+
+    # Act
+    returns = compute_ticker_returns(position, open_, close)
+
+    # Assert: day1 (the unpriceable entry) is NaN; later days, once open_
+    # is available again, compute normally off the (still real) position.
+    assert np.isnan(returns.iloc[1])
+    assert returns.iloc[2] == pytest.approx(102.0 / 101.0 - 1.0)
+    assert returns.iloc[3] == pytest.approx(103.0 / 102.0 - 1.0)
 
 
 def test_position_flip_decomposes_into_exited_and_new_portions() -> None:

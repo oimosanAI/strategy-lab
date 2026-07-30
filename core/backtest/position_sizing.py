@@ -15,6 +15,28 @@ multi-factor strategy can have every single position comfortably within
 its own ``max_leverage`` cap while the portfolio's summed gross exposure is
 still far beyond any sane limit; only ``check_exposure_limits`` catches
 that.
+
+Known limitation -- stale/frozen prices are NOT distinguished from a
+genuinely low-volatility asset: ``VolTargetSizer`` divides by
+``realized_vol``, which is exactly ``0.0`` both when an asset is truly
+flat over the whole window AND when its price feed has stopped updating
+(a data outage, a halted ticker). In either case ``target_vol /
+realized_vol`` clips to ``+/-max_leverage`` -- the single largest
+position size this sizer can produce, applied on exactly the input it
+should trust least. This is deliberately NOT handled here (e.g. via a
+``min_vol_threshold`` mirroring ``PositionSizingConfig.
+min_var_threshold``): whether a price series is "stale" is a data
+QUALITY question, not a sizing question, and conflating the two would
+force one numeric threshold to arbitrate between two scenarios with
+opposite meanings -- a real low-vol asset (where clipping to
+max_leverage is the documented, tested, intended behavior; see
+test_vol_target_sizer_clips_to_max_leverage_when_vol_near_zero) and a
+broken feed (where it is dangerous) are mathematically identical inputs
+here and cannot be told apart from realized_vol alone. Stale-price
+detection belongs in core.data (see core/data/loader.py's module
+docstring) as an input-validation concern surfaced before prices ever
+reach a sizer, the same way check_exposure_limits was kept a portfolio-
+level concern rather than folded into this per-ticker cap.
 """
 
 from __future__ import annotations
