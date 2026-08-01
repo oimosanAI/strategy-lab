@@ -56,7 +56,17 @@ def run_pairs_trading_walk_forward(
         if not candidates:
             results.append(
                 WalkForwardWindowResult(
-                    window=window, label="no candidate", is_metrics=None, oos_metrics=None, significance=None
+                    window=window,
+                    label="no candidate",
+                    is_metrics=None,
+                    oos_metrics=None,
+                    significance=None,
+                    # Stated explicitly rather than left to the reader to
+                    # infer from the label: an N/A row here means selection
+                    # ran and found nothing, NOT that the window went
+                    # untested for lack of data (the other route to an N/A
+                    # row -- see core.evaluation.walk_forward).
+                    skip_reason="no statistically-justified pair survived selection",
                 )
             )
             continue

@@ -32,6 +32,12 @@ class SignificancePanelContent:
     sharpe: float
     permutation_p: float
     bootstrap_ci: tuple[float, float]
+    # Carried from the result rather than hardcoded in the label:
+    # check_significance derives the interval's level from the permutation
+    # test's alternative, so a one-sided test at alpha=0.05 yields a 90%
+    # interval, not 95%. Labelling it "95%" would mislabel the number
+    # actually being displayed.
+    bootstrap_confidence_level: float
     agree: bool
     caution_text: str
 
@@ -45,6 +51,7 @@ def build_significance_panel_content(
         sharpe=oos_metrics["sharpe_ratio"],
         permutation_p=significance.permutation.p_value,
         bootstrap_ci=(significance.bootstrap.lower, significance.bootstrap.upper),
+        bootstrap_confidence_level=significance.bootstrap.confidence_level,
         agree=significance.agree,
         caution_text=STANDING_MULTIPLE_COMPARISONS_CAUTION,
     )
@@ -76,6 +83,9 @@ def render_significance_panel(oos_metrics: dict[str, float], significance: Signi
     content = build_significance_panel_content(oos_metrics, significance)
     st.write(f"OOS Sharpe: {content.sharpe:.2f}")
     st.write(f"Permutation p-value: {content.permutation_p:.4f}")
-    st.write(f"Bootstrap 95% CI: [{content.bootstrap_ci[0]:.4f}, {content.bootstrap_ci[1]:.4f}]")
+    st.write(
+        f"Bootstrap {content.bootstrap_confidence_level:.0%} CI: "
+        f"[{content.bootstrap_ci[0]:.4f}, {content.bootstrap_ci[1]:.4f}]"
+    )
     st.write(f"Agreement: {'Yes' if content.agree else 'No'}")
     st.caption(content.caution_text)

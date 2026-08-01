@@ -73,7 +73,17 @@ def test_significance_panel_content_has_no_color_or_style_field() -> None:
     # guarantee here -- not a policy that could be silently violated by a
     # future edit, but a type that structurally cannot carry one.
     field_names = {f for f in SignificancePanelContent.__dataclass_fields__}
-    assert field_names == {"sharpe", "permutation_p", "bootstrap_ci", "agree", "caution_text"}
+    assert field_names == {
+        "sharpe",
+        "permutation_p",
+        "bootstrap_ci",
+        # Carried so the CI's level is read off the result rather than
+        # hardcoded in the label; a numeric confidence level is data about
+        # the interval, not a color/style/highlight attribute.
+        "bootstrap_confidence_level",
+        "agree",
+        "caution_text",
+    }
 
 
 # ---------------------------------------------------------------------------

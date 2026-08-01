@@ -33,7 +33,7 @@ import numpy as np
 import pandas as pd
 
 from core.evaluation.metrics import BenchmarkComparison
-from core.evaluation.statistical_tests import SignificanceCheck
+from core.evaluation.statistical_tests import PermutationResult, SignificanceCheck
 
 
 @dataclass(frozen=True)
@@ -98,6 +98,19 @@ def _fmt_pvalue(value: float, decimals: int = 4) -> str:
     return f"{value:.{decimals}f}"
 
 
+def _fmt_dropped_draws(permutation: PermutationResult) -> str:
+    """Disclose discarded permutation draws, or nothing when none were.
+
+    Silent in the overwhelmingly common case (no draw is undefined), so
+    the line stays readable; explicit the moment the p-value rests on
+    fewer draws than were requested.
+    """
+    dropped = permutation.n_permutations - permutation.null_distribution.size
+    if dropped <= 0:
+        return ""
+    return f" of {permutation.n_permutations} requested; {dropped} discarded as undefined"
+
+
 def _fmt_duration(value: float) -> str:
     if np.isnan(value):
         return "N/A"
@@ -140,18 +153,27 @@ def render_strategy_report(inputs: StrategyReportInputs) -> str:
     lines += [
         "## Statistical Significance (Pillar 2)",
         "",
+        # n is the SURVIVING draw count (null_distribution.size), which is
+        # what the p-value's denominator actually was; n_permutations is
+        # only what was requested. Where they differ, both are shown --
+        # quietly printing the larger one would overstate the evidence.
         f"- Sign-flip permutation test: p = {_fmt_pvalue(sig.permutation.p_value)} "
-        f"(n={sig.permutation.n_permutations}, alternative={sig.permutation.alternative})",
+        f"(n={sig.permutation.null_distribution.size}{_fmt_dropped_draws(sig.permutation)}, "
+        f"alternative={sig.permutation.alternative})",
         f"- Moving-block bootstrap {sig.bootstrap.confidence_level:.0%} CI: "
-        f"[{sig.bootstrap.lower:.4f}, {sig.bootstrap.upper:.4f}] (n_resamples={sig.bootstrap.n_resamples})",
+        f"[{sig.bootstrap.lower:.4f}, {sig.bootstrap.upper:.4f}] (n_resamples={sig.bootstrap.n_resamples}; "
+        f"tail-matched to the {sig.permutation.alternative} test above, which is why a one-sided "
+        "test is paired with a 90% and not a 95% interval)",
     ]
     if sig.agree:
         lines.append("- **Agreement: Yes**")
     else:
         lines.append(
             "- **Agreement: No** — the permutation test and bootstrap CI disagree. "
-            "Trust the (comparatively autocorrelation-robust) bootstrap CI: treat this "
-            "result as **not established**, do not average the two numbers together."
+            "Treat this result as **not established**, whichever of the two claims "
+            "significance, and do not average the two numbers together. Two methods "
+            "disagreeing about the same null indicate an unstable estimate; this is a "
+            "weaker position than a concordant null, not a firmer one."
         )
     lines.append("")
 
@@ -278,7 +300,8 @@ def render_comparison_report(strategies: Sequence[StrategyReportInputs]) -> str:
     for name in disagreeing:
         lines.append(
             f"⚠️ **{name}**: permutation test and bootstrap CI disagree — treat this "
-            "result as **not established**, do not average the two numbers together."
+            "result as **not established**, whichever of the two claims significance, "
+            "and do not average the two numbers together."
         )
     if disagreeing:
         lines.append("")

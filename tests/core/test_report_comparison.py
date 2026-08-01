@@ -42,7 +42,9 @@ def _permutation(p_value: float = 0.0234) -> PermutationResult:
         p_value=p_value,
         n_permutations=2000,
         alternative="greater",
-        null_distribution=np.array([0.0]),
+        # Sized to n_permutations: the report reads this array's size as
+        # the p-value's real denominator (see test_report._permutation).
+        null_distribution=np.zeros(2000),
         seed=0,
     )
 

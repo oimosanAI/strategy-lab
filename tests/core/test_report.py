@@ -27,13 +27,16 @@ from core.evaluation.report import StrategyReportInputs, render_strategy_report,
 from core.evaluation.statistical_tests import BootstrapResult, PermutationResult, SignificanceCheck
 
 
-def _permutation(p_value: float = 0.0234) -> PermutationResult:
+def _permutation(p_value: float = 0.0234, n_finite: int = 2000) -> PermutationResult:
+    # null_distribution is sized to n_finite, not left as a 1-element stub:
+    # the report reads its size as the p-value's real denominator, so a
+    # stub would make every rendered fixture claim 1999 discarded draws.
     return PermutationResult(
         observed=0.01,
         p_value=p_value,
         n_permutations=2000,
         alternative="greater",
-        null_distribution=np.array([0.0]),
+        null_distribution=np.zeros(n_finite),
         seed=0,
     )
 
@@ -131,6 +134,33 @@ def test_render_includes_significance_section() -> None:
     assert "0.0234" in report
     assert "0.0123" in report
     assert "0.0456" in report
+
+
+def test_render_reports_the_surviving_draw_count_not_the_requested_one() -> None:
+    # Arrange: 2000 requested, 1994 survived (6 draws produced an
+    # undefined statistic and were discarded).
+    inputs = _inputs(
+        significance=SignificanceCheck(
+            permutation=_permutation(n_finite=1994), bootstrap=_bootstrap(), agree=True
+        )
+    )
+
+    # Act
+    report = render_strategy_report(inputs)
+
+    # Assert: the p-value's actual denominator leads, and the shortfall is
+    # disclosed rather than the larger requested figure being shown alone.
+    assert "n=1994" in report
+    assert "2000 requested" in report
+    assert "6 discarded" in report
+
+
+def test_render_stays_silent_about_draws_when_none_were_discarded() -> None:
+    # The common case: no clutter when there is nothing to disclose.
+    report = render_strategy_report(_inputs())
+
+    assert "n=2000" in report
+    assert "discarded" not in report
 
 
 def test_render_shows_disagreement_warning_when_agree_is_false() -> None:

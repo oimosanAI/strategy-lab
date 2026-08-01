@@ -99,17 +99,26 @@ pairs_tradingのentry_threshold × exit_thresholdについては、実際にテ�
 
 インタラクティブ版（plotly、ダウンロードしてブラウザで開くと回転・ホバー操作が可能）：[reports/figures/interactive/pairs_trading_entry_exit_3d.html](reports/figures/interactive/pairs_trading_entry_exit_3d.html)
 
-生成スクリプト：[scripts/generate_figures.py](scripts/generate_figures.py)（`DataLoader`/`YFinanceProvider`/`UniverseLoader`を通じて実データを取得し直す、フレッシュクローンからも再現可能な構成。ただしpairs_trading全宇宙walk-forwardと多重検定の2スキャン点は、5,551検定×4ウィンドウの再実行が非現実的なコストのため、`strategies/pairs_trading/README.md`記載の実測値をそのまま転記している——詳細はスクリプト内のコメントを参照）。
+生成スクリプト：[scripts/generate_figures.py](scripts/generate_figures.py)（`DataLoader`/`YFinanceProvider`/`UniverseLoader`を通じて実データを取得し直す、フレッシュクローンからも再現可能な構成。ただしpairs_trading全宇宙walk-forwardと多重検定の2スキャン点は、5,551検定×4ウィンドウの再実行が非現実的なコストのため、`strategies/pairs_trading/README.md`記載の実測値をそのまま転記している——詳細はスクリプト内のコメントを参照）。なお図と異なりレポート側（§3-6・§3-8）は転記をやめており、[scripts/generate_reports.py](scripts/generate_reports.py)はこの全宇宙walk-forwardを実際に再計算している（約21分）。その再計算で転記値が完全に再現されることも確認済み。
 
 ### 3-6. 生成済みレポート
 
-上記の検証で実際に`core.evaluation.report`から生成したMarkdownレポートを[`reports/`](reports/)に格納している。
+上記の検証で実際に`core.evaluation`から生成したMarkdownレポート全13件を[`reports/`](reports/)に格納している。
+
+**戦略別レポート・比較**
 
 - [`reports/pairs_trading_aep_fe.md`](reports/pairs_trading_aep_fe.md) — ペアトレード（AEP-FE）単体レポート
 - [`reports/factor_momentum_global.md`](reports/factor_momentum_global.md) — マルチファクター（globalモード）単体レポート
 - [`reports/factor_momentum_sector_neutral.md`](reports/factor_momentum_sector_neutral.md) — マルチファクター（sector_neutralモード）単体レポート
-- [`reports/strategy_comparison.md`](reports/strategy_comparison.md) — `render_comparison_report`によるペアトレード vs マルチファクターの横並び比較
 - [`reports/vol_arbitrage_vrp.md`](reports/vol_arbitrage_vrp.md) — Vol Arbitrage（VRP戦略）単体レポート
+- [`reports/strategy_comparison.md`](reports/strategy_comparison.md) — `render_comparison_report`によるペアトレード vs マルチファクターの横並び比較
+
+**walk-forward（4件）・パラメータ感度分析（4件）**
+
+- `reports/pairs_trading_walk_forward_full_universe.md` / `..._narrow_pool.md`、`reports/factor_momentum_walk_forward.md`、`reports/vol_arbitrage_walk_forward.md`
+- `reports/sensitivity_pairs_trading_entry_exit_threshold.md` / `..._correlation_prefilter.md`、`reports/sensitivity_factor_momentum_percentile.md`、`reports/sensitivity_vol_arbitrage_vrp_threshold.md`
+
+生成スクリプト：[scripts/generate_reports.py](scripts/generate_reports.py)。**これら13件は手で編集せず、実データから再生成する**（`poetry run python scripts/generate_reports.py`、全件で約60分。`--only fast`で高コストな全宇宙ペア2件を除く11件のみ、約2分）。この運用に統一した経緯と、それによって検出できた陳腐化記述については§3-8を参照。
 
 ### 3-7. コードレビューで発覚した、検証機構自体の欠陥（`assert_backtest_causal`の1バー検出漏れ）
 
@@ -132,6 +141,45 @@ pairs_tradingのentry_threshold × exit_thresholdについては、実際にテ�
 
 **今後の既知の課題として記録**：`assert_selection_ignores_out_of_sample`（pair選定・Kalmanハイパーパラメータ較正のIS/OOS境界ガード、`core/backtest/sample_split.py`）に3つの検出力の弱さ（NaN比較での誤検出、OOS区間が価格indexと交差しない場合の見かけ上のPASS、`assert_causal`と異なり単一摂動試行のみ）が見つかった。このガードは`select_pairs`・`calibrate_kalman_hyperparameters`のテスト専用検証であり、walk-forward・sensitivity・ダッシュボード生成のいずれのプロダクションランタイム経路からも呼ばれていないため、reports/配下の数値汚染リスクはない。ただし将来の設定変更で検証ガード自体が黙って無意味化しうる、テストインフラの信頼性に関わる課題として、次回以降の対応候補に残す。
 
+### 3-8. コードレビューで発覚した、有意性判定ロジックの裾ミスマッチ（`core/evaluation/`）
+
+§3-7に続き、`core/evaluation/`に対する`/code-review`（2026-07-31実施）で4件のMEDIUM指摘が見つかった。CRITICAL/HIGHはなし。詳細な経緯・実測データは会話記録に残しているため、ここでは要点のみ記す。
+
+**MEDIUM-2（最重要）：片側p値と両側95% CIを突き合わせていた**
+
+`check_significance`は`sign_flip_permutation_test`（既定`alternative="greater"`、片側α=0.05）と`bootstrap_statistic`（両側95% CI）を並べ、`_check_agreement`で「p<α」と「CIがゼロを跨がない」を比較していた。片側5%と両側2.5%という**異なる裾の質量を比較**しており、さらに「CIがゼロを跨がない」は方向を問わない事象のため、**平均が有意に負の戦略では、片側`greater`検定と別の仮説を比べたまま「不一致」と表示される**構造だった。負のSharpeが並ぶこのリポジトリの実データでは机上の懸念ではない。
+
+修正は、bootstrap側をpermutationの`alternative`に合わせる方針を採った（片側なら`confidence_level = 1-2α`、両側なら`1-α`。判定も`greater`なら`lower > 0`という方向依存に変更）。加えて`_check_agreement`は、信頼水準が`alternative`/αと整合しない場合に**`ValueError`で拒否**する——欠陥を「docstringで注意する」のではなく構造的に起こせなくした。`alternative`は`check_significance`の1引数として両成分に伝播させ、二度と食い違えない形にした。
+
+**その他のMEDIUM**：
+
+| 項目 | 内容 | 対応 |
+|---|---|---|
+| MEDIUM-1 | `benchmark_comparison`の下限が2観測。定数項＋傾きの2パラメータ回帰は残差自由度0となり、`r_squared`が必ず1.0、両p値がNaNになる。docstringは「r_squared/p値を妥当性チェックに使え」と指示しており、指示された検算が沈黙して機能しない状態だった。 | 下限を3に修正 |
+| MEDIUM-3 | walk-forwardのOOS区間が短いウィンドウで、`bootstrap_statistic`の低レベルエラー（`block_size (5) must not exceed...`）が伝播し**残り全ウィンドウを巻き添えに中断**していた。「候補なしでもハーネスを止めない」という既存の設計思想と矛盾。 | `skip_reason`を追加し記録して継続。機械的下限（計算不能）と統計的下限（`4 × block_size`＝ブロック数不足で情報量なし）を出し分け |
+| MEDIUM-4 | `sign_flip_permutation_test`が非有限のドローを黙って捨て、全滅時も`(1+0)/(1+0)=1.0`を静かに返していた（姉妹関数`bootstrap_statistic`は同状況で`ValueError`）。また`n_permutations`は要求数であってp値の分母ではないのに、レポートは大きい方を表示し**証拠を過大に見せていた**。 | 全滅時に`ValueError`。レポートは実効ドロー数を表示し、差があるときのみ破棄件数を開示 |
+
+**実データでの実証**：3戦略（pairs_trading / factor_momentum / vol_arbitrage）の全12レポートを再生成し、`dashboard/data/`も再生成してバイト単位で一致することを確認した。**Sharpe・p値・各種メトリクスは全レポートで完全一致**。MEDIUM-3・4の経路は実データで一度も踏まれておらず（最小OOS長122≫統計的下限20、非有限ドロー0件）、堅牢性・正直性の修正であって既存結果の訂正ではない。
+
+**唯一の数値変化：META-WBDのAgreement判定 `Yes`→`No`**
+
+`reports/pairs_trading_walk_forward_narrow_pool.md`のWindow 1（META-WBD、狭い2セクタープール、参考情報）のみ判定が変わった。permutation p=0.0730に対し、修正前の両側95% CI `[-0.001173, 0.014407]`はゼロを跨いで「両者一致で非有意」となっていたが、裾を揃えた90% CI `[0.000149, 0.013251]`は下限が正であり、**bootstrap側は有意・permutation側は非有意**という不一致が表面化した。p=0.073は片側α=0.05と90%区間下側裾のちょうど中間にあり、まさに旧来のミスマッチが不一致を覆い隠していた帯域である。
+
+当初からこのケースを「有意でない、高分散な推定値」として慎重に扱ってきた判断は妥当だったが、**その根拠は「両者一致で非有意」から「両者矛盾のため未確立」に変わった**。これは安心材料ではなく、**当初の出力が示していたほど明快なnullではなかった**という警戒すべき変化である（詳細は`strategies/pairs_trading/README.md` §3-2）。あわせて`SignificanceCheck`のdocstringも修正した——従来は`agree=False`のとき「bootstrap CIを信じよ」と指示していたが、この方向（CIが有意と言う側）で文字通り従うと不一致が有意の主張に反転してしまうため、「どちらが有意を主張していても未確立として扱う」に改めた。
+
+**レポート生成の恒久化（`scripts/generate_reports.py`新設）**
+
+今回、`reports/*.md`が場当たり的に生成され手で維持されていたことが問題として顕在化した。評価ロジックが変わった瞬間、コミット済みレポートは**コードがもう主張していないことを主張し続ける**状態になり、直す手段が「手で数値を書き直す（＝でっち上げる）」か「陳腐化を放置する」しかなくなる。数値の再現性が存在意義であるリポジトリで、どちらも許容できない。
+
+`scripts/generate_reports.py`を新設し、全13レポートを実データから単一コマンドで再生成できるようにした。以後レポートは**再生成するものであって編集するものではない**。`generate_figures.py`が「5,551検定×4ウィンドウは再実行が非現実的」として転記していた全宇宙walk-forwardも、本スクリプトでは実際に再計算している（約21分）——他のレポートから数値を黙って写すのは、まさにこのスクリプトが解消しようとしている失敗そのものだからである。1ファイルの修正でも手編集に戻らないよう、`--only {all,fast,full-universe-pairs}`で部分再生成を正式な機能とした。
+
+この作業自体が、**陳腐化した記述を2件検出した**：
+
+- `factor_momentum_*.md`の「`check_exposure_limits()`はpost-hocモニタで`run_backtest`内では強制されない」——§3-7の対応（`run_backtest`が既定で`ExposureLimits`を自動チェックするようになった）により既に偽。現在の挙動（`exposure_limits_strict=False`のため記録・警告はするが raise はしない）を正確に記述し直した。
+- `vol_arbitrage_vrp.md`の「この戦略にはwalk-forward・パラメータ感度分析が未実施」——`reports/vol_arbitrage_walk_forward.md`と`reports/sensitivity_vol_arbitrage_vrp_threshold.md`が同じディレクトリに存在しており偽。加えて`generate_reports.py`自体が**`vol_arbitrage_walk_forward.md`を生成対象から取りこぼしていた**ことも判明し（13件中12件しか生成していなかった）、生成対象に追加した上で既存数値をバイト単位で再現することを確認した。
+
+**今後の既知の課題として記録**：同レビューのMEDIUM-5（`render_comparison_report`が約125行でハウスルールの50行上限超過）とLOW 6件（`sensitivity.py`のグリッド点間でのparamsキー不揃い、`visualization.py`が実行時の型ナローイングに`assert`を使用し`python -O`で除去される、`Figure`の未close、空入力でのクラッシュ、`periods_per_year=0`での`ZeroDivisionError`、空`returns`での`IndexError`）は今回のスコープ外とした。また`tests/dashboard/test_pages.py`のStreamlit `AppTest`の3秒タイムアウトによるflakinessは、本作業以前から存在することを`git stash`での切り分けで確認済みであり、別途対応する。
+
 ## 4. 技術スタック・アーキテクチャ概要
 
 ```
@@ -146,7 +194,7 @@ strategies/
 dashboard/        Streamlitインタラクティブダッシュボード（app.pyから起動、§5-1参照）
 ```
 
-主要ライブラリ：`pandas` / `numpy` / `statsmodels` / `scipy`（数値計算・統計検定）、`yfinance`（データ取得）、`matplotlib` / `seaborn` / `plotly`（可視化）、`streamlit`（インタラクティブダッシュボード、任意グループ）、`pytest`（テスト、335件・カバレッジ99%）、`ruff` / `black` / `mypy`（静的検査・整形）、`poetry`（依存管理）。
+主要ライブラリ：`pandas` / `numpy` / `statsmodels` / `scipy`（数値計算・統計検定）、`yfinance`（データ取得）、`matplotlib` / `seaborn` / `plotly`（可視化）、`streamlit`（インタラクティブダッシュボード、任意グループ）、`pytest`（テスト、356件・カバレッジ99%）、`ruff` / `black` / `mypy`（静的検査・整形）、`poetry`（依存管理）。
 
 ## 5. 再現手順
 

@@ -26,7 +26,7 @@ assert_backtest_causal PASSED (n_trials=8, seed=0) on the full S&P 500 panel (50
 ## Statistical Significance (Pillar 2)
 
 - Sign-flip permutation test: p = 0.4953 (n=2000, alternative=greater)
-- Moving-block bootstrap 95% CI: [-0.0005, 0.0005] (n_resamples=2000)
+- Moving-block bootstrap 90% CI: [-0.0004, 0.0004] (n_resamples=2000; tail-matched to the greater test above, which is why a one-sided test is paired with a 90% and not a 95% interval)
 - **Agreement: Yes**
 
 ## Walk-Forward / Over-fitting (Pillar 3)
@@ -38,7 +38,7 @@ Anchored split: IS Sharpe=1.470, OOS Sharpe=0.026. See strategies/factor_momentu
 - Level A survivorship bias (current S&P 500 constituents only).
 - Sector-neutral construction reduces sector concentration (see strategies/factor_momentum/README.md Sec 3-3) but showed WORSE IS->OOS degradation than the global mode in this same evaluation window -- a documented trade-off, not a bug.
 - min_names_per_sector=10 validated only partially on real data (no sector in this universe actually fell below the threshold during this run).
-- check_exposure_limits() is a post-hoc monitor, not enforced inside run_backtest.
+- Portfolio exposure limits are checked automatically inside run_backtest, but not enforced: the default BacktestConfig uses exposure_limits_strict=False, so a breach is recorded in BacktestResult.exposure_violations and warned about rather than raised. The default caps (max_gross=max_net=5.0) are a catastrophic sanity net, not a per-strategy-tuned constraint -- see BacktestConfig.exposure_limits.
 
 ---
 *A clean Sharpe ratio is not evidence of edge — see Pillars 1-2 above before drawing any conclusion.*

@@ -56,6 +56,13 @@ _DDOF: int = 1
 # without risking false positives.
 _STD_FLOOR: float = 1e-12
 
+# benchmark_comparison fits two parameters (intercept + slope), so it needs
+# n - 2 >= 1 observations to keep a residual degree of freedom. At n == 2 the
+# line passes exactly through both points: r_squared is identically 1.0 and
+# both p-values are NaN, i.e. every diagnostic the caller would use to judge
+# the fit is uninformative. Three is therefore the true mathematical floor.
+_MIN_REGRESSION_OBSERVATIONS: int = 3
+
 
 @dataclass(frozen=True)
 class DrawdownInfo:
@@ -261,28 +268,34 @@ def benchmark_comparison(
 ) -> BenchmarkComparison:
     """OLS regression: ``returns = alpha + beta * benchmark_returns + eps``.
 
-    IMPORTANT: the ValueError below only guards against a mathematically
-    unsolvable regression (fewer than 2 overlapping observations gives an
-    OLS problem with no degrees of freedom). Clearing that floor is NOT a
-    claim that the sample is statistically adequate -- 2 or 20 overlapping
-    days both pass it. Treat r_squared/alpha_pvalue/beta_pvalue, and plain
-    common sense about the sample size, as the actual adequacy check; do
-    not read "no ValueError" as "enough data".
+    IMPORTANT: the ValueError below only guards against a regression whose
+    own diagnostics are undefined. This model fits TWO parameters
+    (intercept and slope), so it needs at least three observations to
+    retain one residual degree of freedom; on exactly two points it
+    interpolates them, forcing ``r_squared`` to 1.0 and both p-values to
+    NaN. Clearing that floor is NOT a claim that the sample is
+    statistically adequate -- 3 or 20 overlapping days both pass it. Treat
+    r_squared/alpha_pvalue/beta_pvalue, and plain common sense about the
+    sample size, as the actual adequacy check; do not read "no ValueError"
+    as "enough data". The floor exists precisely so that those
+    diagnostics are real numbers when you go to read them.
 
     Raises
     ------
     ValueError
-        If fewer than two dates overlap between the two series.
+        If fewer than three dates overlap between the two series.
     """
     aligned = pd.concat(
         [returns.astype(float).rename("strategy"), benchmark_returns.astype(float).rename("benchmark")],
         axis=1,
     ).dropna()
-    if len(aligned) < 2:
+    if len(aligned) < _MIN_REGRESSION_OBSERVATIONS:
         raise ValueError(
-            "need at least two overlapping observations to run the regression "
-            "(this is a mathematical floor, not a statistical adequacy check -- "
-            "see the function docstring)"
+            f"need at least three overlapping observations to run the regression, "
+            f"got {len(aligned)} (a two-parameter fit on two points has zero "
+            "residual degrees of freedom: r_squared is forced to 1.0 and both "
+            "p-values are NaN). This is a mathematical floor, not a statistical "
+            "adequacy check -- see the function docstring"
         )
 
     predictors = sm.add_constant(aligned["benchmark"])

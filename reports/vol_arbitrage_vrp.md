@@ -26,12 +26,12 @@ assert_backtest_causal PASSED (n_trials=8, seed=0) on the full VIX/SPY/SVXY pane
 ## Statistical Significance (Pillar 2)
 
 - Sign-flip permutation test: p = 0.4638 (n=2000, alternative=greater)
-- Moving-block bootstrap 95% CI: [-0.0008, 0.0008] (n_resamples=2000)
+- Moving-block bootstrap 90% CI: [-0.0006, 0.0007] (n_resamples=2000; tail-matched to the greater test above, which is why a one-sided test is paired with a 90% and not a 95% interval)
 - **Agreement: Yes**
 
 ## Walk-Forward / Over-fitting (Pillar 3)
 
-Single anchored split only (walk-forward not yet performed for this strategy): IS Sharpe=0.307, OOS Sharpe=0.061. Degradation = 0.246. Buy & Hold SVXY OOS Sharpe (no signal, no cost model) = 0.411, cumulative return=13.50%, vs strategy cumulative return=-0.41%.
+Anchored split: IS Sharpe=0.307, OOS Sharpe=0.061. Degradation = 0.246. Buy & Hold SVXY OOS Sharpe (no signal, no cost model) = 0.411, cumulative return=13.50%, vs strategy cumulative return=-0.41%. See reports/vol_arbitrage_walk_forward.md for the 4-window walk-forward record.
 
 ## Known Limitations
 
@@ -39,7 +39,7 @@ Single anchored split only (walk-forward not yet performed for this strategy): I
 - vrp_threshold=0.0 has no strong literature backing -- see strategies/vol_arbitrage/README.md Sec 3-4; the strategy's signal uses TRAILING realized volatility, a different (causal) measure from the forward-looking realized volatility the academic VRP literature usually reports against.
 - Long-only design: no short-vol-to-long-vol reversal when VRP is negative, due to this project's cost model having no borrow-cost modeling.
 - A single Memorial Day holiday row (2026-05-25) was dropped from the panel as a data-hygiene step (both SVXY and SPY showed NaN on that date), not a results-shaping exclusion.
-- No walk-forward or parameter sensitivity analysis has been performed yet for this strategy (unlike pairs_trading/factor_momentum) -- see Known Limitations in strategies/vol_arbitrage/README.md.
+- Walk-forward and vrp_threshold sensitivity analyses exist (see reports/vol_arbitrage_walk_forward.md and reports/sensitivity_vol_arbitrage_vrp_threshold.md) but all four walk-forward windows and all five grid points come back non-significant, so neither establishes an edge -- see Known Limitations in strategies/vol_arbitrage/README.md.
 
 ---
 *A clean Sharpe ratio is not evidence of edge — see Pillars 1-2 above before drawing any conclusion.*

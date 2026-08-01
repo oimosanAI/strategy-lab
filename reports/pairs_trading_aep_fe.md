@@ -26,7 +26,7 @@ assert_backtest_causal PASSED (n_trials=8, seed=0) on the full AEP/FE panel.
 ## Statistical Significance (Pillar 2)
 
 - Sign-flip permutation test: p = 0.6342 (n=2000, alternative=greater)
-- Moving-block bootstrap 95% CI: [-0.0008, 0.0006] (n_resamples=2000)
+- Moving-block bootstrap 90% CI: [-0.0007, 0.0005] (n_resamples=2000; tail-matched to the greater test above, which is why a one-sided test is paired with a 90% and not a 95% interval)
 - **Agreement: Yes**
 
 ## Walk-Forward / Over-fitting (Pillar 3)

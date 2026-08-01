@@ -362,3 +362,40 @@ def test_benchmark_comparison_raises_on_insufficient_overlap() -> None:
     # Act / Assert
     with pytest.raises(ValueError):
         benchmark_comparison(strategy_returns, benchmark_returns)
+
+
+def test_benchmark_comparison_raises_on_two_overlapping_observations() -> None:
+    # Arrange: exactly two overlapping dates. A two-parameter regression
+    # (intercept + slope) fitted on two points has ZERO residual degrees of
+    # freedom: it interpolates the points exactly, so r_squared is
+    # necessarily 1.0 and both p-values are NaN. The docstring directs
+    # callers to read r_squared/p-values as the real adequacy check, so
+    # letting n=2 through hands them a perfect-looking r_squared with no
+    # information in it. Three observations is the true mathematical floor
+    # (residual df >= 1).
+    dates = pd.bdate_range("2020-01-01", periods=2)
+    strategy_returns = pd.Series([0.01, -0.02], index=dates)
+    benchmark_returns = pd.Series([0.005, -0.01], index=dates)
+
+    # Act / Assert
+    with pytest.raises(ValueError, match="three"):
+        benchmark_comparison(strategy_returns, benchmark_returns)
+
+
+def test_benchmark_comparison_accepts_three_overlapping_observations() -> None:
+    # Arrange: three points is the smallest sample with a residual degree
+    # of freedom, so the regression is genuinely fitted (not interpolated)
+    # and the p-values are real numbers rather than NaN. Constructed with
+    # noise on the third point so the fit is imperfect and r_squared is
+    # therefore informative rather than pinned at 1.0.
+    dates = pd.bdate_range("2020-01-01", periods=3)
+    benchmark_returns = pd.Series([0.01, -0.02, 0.03], index=dates)
+    strategy_returns = pd.Series([0.015, -0.03, 0.040], index=dates)
+
+    # Act
+    result = benchmark_comparison(strategy_returns, benchmark_returns)
+
+    # Assert: the point of the floor is that the diagnostics are defined.
+    assert not np.isnan(result.alpha_pvalue)
+    assert not np.isnan(result.beta_pvalue)
+    assert result.r_squared < 1.0

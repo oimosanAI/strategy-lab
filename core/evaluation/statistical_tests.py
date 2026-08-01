@@ -59,6 +59,11 @@ DEFAULT_N_PERMUTATIONS: int = 2000
 DEFAULT_CONFIDENCE_LEVEL: float = 0.95
 DEFAULT_SEED: int = 0
 
+# check_significance's moving-block default, named so callers that need to
+# reason about it (e.g. deciding whether a window is long enough to be
+# worth testing at all) read the same number rather than re-guessing it.
+DEFAULT_BLOCK_SIZE: int = 5
+
 Statistic = Callable[[pd.Series], float]
 Alternative = Literal["greater", "less", "two-sided"]
 
@@ -231,6 +236,30 @@ def bootstrap_statistic(
 
 @dataclass(frozen=True)
 class PermutationResult:
+    """Result of a sign-flip permutation test.
+
+    Attributes
+    ----------
+    observed:
+        The statistic on the unpermuted series.
+    p_value:
+        Add-one-corrected tail probability, computed over
+        ``null_distribution`` -- see the note on ``n_permutations``.
+    n_permutations:
+        How many sign-flips were REQUESTED. This is deliberately not the
+        p-value's denominator: draws whose statistic came out non-finite
+        are discarded, so the denominator is ``null_distribution.size``,
+        which can be smaller. Read that field, not this one, when
+        reporting how much evidence the p-value actually rests on.
+    alternative:
+        Which tail the p-value covers.
+    null_distribution:
+        The surviving (finite) draws. Its size is the effective sample
+        behind ``p_value``.
+    seed:
+        Reproduces the exact draws above.
+    """
+
     observed: float
     p_value: float
     n_permutations: int
@@ -298,7 +327,19 @@ def sign_flip_permutation_test(
         signs = rng.choice(np.array([-1.0, 1.0]), size=len(values))
         null[i] = statistic(_as_series(values * signs))
 
+    # Draws whose statistic is undefined cannot be counted for or against
+    # the observed value, so they are dropped and the p-value's denominator
+    # becomes null.size -- NOT n_permutations. If every draw is undefined
+    # there is no null distribution left, and (1 + 0) / (1 + 0) = 1.0 would
+    # be a confident "not significant" backed by nothing. Raise instead,
+    # mirroring bootstrap_statistic's identical guard rather than leaving
+    # the two sibling functions to fail differently on the same input.
     null = null[np.isfinite(null)]
+    if null.size == 0:
+        raise ValueError(
+            "every sign-flipped permutation produced an undefined statistic; "
+            "the statistic may be ill-defined for this series"
+        )
     p_value = _p_value_from_null(observed, null, alternative)
 
     return PermutationResult(
@@ -324,15 +365,41 @@ class SignificanceCheck:
     Attributes
     ----------
     permutation, bootstrap:
-        The two component results.
+        The two component results. Their tails are matched by
+        construction: ``check_significance`` derives the bootstrap's
+        ``confidence_level`` from the permutation test's ``alternative``
+        and ``alpha`` (see ``_confidence_level_for``), so a one-sided
+        test at alpha=0.05 is paired with a 90% -- not 95% -- interval.
     agree:
         True iff both checks reach the same conclusion about significance
-        (see ``_check_agreement``). False signals a genuine disagreement
-        -- e.g. the permutation test claims significance but the bootstrap
-        CI still straddles zero -- worth investigating, not averaging
-        away. When ``agree`` is False, trust the (comparatively
-        autocorrelation-robust) bootstrap CI and treat the result as NOT
-        established; do not split the difference between the two numbers.
+        (see ``_check_agreement``, which reads the interval directionally
+        rather than as "excludes zero"). False signals a genuine
+        disagreement -- worth investigating, not averaging away.
+
+        Disagreement runs in BOTH directions, and the rule below is the
+        same either way:
+
+        - the permutation test claims significance while the interval
+          does not, or
+        - the interval claims significance while the permutation test
+          does not.
+
+        In EITHER case, treat the result as NOT established, and do not
+        split the difference between the two numbers. The reading is
+        deliberately not "believe whichever component claims
+        significance": two methods that disagree about the same null are
+        evidence that the estimate is unstable, not evidence of an edge.
+        Note this is a strictly weaker claim than "both agree it is not
+        significant" -- an ``agree=False`` result is more ambiguous than a
+        concordant null, not more firmly null, and should be reported that
+        way.
+
+        (Earlier versions of this docstring said to "trust the
+        comparatively autocorrelation-robust bootstrap CI". That advice
+        was written when only the first direction could occur, and
+        following it literally in the second direction would turn a
+        disagreement into a claim of significance -- the opposite of the
+        intended conservatism.)
     """
 
     permutation: PermutationResult
@@ -340,15 +407,74 @@ class SignificanceCheck:
     agree: bool
 
 
+def _confidence_level_for(alternative: Alternative, alpha: float) -> float:
+    """The bootstrap confidence level whose tail mass matches a permutation
+    test at ``alpha`` under the SAME alternative.
+
+    A two-sided interval at level ``c`` leaves ``(1 - c) / 2`` in each
+    tail. A ONE-sided test at ``alpha`` decides on a single tail of mass
+    ``alpha``, so it pairs with ``c = 1 - 2 * alpha`` (whose lower bound is
+    the alpha-quantile and upper bound the (1-alpha)-quantile). A TWO-sided
+    test at ``alpha`` spends ``alpha / 2`` per tail and so pairs with
+    ``c = 1 - alpha``.
+
+    Raises
+    ------
+    ValueError
+        If ``alpha`` is outside ``(0, 0.5)`` -- at ``alpha >= 0.5`` the
+        one-sided pairing ``1 - 2 * alpha`` is not a confidence level.
+    """
+    if not 0.0 < alpha < 0.5:
+        raise ValueError(f"alpha must lie strictly in (0, 0.5), got {alpha}")
+    if alternative == "two-sided":
+        return 1.0 - alpha
+    return 1.0 - 2.0 * alpha
+
+
 def _check_agreement(permutation: PermutationResult, bootstrap: BootstrapResult, alpha: float) -> bool:
     """Pure function: do the two checks reach the same conclusion?
 
     Kept separate from any randomness so disagreement scenarios can be
     tested deterministically with hand-built results.
+
+    The bootstrap side is read DIRECTIONALLY, matching the permutation
+    test's own ``alternative``: an ``alternative="greater"`` test asks
+    whether the statistic is significantly ABOVE zero, so the matching
+    bootstrap verdict is ``lower > 0`` -- not the direction-agnostic
+    "interval excludes zero". The difference is not cosmetic: a strategy
+    that loses money significantly has an interval excluding zero on the
+    NEGATIVE side, which the symmetric rule would score as "significant"
+    and then report as a disagreement with the (correctly non-significant)
+    one-sided test. That is not two checks disagreeing; it is two checks
+    answering different questions.
+
+    Raises
+    ------
+    ValueError
+        If ``alpha`` is outside ``(0, 0.5)``, or if the bootstrap's
+        ``confidence_level`` does not match ``alternative`` at ``alpha``
+        (see ``_confidence_level_for``). Comparing a one-sided p-value
+        against a two-sided 95% interval compares 5% of tail mass against
+        2.5%; refusing is safer than returning a verdict built on that
+        mismatch.
     """
+    expected_confidence = _confidence_level_for(permutation.alternative, alpha)
+    if not np.isclose(bootstrap.confidence_level, expected_confidence):
+        raise ValueError(
+            f"bootstrap confidence_level {bootstrap.confidence_level} does not match a "
+            f"{permutation.alternative!r} permutation test at alpha={alpha}; expected "
+            f"{expected_confidence} so that both components decide on the same tail "
+            "mass (see _confidence_level_for)"
+        )
+
     permutation_significant = permutation.p_value < alpha
-    bootstrap_excludes_zero = not (bootstrap.lower <= 0.0 <= bootstrap.upper)
-    return permutation_significant == bootstrap_excludes_zero
+    if permutation.alternative == "greater":
+        bootstrap_significant = bootstrap.lower > 0.0
+    elif permutation.alternative == "less":
+        bootstrap_significant = bootstrap.upper < 0.0
+    else:  # two-sided
+        bootstrap_significant = not (bootstrap.lower <= 0.0 <= bootstrap.upper)
+    return permutation_significant == bootstrap_significant
 
 
 def check_significance(
@@ -356,9 +482,10 @@ def check_significance(
     statistic: Statistic = _mean_statistic,
     *,
     alpha: float = 0.05,
+    alternative: Alternative = "greater",
     n_permutations: int = DEFAULT_N_PERMUTATIONS,
     n_resamples: int = DEFAULT_N_RESAMPLES,
-    block_size: int = 5,
+    block_size: int = DEFAULT_BLOCK_SIZE,
     seed: int = DEFAULT_SEED,
 ) -> SignificanceCheck:
     """Run sign_flip_permutation_test and a moving-block bootstrap_statistic
@@ -369,10 +496,30 @@ def check_significance(
     counter the permutation test's i.i.d.-sign-symmetry blind spot, so its
     bootstrap component should not itself default to the same blind
     assumption.
+
+    ``alternative`` is applied to BOTH components: it selects the
+    permutation test's tail, and (via ``_confidence_level_for``) the
+    bootstrap confidence level whose tail mass matches it. It is a single
+    argument rather than two precisely so the two halves cannot drift out
+    of alignment -- with a one-sided default of ``"greater"`` and
+    ``alpha=0.05``, the interval is a 90% one, NOT 95%.
+
+    Raises
+    ------
+    ValueError
+        If ``alpha`` is outside ``(0, 0.5)``.
     """
-    permutation = sign_flip_permutation_test(returns, statistic, n_permutations=n_permutations, seed=seed)
+    confidence_level = _confidence_level_for(alternative, alpha)
+    permutation = sign_flip_permutation_test(
+        returns, statistic, n_permutations=n_permutations, alternative=alternative, seed=seed
+    )
     bootstrap = bootstrap_statistic(
-        returns, statistic, n_resamples=n_resamples, block_size=block_size, seed=seed
+        returns,
+        statistic,
+        n_resamples=n_resamples,
+        confidence_level=confidence_level,
+        block_size=block_size,
+        seed=seed,
     )
     agree = _check_agreement(permutation, bootstrap, alpha)
     return SignificanceCheck(permutation=permutation, bootstrap=bootstrap, agree=agree)

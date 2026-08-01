@@ -89,6 +89,101 @@ def test_evaluate_walk_forward_windows_scales_beyond_two_windows() -> None:
     assert len(results) == 3
 
 
+def _short_oos_windows(idx: pd.DatetimeIndex) -> list[TrainTestSplit]:
+    """Two windows whose OOS slices sit either side of the mechanical
+    floor: 3 observations (below block_size=5, not computable at all) and
+    10 observations (computable, but too few blocks to be informative)."""
+    return [
+        TrainTestSplit(
+            in_sample=SamplePeriod(idx[0], idx[49]), out_of_sample=SamplePeriod(idx[50], idx[52])
+        ),
+        TrainTestSplit(
+            in_sample=SamplePeriod(idx[0], idx[59]), out_of_sample=SamplePeriod(idx[60], idx[69])
+        ),
+    ]
+
+
+def test_evaluate_walk_forward_windows_skips_a_window_below_the_mechanical_floor() -> None:
+    # Arrange: 3 OOS observations, fewer than the default block_size of 5.
+    # Previously this escaped as bootstrap_statistic's low-level
+    # "block_size (5) must not exceed the number of observations (3)"
+    # ValueError, aborting every remaining window -- contradicting the
+    # harness's own "no candidate does not stop the run" design.
+    returns = _returns()
+    window = _short_oos_windows(returns.index)[0]
+
+    # Act
+    results = evaluate_walk_forward_windows(returns, [window])
+
+    # Assert: recorded, not raised, and all three payload fields are None
+    # together (the type's documented invariant).
+    assert len(results) == 1
+    assert results[0].is_metrics is None
+    assert results[0].oos_metrics is None
+    assert results[0].significance is None
+    assert results[0].skip_reason is not None
+    assert "3" in results[0].skip_reason
+
+
+def test_evaluate_walk_forward_windows_skips_a_window_below_the_statistical_floor() -> None:
+    # Arrange: 10 OOS observations -- above block_size=5, so the bootstrap
+    # would run, but far too few blocks for its interval to carry
+    # information. Emitting a p-value here would be reporting precision
+    # the data cannot support.
+    returns = _returns()
+    window = _short_oos_windows(returns.index)[1]
+
+    # Act
+    results = evaluate_walk_forward_windows(returns, [window])
+
+    # Assert
+    assert results[0].oos_metrics is None
+    assert results[0].significance is None
+    assert results[0].skip_reason is not None
+    assert "10" in results[0].skip_reason
+
+
+def test_evaluate_walk_forward_windows_distinguishes_the_two_skip_reasons() -> None:
+    # The whole point of carrying a reason rather than a bare None: the
+    # two skips must not read identically.
+    returns = _returns()
+    results = evaluate_walk_forward_windows(returns, _short_oos_windows(returns.index))
+
+    assert results[0].skip_reason != results[1].skip_reason
+
+
+def test_evaluate_walk_forward_windows_does_not_stop_at_a_skipped_window() -> None:
+    # Arrange: a skipped window sandwiched between two evaluable ones.
+    returns = _returns()
+    idx = returns.index
+    windows = [
+        TrainTestSplit(
+            in_sample=SamplePeriod(idx[0], idx[49]), out_of_sample=SamplePeriod(idx[50], idx[74])
+        ),
+        TrainTestSplit(
+            in_sample=SamplePeriod(idx[0], idx[74]), out_of_sample=SamplePeriod(idx[75], idx[77])
+        ),
+        TrainTestSplit(
+            in_sample=SamplePeriod(idx[0], idx[74]), out_of_sample=SamplePeriod(idx[75], idx[99])
+        ),
+    ]
+
+    # Act
+    results = evaluate_walk_forward_windows(returns, windows)
+
+    # Assert: the run continues past the skip and still evaluates window 3.
+    assert results[0].oos_metrics is not None
+    assert results[1].skip_reason is not None
+    assert results[2].oos_metrics is not None
+
+
+def test_evaluate_walk_forward_windows_leaves_skip_reason_none_when_evaluable() -> None:
+    returns = _returns()
+    results = evaluate_walk_forward_windows(returns, _windows(returns.index))
+
+    assert all(r.skip_reason is None for r in results)
+
+
 # ---------------------------------------------------------------------------
 # render_walk_forward_report
 # ---------------------------------------------------------------------------
@@ -135,6 +230,72 @@ def test_render_walk_forward_report_handles_empty_window_without_crashing() -> N
 
     assert "no candidate" in report
     assert "N/A" in report
+
+
+def test_render_walk_forward_report_shows_skip_reason_instead_of_the_bare_label() -> None:
+    # Arrange: a window skipped for being too short, versus the existing
+    # "no candidate" case. Rendering both as an undifferentiated N/A row
+    # would conflate "selection found nothing" with "we could not
+    # evaluate this window" -- two very different facts about the run.
+    idx = pd.bdate_range("2020-01-01", periods=100)
+    window = TrainTestSplit(in_sample=SamplePeriod(idx[0], idx[49]), out_of_sample=SamplePeriod(idx[50], idx[52]))
+    skipped = WalkForwardWindowResult(
+        window=window,
+        label="strategy",
+        is_metrics=None,
+        oos_metrics=None,
+        significance=None,
+        skip_reason="too short to evaluate (3 OOS observations; need at least 5)",
+    )
+
+    report = render_walk_forward_report("Factor Momentum", [skipped])
+
+    assert "too short to evaluate" in report
+    assert "3 OOS observations" in report
+
+
+def test_render_walk_forward_report_summary_breaks_out_skipped_windows() -> None:
+    idx = pd.bdate_range("2020-01-01", periods=100)
+    good_window = TrainTestSplit(
+        in_sample=SamplePeriod(idx[0], idx[49]), out_of_sample=SamplePeriod(idx[50], idx[74])
+    )
+    short_window = TrainTestSplit(
+        in_sample=SamplePeriod(idx[0], idx[74]), out_of_sample=SamplePeriod(idx[75], idx[77])
+    )
+    # The two genuinely different routes to an N/A row, side by side.
+    results = [
+        _populated_result(good_window, "strategy", sharpe=1.0),
+        WalkForwardWindowResult(
+            window=short_window,
+            label="no candidate",
+            is_metrics=None,
+            oos_metrics=None,
+            significance=None,
+            skip_reason="no statistically-justified pair survived selection",
+        ),
+        WalkForwardWindowResult(
+            window=short_window,
+            label="strategy",
+            is_metrics=None,
+            oos_metrics=None,
+            significance=None,
+            skip_reason="too short to evaluate (3 OOS observations; need at least 5)",
+        ),
+    ]
+
+    report = render_walk_forward_report("Factor Momentum", results)
+
+    # The summary must say how many windows were skipped for lack of data,
+    # separately from the overall populated count, so a reader cannot
+    # mistake an unevaluable run for an evaluated-but-negative one.
+    assert "Windows with a result: 1/3" in report
+    assert "Windows with no tested result: 2/3" in report
+    # Neutral summary wording: the per-window reasons differ (selection
+    # found nothing vs. too little data) and must not be summarised as if
+    # they were all the same kind of failure.
+    assert "insufficient out-of-sample data" not in report
+    assert "no statistically-justified pair survived selection" in report
+    assert "too short to evaluate" in report
 
 
 def test_render_walk_forward_report_consistency_summary_counts_populated_windows() -> None:

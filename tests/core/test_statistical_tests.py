@@ -45,6 +45,7 @@ import pytest
 from scipy import stats
 
 from core.evaluation.statistical_tests import (
+    Alternative,
     BootstrapResult,
     PermutationResult,
     SignificanceCheck,
@@ -286,21 +287,64 @@ def test_sign_flip_null_distribution_is_symmetric_around_zero() -> None:
     assert abs(null.mean()) < 4 * mc_error
 
 
+def test_permutation_rejects_when_every_draw_is_undefined() -> None:
+    # Arrange: a statistic that is always NaN, so every sign-flipped draw
+    # is non-finite and the null distribution is empty after filtering.
+    # Previously this returned p = (1 + 0) / (1 + 0) = 1.0 in silence --
+    # a confident-looking "not significant" backed by zero draws, while
+    # the sibling bootstrap_statistic raises in exactly this situation
+    # (test_bootstrap_rejects_when_every_resample_is_undefined).
+    returns = _series([0.01, 0.02, -0.01])
+
+    # Act / Assert
+    with pytest.raises(ValueError, match="undefined"):
+        sign_flip_permutation_test(returns, statistic=lambda r: float("nan"), n_permutations=50)
+
+
+def test_permutation_null_distribution_size_is_the_p_value_denominator() -> None:
+    # Arrange: a statistic that is NaN for roughly half the draws (those
+    # whose sign-flipped sum happens to be negative), so some are dropped.
+    def flaky(r: pd.Series) -> float:
+        total = float(r.sum())
+        return total if total > 0 else float("nan")
+
+    returns = _series([0.01, 0.02, -0.01, 0.03, 0.005])
+
+    # Act
+    result = sign_flip_permutation_test(returns, statistic=flaky, n_permutations=200, seed=1)
+
+    # Assert: some draws really were dropped (otherwise this test proves
+    # nothing), and the reported p-value is the add-one-corrected ratio
+    # over the SURVIVING draws -- which is null_distribution.size, not the
+    # requested n_permutations. The two fields must not be read as
+    # interchangeable.
+    assert result.null_distribution.size < result.n_permutations
+    expected = (1 + int(np.sum(result.null_distribution >= result.observed))) / (
+        1 + result.null_distribution.size
+    )
+    assert result.p_value == pytest.approx(expected)
+
+
 # ---------------------------------------------------------------------------
 # _check_agreement: deterministic, no randomness
 # ---------------------------------------------------------------------------
 
 
-def _permutation(p_value: float) -> PermutationResult:
+def _permutation(p_value: float, alternative: Alternative = "greater") -> PermutationResult:
     return PermutationResult(
-        observed=0.01, p_value=p_value, n_permutations=100, alternative="greater",
+        observed=0.01, p_value=p_value, n_permutations=100, alternative=alternative,
         null_distribution=np.array([0.0]), seed=0,
     )
 
 
-def _bootstrap(lower: float, upper: float) -> BootstrapResult:
+def _bootstrap(lower: float, upper: float, confidence_level: float = 0.90) -> BootstrapResult:
+    # confidence_level defaults to 0.90, NOT 0.95: these fixtures pair with
+    # a one-sided ("greater") permutation test at alpha=0.05, and the
+    # interval whose tail mass matches that is 1 - 2*alpha = 0.90. A 0.95
+    # interval here would put 2.5% in the relevant tail against the test's
+    # 5% -- the exact mismatch _check_agreement now rejects outright.
     return BootstrapResult(
-        point_estimate=0.01, lower=lower, upper=upper, confidence_level=0.95,
+        point_estimate=0.01, lower=lower, upper=upper, confidence_level=confidence_level,
         standard_error=0.005, distribution=np.array([0.0]), n_resamples=100, seed=0,
     )
 
@@ -320,6 +364,52 @@ def test_check_agreement_false_when_permutation_significant_but_ci_straddles_zer
 
 def test_check_agreement_false_when_ci_excludes_zero_but_permutation_not_significant() -> None:
     assert _check_agreement(_permutation(0.5), _bootstrap(0.002, 0.02), alpha=0.05) is False
+
+
+def test_check_agreement_greater_ignores_an_interval_entirely_below_zero() -> None:
+    # A strategy that LOSES money significantly: the interval excludes zero,
+    # but on the negative side. An `alternative="greater"` permutation test
+    # asks "is the mean significantly ABOVE zero?" and correctly says no.
+    # These two are NOT in disagreement -- a direction-agnostic
+    # "interval excludes zero" rule would wrongly report agree=False here,
+    # because it silently answers a different question from the test it is
+    # supposed to be cross-checking. This is the case that distinguishes a
+    # directional agreement rule from a symmetric one.
+    assert _check_agreement(_permutation(0.9), _bootstrap(-0.02, -0.002), alpha=0.05) is True
+
+
+def test_check_agreement_less_is_significant_when_interval_lies_below_zero() -> None:
+    # Mirror image: with alternative="less", an interval entirely below
+    # zero IS the significant case.
+    permutation = _permutation(0.01, alternative="less")
+    assert _check_agreement(permutation, _bootstrap(-0.02, -0.002), alpha=0.05) is True
+    assert _check_agreement(permutation, _bootstrap(-0.01, 0.02), alpha=0.05) is False
+
+
+def test_check_agreement_two_sided_uses_a_one_minus_alpha_interval() -> None:
+    # A two-sided permutation test at alpha pairs with a 1 - alpha
+    # interval, and only there is "excludes zero" the right rule.
+    permutation = _permutation(0.01, alternative="two-sided")
+    assert _check_agreement(permutation, _bootstrap(-0.02, -0.002, 0.95), alpha=0.05) is True
+    assert _check_agreement(permutation, _bootstrap(0.002, 0.02, 0.95), alpha=0.05) is True
+    assert _check_agreement(permutation, _bootstrap(-0.01, 0.02, 0.95), alpha=0.05) is False
+
+
+def test_check_agreement_rejects_a_mismatched_confidence_level() -> None:
+    # The MEDIUM-2 defect, made structurally impossible rather than merely
+    # documented: a one-sided test at alpha=0.05 compared against a 95%
+    # two-sided interval puts 5% in the test's tail against the interval's
+    # 2.5%. The function refuses rather than silently returning a verdict
+    # built on mismatched tail masses.
+    with pytest.raises(ValueError, match="confidence_level"):
+        _check_agreement(_permutation(0.01), _bootstrap(0.002, 0.02, 0.95), alpha=0.05)
+
+
+def test_check_agreement_rejects_alpha_outside_zero_to_half() -> None:
+    # alpha >= 0.5 would make the one-sided pairing 1 - 2*alpha <= 0, i.e.
+    # not a confidence level at all.
+    with pytest.raises(ValueError, match="alpha"):
+        _check_agreement(_permutation(0.01), _bootstrap(0.002, 0.02), alpha=0.5)
 
 
 # ---------------------------------------------------------------------------
@@ -342,6 +432,37 @@ def test_check_significance_wires_permutation_and_bootstrap_correctly() -> None:
     assert isinstance(result.permutation, PermutationResult)
     assert isinstance(result.bootstrap, BootstrapResult)
     assert result.agree == _check_agreement(result.permutation, result.bootstrap, alpha=0.05)
+
+
+def test_check_significance_pairs_a_one_sided_test_with_a_matched_interval() -> None:
+    # Arrange / Act: the default alternative is one-sided ("greater").
+    returns = _series([0.05, 0.04, 0.06, 0.05, 0.045, 0.055])
+    result = check_significance(returns, n_permutations=500, n_resamples=500, seed=3)
+
+    # Assert: alpha=0.05 one-sided pairs with a 1 - 2*alpha = 0.90
+    # interval, so the two components put the same 5% in the tail that
+    # actually decides the verdict.
+    assert result.permutation.alternative == "greater"
+    assert result.bootstrap.confidence_level == pytest.approx(0.90)
+
+
+def test_check_significance_pairs_a_two_sided_test_with_a_one_minus_alpha_interval() -> None:
+    # Arrange / Act
+    returns = _series([0.05, 0.04, 0.06, 0.05, 0.045, 0.055])
+    result = check_significance(
+        returns, n_permutations=500, n_resamples=500, alternative="two-sided", seed=3
+    )
+
+    # Assert: alternative must reach the permutation component, and the
+    # interval must follow it to 1 - alpha = 0.95.
+    assert result.permutation.alternative == "two-sided"
+    assert result.bootstrap.confidence_level == pytest.approx(0.95)
+
+
+def test_check_significance_rejects_alpha_outside_zero_to_half() -> None:
+    returns = _series([0.05, 0.04, 0.06, 0.05, 0.045, 0.055])
+    with pytest.raises(ValueError, match="alpha"):
+        check_significance(returns, alpha=0.5, n_permutations=100, n_resamples=100, seed=3)
 
 
 # ---------------------------------------------------------------------------
