@@ -30,6 +30,8 @@
   - [5-1. インタラクティブダッシュボード（Streamlit）](#5-1-インタラクティブダッシュボードstreamlit)
 - [6. 既知の限界](#6-既知の限界)
 
+> **30秒サマリー**：3戦略（ペアトレード・マルチファクター・ボラティリティリスクプレミアム）をS&P 500の実データで検証したが、統計的に有意なエッジは確認できなかった（§3-1〜3-4）。この検証プロセスの中で、外部コードレビューを通じて検証基盤（causalityガード・有意性判定・多重検定補正）に複数の重大な欠陥を発見し、修正した（§3-7〜3-9）——本プロジェクトの核心はこの発見・修正の経緯そのものにある。
+
 ## 1. プロジェクト概要
 
 クオンツ・リスク管理職種への応募を意図した技術ポートフォリオ。単一戦略の実装ではなく、**複数戦略を統一的なバックテスト・評価基盤の上で比較検証できるフレームワーク**として設計した。ペアトレード（統計的裁定）・マルチファクター（モメンタム＋低ボラティリティ）・ボラティリティリスクプレミアム（VRP）の3戦略を、look-ahead biasのないバックテストエンジン・統計的有意性検定・パラメータ感度分析・walk-forward分析からなる検証基盤の上に実装し、S&P 500の実データでEnd-to-Endの動作検証を行った。
@@ -51,6 +53,8 @@ Phase 3の実データE2E検証では、いずれもユニットテストの粒�
 ![OOS Equity Curve Comparison](reports/figures/equity_curves_comparison.png)
 
 上図：3戦略のOOS区間の累積リターンを実データで重ね書きしたもの。pairs_trading（AEP-FE）は狭い2セクタープールでの参考情報であり、全宇宙補正では統計的に有意でない（凡例に明記）。3戦略のいずれも安定して右肩上がりではなく、以下で述べる個別の発見と整合する。軸は3系列とも共通スケール（0%起点）で、恣意的な拡大・縮小は行っていない。生成スクリプト：[scripts/generate_figures.py](scripts/generate_figures.py)。
+
+### 実データ検証で見つかった発見
 
 ### 3-1. 多重検定問題（ペアトレード）
 
@@ -106,6 +110,8 @@ Phase 3拡張として、VIXと実現ボラティリティの乖離（Volatility
 
 VRPタイミングシグナルは、単純に「常に持っておく」場合と比べて**明確に負の価値を追加していた**。これは他の2発見（統計的に中立な「エッジなし」）とは質的に異なる、より強いネガティブな結果である（統計的には有意でない）。原因（trailing RVという設計上の制約、`vrp_threshold`の根拠の弱さ、`SVXY`固有の値動き、のどれが主要因か）は今回の検証だけでは切り分けられていない。続けてwalk-forward分析を実施したところ、OOS Sharpeはウィンドウごとに-1.38〜+1.72まで振動し、上記の単一分割の結果が広い分布からの一標本に過ぎなかったことが、pairs_trading・factor_momentumに続き3戦略目でも確認された。詳細は[strategies/vol_arbitrage/README.md](strategies/vol_arbitrage/README.md)。
 
+### 可視化とレポート
+
 ### 3-5. 可視化：Walk-Forwardとパラメータ感度分析
 
 ![Walk-Forward OOS Sharpe by Window](reports/figures/walk_forward_oos_sharpe.png)
@@ -143,7 +149,20 @@ pairs_tradingのentry_threshold × exit_thresholdについては、実際にテ�
 
 生成スクリプト：[scripts/generate_reports.py](scripts/generate_reports.py)。**これら13件は手で編集せず、実データから再生成する**（`poetry run python scripts/generate_reports.py`、全件で約60分。`--only fast`で高コストな全宇宙ペア2件を除く11件のみ、約2分）。この運用に統一した経緯と、それによって検出できた陳腐化記述については§3-8を参照。
 
+### コードレビューで発覚した検証機構の欠陥
+
 ### 3-7. コードレビューで発覚した、検証機構自体の欠陥（`assert_backtest_causal`の1バー検出漏れ）
+
+| 対象 | 発見 | 重大度 |
+|---|---|---|
+| `assert_backtest_causal` | 1バーlook-aheadの検出漏れ | HIGH |
+| `VolTargetSizer` | vol=0での`max_leverage`挙動 | ドキュメント化のみ |
+| `equity_curve` | 破産の床がない | MEDIUM |
+| `compute_ticker_returns` | NaN漏れ | MEDIUM |
+| `run_backtest` | 入力検証欠如 | MEDIUM |
+
+<details>
+<summary>詳細を見る</summary>
 
 `core/backtest/`に対する`/code-review`（2026-07-30実施）で、3戦略の実データ検証結果の信頼性の土台そのものに関わる欠陥が見つかった。詳細な経緯・実測データは会話記録に残しているため、ここでは要点のみ記す。
 
@@ -164,7 +183,19 @@ pairs_tradingのentry_threshold × exit_thresholdについては、実際にテ�
 
 **今後の既知の課題として記録**：`assert_selection_ignores_out_of_sample`（pair選定・Kalmanハイパーパラメータ較正のIS/OOS境界ガード、`core/backtest/sample_split.py`）に3つの検出力の弱さ（NaN比較での誤検出、OOS区間が価格indexと交差しない場合の見かけ上のPASS、`assert_causal`と異なり単一摂動試行のみ）が見つかった。このガードは`select_pairs`・`calibrate_kalman_hyperparameters`のテスト専用検証であり、walk-forward・sensitivity・ダッシュボード生成のいずれのプロダクションランタイム経路からも呼ばれていないため、reports/配下の数値汚染リスクはない。ただし将来の設定変更で検証ガード自体が黙って無意味化しうる、テストインフラの信頼性に関わる課題として、次回以降の対応候補に残す。
 
+</details>
+
 ### 3-8. コードレビューで発覚した、有意性判定ロジックの裾ミスマッチ（`core/evaluation/`）
+
+| 対象 | 発見 | 重大度 |
+|---|---|---|
+| `check_significance`（`_check_agreement`） | 片側p値と両側95% CIを突き合わせる裾ミスマッチ | MEDIUM |
+| `benchmark_comparison` | 観測数下限2で残差自由度0、`r_squared`/p値が機能しない | MEDIUM |
+| walk-forwardハーネス | bootstrapの低レベルエラーが後続ウィンドウを巻き添えに中断 | MEDIUM |
+| `sign_flip_permutation_test` | 非有限ドローを黙って破棄、全滅時に1.0を返す | MEDIUM |
+
+<details>
+<summary>詳細を見る</summary>
 
 §3-7に続き、`core/evaluation/`に対する`/code-review`（2026-07-31実施）で4件のMEDIUM指摘が見つかった。CRITICAL/HIGHはなし。詳細な経緯・実測データは会話記録に残しているため、ここでは要点のみ記す。
 
@@ -203,7 +234,18 @@ pairs_tradingのentry_threshold × exit_thresholdについては、実際にテ�
 
 **今後の既知の課題として記録**：同レビューのMEDIUM-5（`render_comparison_report`が約125行でハウスルールの50行上限超過）とLOW 6件（`sensitivity.py`のグリッド点間でのparamsキー不揃い、`visualization.py`が実行時の型ナローイングに`assert`を使用し`python -O`で除去される、`Figure`の未close、空入力でのクラッシュ、`periods_per_year=0`での`ZeroDivisionError`、空`returns`での`IndexError`）は今回のスコープ外とした。また`tests/dashboard/test_pages.py`のStreamlit `AppTest`の3秒タイムアウトによるflakinessは、本作業以前から存在することを`git stash`での切り分けで確認済みであり、別途対応する。
 
+</details>
+
 ### 3-9. コードレビューで発覚した、多重検定補正そのものの過小評価（`strategies/`）
+
+| 対象 | 発見 | 重大度 |
+|---|---|---|
+| `select_pairs`（`n_tests`） | Bonferroni検定族サイズを2分の1に過小評価 | HIGH |
+| `VolArbitrageStrategy.generate_signals` | ticker設定ミスがcrashではなく「エッジなし」に化ける | HIGH |
+| `build_sector_neutral_signal` | `prices`と異なる列集合を返し得る | MEDIUM |
+
+<details>
+<summary>詳細を見る</summary>
 
 §3-7・§3-8に続き、`strategies/`に対する`/code-review`（2026-08-01実施）でHIGH 2件・MEDIUM 3件が見つかった。CRITICALはなし。**うちHIGH-1は、このプロジェクトの中心的な発見（§3-1の多重検定問題）の土台にある計算そのものの欠陥**だった。
 
@@ -242,6 +284,8 @@ pairs_tradingのentry_threshold × exit_thresholdについては、実際にテ�
 **テスト設計上の教訓**：この3件を通じて、既存テストが「正しさ」ではなく「自己無矛盾性」しか検証していない箇所が見つかった。特にHIGH-1では`expected_adjusted = min(1.0, ab.engle_granger.p_value * ab.n_tests)`と、検証対象自身が記録した`n_tests`から期待値を組み立てており、族サイズがペア数でも検定数でも通ってしまう構造だった。修正では期待値をフィクスチャから独立に導出し直し、「旧規則なら採択・新規則なら棄却される」境界ペアのテストを追加した（詳細は`strategies/pairs_trading/README.md` §4-4）。
 
 **今後の既知の課題として記録**：MEDIUM-2（`PairsTradingStrategy.generate_signals`がインスタンス状態を書き換えるため、`assert_causal`実行後に`last_forced_exit_dates`が摂動試行の値で汚染される。現状`strategies/`外に読み出し箇所はなく潜在的）、MEDIUM-3（`run_correlation_prefilter_grid`が`PairSelectionConfig`を`dataclasses.replace`ではなく手書きコピーしており、フィールド追加時に無言でデフォルトに戻る）、LOW 3件（`realized_volatility`の実装が3箇所に複製されているのにdocstringは「reused」と記述、グローバルモードに`min_names_per_sector`相当の下限なし、`max_holding_periods`がエントリーバーを含め実質+1バー）は今回のスコープ外とした。
+
+</details>
 
 ## 4. 技術スタック・アーキテクチャ概要
 
