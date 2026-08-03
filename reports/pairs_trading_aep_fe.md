@@ -36,7 +36,7 @@ See strategies/pairs_trading/README.md for the full IS/OOS degradation record.
 ## Known Limitations
 
 - Level A survivorship bias (current S&P 500 constituents only).
-- Candidate pool: single surviving pair (AEP-FE) after full-universe Bonferroni correction across 5,551 tests -- see strategies/pairs_trading/README.md.
+- Candidate pool: AEP-FE is the single pair surviving Bonferroni correction within the NARROW 2-sector scan (308 pairs = 616 tests, adjusted p=0.0472 -- barely inside alpha=0.05). It does NOT survive the full-universe family (5,551 pairs = 11,102 tests), where zero pairs survive. The family size counts 2 tests per pair because engle_granger_test selects the stronger of both regression directions -- see strategies/pairs_trading/README.md Step F.
 - Static hedge ratio frozen from in-sample OLS; not re-estimated OOS.
 
 ---

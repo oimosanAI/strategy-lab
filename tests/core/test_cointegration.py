@@ -33,6 +33,7 @@ test's threshold choice can never leak into another's.
 from __future__ import annotations
 
 import functools
+import itertools
 
 import numpy as np
 import pandas as pd
@@ -358,23 +359,107 @@ def test_select_pairs_includes_pair_passing_all_filters() -> None:
     assert frozenset(("A", "B")) in pairs_found
 
 
-def test_select_pairs_records_n_tests_and_adjusted_p_value() -> None:
-    # Arrange
+def _prefilter_survivor_pair_count(
+    prices: pd.DataFrame, sector_map: dict[str, str], prefilter: float | None
+) -> int:
+    """Independently re-derive how many candidate PAIRS survive the
+    correlation pre-filter, without calling select_pairs.
+
+    Deliberately duplicates select_pairs' grouping/pre-filter logic rather
+    than reading ``PairCandidate.n_tests`` back: a test that derives its
+    expectation from the value under test can only prove self-consistency,
+    never correctness. This helper is what gives the n_tests tests below
+    their detection power.
+    """
+    groups: dict[str, list[str]] = {}
+    for ticker in prices.columns:
+        sector = sector_map.get(ticker)
+        if sector is None:
+            continue
+        groups.setdefault(sector, []).append(ticker)
+
+    count = 0
+    for tickers in groups.values():
+        for ticker_a, ticker_b in itertools.combinations(sorted(tickers), 2):
+            if prefilter is not None and abs(prices[ticker_a].corr(prices[ticker_b])) < prefilter:
+                continue
+            count += 1
+    return count
+
+
+def test_select_pairs_n_tests_counts_both_regression_directions() -> None:
+    # Arrange: engle_granger_test runs coint() in BOTH directions and
+    # reports the stronger (lower p-value) one -- that minimum-of-two
+    # selection is itself a second layer of multiple testing, so the
+    # Bonferroni family size is 2 tests per surviving pair, not 1.
     prices = _six_ticker_panel()
     config = PairSelectionConfig(correlation_prefilter=0.7)
     split = SamplePeriod(prices.index[0], prices.index[-1])
+    n_pairs = _prefilter_survivor_pair_count(prices, _SECTOR_MAP, 0.7)
 
     # Act
     result = select_pairs(prices, split, _SECTOR_MAP, config)
     ab = next(c for c in result if {c.ticker_a, c.ticker_b} == {"A", "B"})
 
-    # Assert: n_tests is recorded, and the adjusted p-value matches the
-    # Bonferroni formula applied to the ACTUAL n_tests from this run
-    # (not a hardcoded number) -- a wiring check, not a re-derivation.
-    assert ab.n_tests >= 1
-    expected_adjusted = min(1.0, ab.engle_granger.p_value * ab.n_tests)
+    # Assert: expectation derived from the panel itself, NOT from the
+    # recorded n_tests.
+    assert n_pairs == 3  # A-B, A-C, B-C (F is uncorrelated; D-E cross-sector)
+    assert ab.n_tests == 2 * n_pairs
+
+
+def test_select_pairs_records_n_tests_and_adjusted_p_value() -> None:
+    # Arrange
+    prices = _six_ticker_panel()
+    config = PairSelectionConfig(correlation_prefilter=0.7)
+    split = SamplePeriod(prices.index[0], prices.index[-1])
+    n_pairs = _prefilter_survivor_pair_count(prices, _SECTOR_MAP, 0.7)
+
+    # Act
+    result = select_pairs(prices, split, _SECTOR_MAP, config)
+    ab = next(c for c in result if {c.ticker_a, c.ticker_b} == {"A", "B"})
+
+    # Assert: the Bonferroni factor is re-derived from the independently
+    # counted pair total (2 tests per pair), never from ab.n_tests -- an
+    # expectation built out of the value under test would pass for ANY
+    # family size and so could not catch an under-counted correction.
+    expected_adjusted = min(1.0, ab.engle_granger.p_value * 2 * n_pairs)
     assert ab.adjusted_engle_granger_p_value == pytest.approx(expected_adjusted)
     assert ab.adjusted_engle_granger_p_value >= ab.engle_granger.p_value
+
+
+def test_select_pairs_excludes_pair_significant_only_under_undercounted_family() -> None:
+    # Arrange: the boundary case that is the ENTIRE behavioural difference
+    # between counting N pairs and counting 2N tests. alpha is placed
+    # strictly between the two adjusted p-values, so A-B is significant
+    # under the (wrong) per-pair family size and NOT significant under the
+    # (correct) per-test one. Derived from the fixture's own raw p-value
+    # rather than hardcoded, so it cannot silently drift.
+    prices = _six_ticker_panel()
+    split = SamplePeriod(prices.index[0], prices.index[-1])
+    n_pairs = _prefilter_survivor_pair_count(prices, _SECTOR_MAP, 0.7)
+
+    raw_p = next(
+        c
+        for c in select_pairs(
+            prices, split, _SECTOR_MAP, PairSelectionConfig(correlation_prefilter=0.7)
+        )
+        if {c.ticker_a, c.ticker_b} == {"A", "B"}
+    ).engle_granger.p_value
+
+    # alpha sits at 1.5x the under-counted adjusted p: above it (so the
+    # old, per-pair correction would admit A-B) but below 2x it (so the
+    # correct, per-test correction rejects A-B).
+    boundary_alpha = raw_p * n_pairs * 1.5
+    assert raw_p * n_pairs < boundary_alpha < raw_p * 2 * n_pairs
+
+    config = PairSelectionConfig(correlation_prefilter=0.7, cointegration_alpha=boundary_alpha)
+
+    # Act
+    result = select_pairs(prices, split, _SECTOR_MAP, config)
+
+    # Assert
+    pairs_found = {frozenset((c.ticker_a, c.ticker_b)) for c in result}
+    assert frozenset(("A", "B")) not in pairs_found
 
 
 def test_select_pairs_with_correction_none_matches_raw_p_value() -> None:

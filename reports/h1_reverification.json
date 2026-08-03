@@ -1,0 +1,4924 @@
+{
+  "narrow (2-sector, Step A)": {
+    "scanned_pairs": [
+      {
+        "ticker_a": "AEP",
+        "ticker_b": "FE",
+        "sector": "Utilities",
+        "raw_p": 7.666150690010956e-05,
+        "half_life": 6.458383200616201,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CMS",
+        "ticker_b": "EIX",
+        "sector": "Utilities",
+        "raw_p": 0.002192077003172885,
+        "half_life": 14.884934689402971,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EIX",
+        "ticker_b": "SO",
+        "sector": "Utilities",
+        "raw_p": 0.002437137084159281,
+        "half_life": 10.925897750567197,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DUK",
+        "ticker_b": "EIX",
+        "sector": "Utilities",
+        "raw_p": 0.0026366938290639168,
+        "half_life": 15.491089085647163,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ECHO",
+        "ticker_b": "TKO",
+        "sector": "Communication Services",
+        "raw_p": 0.004845693355194533,
+        "half_life": 12.10085328803482,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DTE",
+        "ticker_b": "EIX",
+        "sector": "Utilities",
+        "raw_p": 0.008095356210221057,
+        "half_life": 14.980050680194243,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CMS",
+        "ticker_b": "PPL",
+        "sector": "Utilities",
+        "raw_p": 0.008737477372956902,
+        "half_life": 10.929723450904358,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GOOG",
+        "ticker_b": "WBD",
+        "sector": "Communication Services",
+        "raw_p": 0.009940185694510504,
+        "half_life": 13.046189552056356,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CMS",
+        "ticker_b": "DTE",
+        "sector": "Utilities",
+        "raw_p": 0.010513313590043543,
+        "half_life": 11.600063412179082,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GOOGL",
+        "ticker_b": "WBD",
+        "sector": "Communication Services",
+        "raw_p": 0.010985889378481618,
+        "half_life": 13.22736568033547,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ETR",
+        "ticker_b": "SRE",
+        "sector": "Utilities",
+        "raw_p": 0.01584727838813208,
+        "half_life": 10.914699448801272,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "OMC",
+        "ticker_b": "VZ",
+        "sector": "Communication Services",
+        "raw_p": 0.02182088992622956,
+        "half_life": 13.680114485073045,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EIX",
+        "ticker_b": "FE",
+        "sector": "Utilities",
+        "raw_p": 0.02419578574128258,
+        "half_life": 20.704470817476015,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GOOG",
+        "ticker_b": "GOOGL",
+        "sector": "Communication Services",
+        "raw_p": 0.02668039337015929,
+        "half_life": 3.8264678544712307,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LNT",
+        "ticker_b": "PNW",
+        "sector": "Utilities",
+        "raw_p": 0.027445847825512806,
+        "half_life": 16.486684877999828,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ECHO",
+        "ticker_b": "FOXA",
+        "sector": "Communication Services",
+        "raw_p": 0.035051967877851344,
+        "half_life": 11.996363319098494,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "D",
+        "ticker_b": "NEE",
+        "sector": "Utilities",
+        "raw_p": 0.04037975732363978,
+        "half_life": 15.735921138376645,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ECHO",
+        "ticker_b": "FOX",
+        "sector": "Communication Services",
+        "raw_p": 0.04758911746915575,
+        "half_life": 12.845369659202023,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ED",
+        "ticker_b": "NEE",
+        "sector": "Utilities",
+        "raw_p": 0.06252962764389691,
+        "half_life": 18.148457700536504,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "D",
+        "ticker_b": "FE",
+        "sector": "Utilities",
+        "raw_p": 0.06997783664239926,
+        "half_life": 19.422383746395802,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FE",
+        "ticker_b": "NEE",
+        "sector": "Utilities",
+        "raw_p": 0.07935829004244666,
+        "half_life": 17.488187297477438,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AEP",
+        "ticker_b": "D",
+        "sector": "Utilities",
+        "raw_p": 0.08908479703122452,
+        "half_life": 23.59096197261146,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ES",
+        "ticker_b": "EXC",
+        "sector": "Utilities",
+        "raw_p": 0.10959770528016932,
+        "half_life": 18.826686432154116,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "WEC",
+        "ticker_b": "XEL",
+        "sector": "Utilities",
+        "raw_p": 0.1230350277077576,
+        "half_life": 30.887117804081296,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "D",
+        "ticker_b": "ED",
+        "sector": "Utilities",
+        "raw_p": 0.22045456213054804,
+        "half_life": 24.67100459843918,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ECHO",
+        "ticker_b": "OMC",
+        "sector": "Communication Services",
+        "raw_p": 0.29777379223001954,
+        "half_life": 27.125279137199925,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "OMC",
+        "ticker_b": "TKO",
+        "sector": "Communication Services",
+        "raw_p": 0.558669706890153,
+        "half_life": 36.18352474142991,
+        "johansen_significant": true
+      }
+    ],
+    "grid": {
+      "0.5": {
+        "n_pairs": 461,
+        "n_tests_old": 461,
+        "n_tests_new": 922,
+        "survivors_old": [
+          [
+            "AEP",
+            "FE",
+            0.03534095468095051
+          ]
+        ],
+        "survivors_new": []
+      },
+      "0.6": {
+        "n_pairs": 374,
+        "n_tests_old": 374,
+        "n_tests_new": 748,
+        "survivors_old": [
+          [
+            "AEP",
+            "FE",
+            0.028671403580640978
+          ]
+        ],
+        "survivors_new": []
+      },
+      "0.7": {
+        "n_pairs": 308,
+        "n_tests_old": 308,
+        "n_tests_new": 616,
+        "survivors_old": [
+          [
+            "AEP",
+            "FE",
+            0.023611744125233744
+          ]
+        ],
+        "survivors_new": [
+          [
+            "AEP",
+            "FE",
+            0.04722348825046749
+          ]
+        ]
+      },
+      "0.8": {
+        "n_pairs": 201,
+        "n_tests_old": 201,
+        "n_tests_new": 402,
+        "survivors_old": [
+          [
+            "AEP",
+            "FE",
+            0.015408962886922022
+          ]
+        ],
+        "survivors_new": [
+          [
+            "AEP",
+            "FE",
+            0.030817925773844044
+          ]
+        ]
+      },
+      "0.9": {
+        "n_pairs": 67,
+        "n_tests_old": 67,
+        "n_tests_new": 134,
+        "survivors_old": [
+          [
+            "AEP",
+            "FE",
+            0.005136320962307341
+          ]
+        ],
+        "survivors_new": [
+          [
+            "AEP",
+            "FE",
+            0.010272641924614682
+          ]
+        ]
+      }
+    }
+  },
+  "full universe (Step C)": {
+    "scanned_pairs": [
+      {
+        "ticker_a": "AEP",
+        "ticker_b": "FE",
+        "sector": "Utilities",
+        "raw_p": 7.666150690010956e-05,
+        "half_life": 6.458383200616201,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LMT",
+        "ticker_b": "NOC",
+        "sector": "Industrials",
+        "raw_p": 0.0002441811050098125,
+        "half_life": 10.888470325620313,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DELL",
+        "ticker_b": "WDC",
+        "sector": "Information Technology",
+        "raw_p": 0.00038131121850268855,
+        "half_life": 8.40712074400216,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BRK-B",
+        "ticker_b": "BRO",
+        "sector": "Financials",
+        "raw_p": 0.0006105832352220496,
+        "half_life": 8.766686031089225,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AVGO",
+        "ticker_b": "FLEX",
+        "sector": "Information Technology",
+        "raw_p": 0.0007106440270341784,
+        "half_life": 14.303778795592189,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HOOD",
+        "ticker_b": "IBKR",
+        "sector": "Financials",
+        "raw_p": 0.0007496551506341303,
+        "half_life": 9.205159782103715,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ALGN",
+        "ticker_b": "BAX",
+        "sector": "Health Care",
+        "raw_p": 0.00095774067443661,
+        "half_life": 13.235883427681735,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CARR",
+        "ticker_b": "NOC",
+        "sector": "Industrials",
+        "raw_p": 0.00135037086181902,
+        "half_life": 13.03945602994261,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMZN",
+        "ticker_b": "APTV",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.001354950171515541,
+        "half_life": 10.346966691351982,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HUM",
+        "ticker_b": "SYK",
+        "sector": "Health Care",
+        "raw_p": 0.0017025835023027685,
+        "half_life": 9.373602213395358,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DASH",
+        "ticker_b": "ORLY",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.0017400688700745539,
+        "half_life": 8.827298251034344,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "O",
+        "ticker_b": "VICI",
+        "sector": "Real Estate",
+        "raw_p": 0.001848721079466494,
+        "half_life": 9.46238907146029,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MAS",
+        "ticker_b": "NOC",
+        "sector": "Industrials",
+        "raw_p": 0.00185494264056777,
+        "half_life": 13.770275593545248,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "INTU",
+        "ticker_b": "ROP",
+        "sector": "Information Technology",
+        "raw_p": 0.0018745187576784327,
+        "half_life": 8.63551297213903,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ADSK",
+        "ticker_b": "FFIV",
+        "sector": "Information Technology",
+        "raw_p": 0.0019238665551143605,
+        "half_life": 9.257735719870585,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GLW",
+        "ticker_b": "ZBRA",
+        "sector": "Information Technology",
+        "raw_p": 0.002169877163182116,
+        "half_life": 10.888876128284545,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CMS",
+        "ticker_b": "EIX",
+        "sector": "Utilities",
+        "raw_p": 0.002192077003172885,
+        "half_life": 14.884934689402971,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CTAS",
+        "ticker_b": "NOC",
+        "sector": "Industrials",
+        "raw_p": 0.002254644402508788,
+        "half_life": 13.816833788425164,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FDX",
+        "ticker_b": "VRSK",
+        "sector": "Industrials",
+        "raw_p": 0.0023811497770817656,
+        "half_life": 9.911943400323523,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GNRC",
+        "ticker_b": "HON",
+        "sector": "Industrials",
+        "raw_p": 0.0024353439058542427,
+        "half_life": 10.56489938203649,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EIX",
+        "ticker_b": "SO",
+        "sector": "Utilities",
+        "raw_p": 0.002437137084159281,
+        "half_life": 10.925897750567197,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EFX",
+        "ticker_b": "NOC",
+        "sector": "Industrials",
+        "raw_p": 0.002533359275999735,
+        "half_life": 13.516354381570476,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "NXPI",
+        "ticker_b": "VRSN",
+        "sector": "Information Technology",
+        "raw_p": 0.002558029308550121,
+        "half_life": 10.01362712702451,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DUK",
+        "ticker_b": "EIX",
+        "sector": "Utilities",
+        "raw_p": 0.0026366938290639168,
+        "half_life": 15.491089085647163,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AOS",
+        "ticker_b": "HII",
+        "sector": "Industrials",
+        "raw_p": 0.0026582945696591773,
+        "half_life": 11.629110853191756,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "NOC",
+        "ticker_b": "URI",
+        "sector": "Industrials",
+        "raw_p": 0.002855404035474045,
+        "half_life": 14.173986208610776,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LDOS",
+        "ticker_b": "TT",
+        "sector": "Industrials",
+        "raw_p": 0.0028712995689914545,
+        "half_life": 12.114038652068807,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ITW",
+        "ticker_b": "NSC",
+        "sector": "Industrials",
+        "raw_p": 0.002896043315029221,
+        "half_life": 13.016462801720882,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ALLE",
+        "ticker_b": "NSC",
+        "sector": "Industrials",
+        "raw_p": 0.0029065233474066614,
+        "half_life": 11.364092834902321,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BAX",
+        "ticker_b": "ZBH",
+        "sector": "Health Care",
+        "raw_p": 0.0029290707085997477,
+        "half_life": 11.976472089421645,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CINF",
+        "ticker_b": "NDAQ",
+        "sector": "Financials",
+        "raw_p": 0.002947437259261496,
+        "half_life": 8.714721638666626,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CAH",
+        "ticker_b": "PFE",
+        "sector": "Health Care",
+        "raw_p": 0.0029736588791195195,
+        "half_life": 13.69138220712687,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "NOC",
+        "ticker_b": "PH",
+        "sector": "Industrials",
+        "raw_p": 0.0030345862440643682,
+        "half_life": 14.636238728113252,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "COR",
+        "ticker_b": "PFE",
+        "sector": "Health Care",
+        "raw_p": 0.00304003707845784,
+        "half_life": 14.255996386733958,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DAL",
+        "ticker_b": "HON",
+        "sector": "Industrials",
+        "raw_p": 0.0030664190046251474,
+        "half_life": 11.918806945826782,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ADP",
+        "ticker_b": "PAYX",
+        "sector": "Industrials",
+        "raw_p": 0.0031501159789423094,
+        "half_life": 9.801456808364613,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CASY",
+        "ticker_b": "COST",
+        "sector": "Consumer Staples",
+        "raw_p": 0.003211898705307264,
+        "half_life": 9.727117737258203,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "NTAP",
+        "ticker_b": "TEL",
+        "sector": "Information Technology",
+        "raw_p": 0.0032515212455759583,
+        "half_life": 10.205702607891611,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FIX",
+        "ticker_b": "PNR",
+        "sector": "Industrials",
+        "raw_p": 0.0033456018745402732,
+        "half_life": 10.840060900336251,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GNRC",
+        "ticker_b": "JCI",
+        "sector": "Industrials",
+        "raw_p": 0.0034571360239083215,
+        "half_life": 11.50656795514925,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BIIB",
+        "ticker_b": "PFE",
+        "sector": "Health Care",
+        "raw_p": 0.0035616727721074913,
+        "half_life": 24.839856057968717,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "COO",
+        "ticker_b": "GEHC",
+        "sector": "Health Care",
+        "raw_p": 0.003588665471520793,
+        "half_life": 11.054262364880914,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LII",
+        "ticker_b": "UPS",
+        "sector": "Industrials",
+        "raw_p": 0.003596328461386662,
+        "half_life": 10.71281738440142,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMZN",
+        "ticker_b": "DECK",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.003698927608450678,
+        "half_life": 12.455718912325496,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMAT",
+        "ticker_b": "NXPI",
+        "sector": "Information Technology",
+        "raw_p": 0.0037683726340959345,
+        "half_life": 9.838356171747913,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "NOC",
+        "ticker_b": "TT",
+        "sector": "Industrials",
+        "raw_p": 0.003810830321829464,
+        "half_life": 14.449803809797885,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "JKHY",
+        "ticker_b": "USB",
+        "sector": "Financials",
+        "raw_p": 0.003896601612045491,
+        "half_life": 10.02524243294463,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HWM",
+        "ticker_b": "NOC",
+        "sector": "Industrials",
+        "raw_p": 0.004022382897182788,
+        "half_life": 14.413970406154673,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FDX",
+        "ticker_b": "UPS",
+        "sector": "Industrials",
+        "raw_p": 0.004177745723139821,
+        "half_life": 11.753691618025865,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ABT",
+        "ticker_b": "GEHC",
+        "sector": "Health Care",
+        "raw_p": 0.0042887914938571,
+        "half_life": 15.048853152152313,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "COO",
+        "ticker_b": "MDT",
+        "sector": "Health Care",
+        "raw_p": 0.004476441124699659,
+        "half_life": 11.57241336374808,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "UBER",
+        "ticker_b": "UNP",
+        "sector": "Industrials",
+        "raw_p": 0.0045715210777569565,
+        "half_life": 10.590127766008212,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "TEL",
+        "ticker_b": "VRSN",
+        "sector": "Information Technology",
+        "raw_p": 0.004585143446528407,
+        "half_life": 11.358274029925035,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ACGL",
+        "ticker_b": "EG",
+        "sector": "Financials",
+        "raw_p": 0.004603955884140603,
+        "half_life": 8.546510075283665,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BMY",
+        "ticker_b": "HSIC",
+        "sector": "Health Care",
+        "raw_p": 0.004628259419293392,
+        "half_life": 10.68188657023379,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "F",
+        "ticker_b": "MGM",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.004700853415135202,
+        "half_life": 11.461871136946403,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMAT",
+        "ticker_b": "VRSN",
+        "sector": "Information Technology",
+        "raw_p": 0.00475991582249252,
+        "half_life": 11.705485980902775,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MCO",
+        "ticker_b": "SPGI",
+        "sector": "Financials",
+        "raw_p": 0.004836378029066836,
+        "half_life": 10.163182480581625,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ECHO",
+        "ticker_b": "TKO",
+        "sector": "Communication Services",
+        "raw_p": 0.004845693355194533,
+        "half_life": 12.10085328803482,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "F",
+        "ticker_b": "GPC",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.005006511825425565,
+        "half_life": 14.422480079305139,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CME",
+        "ticker_b": "FDS",
+        "sector": "Financials",
+        "raw_p": 0.0050381476568894,
+        "half_life": 10.377364186850288,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CNC",
+        "ticker_b": "IDXX",
+        "sector": "Health Care",
+        "raw_p": 0.005040863896407691,
+        "half_life": 13.158941132730186,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "APTV",
+        "ticker_b": "ORLY",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.005096502234238014,
+        "half_life": 11.166516534587961,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ABNB",
+        "ticker_b": "DPZ",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.0051521902100489046,
+        "half_life": 13.035191019419592,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "JPM",
+        "ticker_b": "KKR",
+        "sector": "Financials",
+        "raw_p": 0.005157200642068132,
+        "half_life": 8.569600666929796,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PLTR",
+        "ticker_b": "SWKS",
+        "sector": "Information Technology",
+        "raw_p": 0.005166020307430706,
+        "half_life": 11.472524217713017,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "APP",
+        "ticker_b": "SWKS",
+        "sector": "Information Technology",
+        "raw_p": 0.005189481994609637,
+        "half_life": 11.367164569338248,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AIZ",
+        "ticker_b": "V",
+        "sector": "Financials",
+        "raw_p": 0.005548725829800648,
+        "half_life": 11.210236782953928,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "SCHW",
+        "ticker_b": "TROW",
+        "sector": "Financials",
+        "raw_p": 0.005615783959864407,
+        "half_life": 11.076421004004253,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "OTIS",
+        "ticker_b": "WM",
+        "sector": "Industrials",
+        "raw_p": 0.005642782067003966,
+        "half_life": 9.187073859733635,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "VRSN",
+        "ticker_b": "WDC",
+        "sector": "Information Technology",
+        "raw_p": 0.005878074706484956,
+        "half_life": 10.725266075621605,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ALGN",
+        "ticker_b": "HSIC",
+        "sector": "Health Care",
+        "raw_p": 0.005890348496670435,
+        "half_life": 14.735475053644262,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LDOS",
+        "ticker_b": "URI",
+        "sector": "Industrials",
+        "raw_p": 0.005952144037941521,
+        "half_life": 12.316906887722888,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GEHC",
+        "ticker_b": "WAT",
+        "sector": "Health Care",
+        "raw_p": 0.006002208570790637,
+        "half_life": 17.870765692028744,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FIX",
+        "ticker_b": "NOC",
+        "sector": "Industrials",
+        "raw_p": 0.006208698885111687,
+        "half_life": 15.341653317354458,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CRM",
+        "ticker_b": "DDOG",
+        "sector": "Information Technology",
+        "raw_p": 0.006316875240871805,
+        "half_life": 10.897514219304265,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MNST",
+        "ticker_b": "TAP",
+        "sector": "Consumer Staples",
+        "raw_p": 0.0066597229305673045,
+        "half_life": 9.188928215286193,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "QCOM",
+        "ticker_b": "VRSN",
+        "sector": "Information Technology",
+        "raw_p": 0.006826802106613194,
+        "half_life": 10.768441995533838,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BA",
+        "ticker_b": "NOC",
+        "sector": "Industrials",
+        "raw_p": 0.007033116524176312,
+        "half_life": 13.483157961147525,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BLDR",
+        "ticker_b": "UNP",
+        "sector": "Industrials",
+        "raw_p": 0.007033719846010739,
+        "half_life": 10.935158132333891,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MCK",
+        "ticker_b": "PFE",
+        "sector": "Health Care",
+        "raw_p": 0.007052526275581988,
+        "half_life": 16.801090205522957,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ABNB",
+        "ticker_b": "SBUX",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.007082376548658956,
+        "half_life": 13.535824960915829,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EMR",
+        "ticker_b": "VRT",
+        "sector": "Industrials",
+        "raw_p": 0.007258238852644619,
+        "half_life": 14.2569331615852,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HBAN",
+        "ticker_b": "JKHY",
+        "sector": "Financials",
+        "raw_p": 0.007258953702608924,
+        "half_life": 10.991396955756066,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "NOC",
+        "ticker_b": "WAB",
+        "sector": "Industrials",
+        "raw_p": 0.007328549122309007,
+        "half_life": 15.657638757999834,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PAYX",
+        "ticker_b": "PNR",
+        "sector": "Industrials",
+        "raw_p": 0.007389614311856873,
+        "half_life": 10.245559471023412,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ACN",
+        "ticker_b": "CTSH",
+        "sector": "Information Technology",
+        "raw_p": 0.00748044837952609,
+        "half_life": 11.24790671832349,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CSX",
+        "ticker_b": "EXPD",
+        "sector": "Industrials",
+        "raw_p": 0.007625177303369247,
+        "half_life": 11.407699352904118,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AME",
+        "ticker_b": "ITW",
+        "sector": "Industrials",
+        "raw_p": 0.0080841198238516,
+        "half_life": 11.238266644918834,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DTE",
+        "ticker_b": "EIX",
+        "sector": "Utilities",
+        "raw_p": 0.008095356210221057,
+        "half_life": 14.980050680194243,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HON",
+        "ticker_b": "JCI",
+        "sector": "Industrials",
+        "raw_p": 0.008308494194087522,
+        "half_life": 12.320891143333284,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AXON",
+        "ticker_b": "HON",
+        "sector": "Industrials",
+        "raw_p": 0.008333903545115434,
+        "half_life": 12.486754841984041,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "JKHY",
+        "ticker_b": "PFG",
+        "sector": "Financials",
+        "raw_p": 0.008471746349739623,
+        "half_life": 10.553351299074444,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BNY",
+        "ticker_b": "PNC",
+        "sector": "Financials",
+        "raw_p": 0.008517356363382335,
+        "half_life": 14.806458455011601,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HON",
+        "ticker_b": "UAL",
+        "sector": "Industrials",
+        "raw_p": 0.008551226319307636,
+        "half_life": 12.89491039867007,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DDOG",
+        "ticker_b": "PTC",
+        "sector": "Information Technology",
+        "raw_p": 0.008583654655810255,
+        "half_life": 10.621049123267216,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CMS",
+        "ticker_b": "PPL",
+        "sector": "Utilities",
+        "raw_p": 0.008737477372956902,
+        "half_life": 10.929723450904358,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GEN",
+        "ticker_b": "TEL",
+        "sector": "Information Technology",
+        "raw_p": 0.008745437568344616,
+        "half_life": 14.458194866519673,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CASY",
+        "ticker_b": "PG",
+        "sector": "Consumer Staples",
+        "raw_p": 0.008873369731751323,
+        "half_life": 11.356315492301052,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GPC",
+        "ticker_b": "MGM",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.008990783351746906,
+        "half_life": 13.244026158341669,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HSIC",
+        "ticker_b": "PFE",
+        "sector": "Health Care",
+        "raw_p": 0.009149824844220963,
+        "half_life": 16.172857376519666,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HOOD",
+        "ticker_b": "SYF",
+        "sector": "Financials",
+        "raw_p": 0.009160220134900868,
+        "half_life": 11.23956280697231,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CDNS",
+        "ticker_b": "INTU",
+        "sector": "Information Technology",
+        "raw_p": 0.009256734349568174,
+        "half_life": 13.490486151320487,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DE",
+        "ticker_b": "UAL",
+        "sector": "Industrials",
+        "raw_p": 0.009343702224006373,
+        "half_life": 12.293983306800818,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FDX",
+        "ticker_b": "RSG",
+        "sector": "Industrials",
+        "raw_p": 0.00950207085292556,
+        "half_life": 13.242338885303301,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "JKHY",
+        "ticker_b": "RF",
+        "sector": "Financials",
+        "raw_p": 0.009505104037046309,
+        "half_life": 11.510873668560363,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FITB",
+        "ticker_b": "PNC",
+        "sector": "Financials",
+        "raw_p": 0.009646591028526209,
+        "half_life": 12.165135045318594,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ABBV",
+        "ticker_b": "GEHC",
+        "sector": "Health Care",
+        "raw_p": 0.009751942692949189,
+        "half_life": 13.282811931877097,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GOOG",
+        "ticker_b": "WBD",
+        "sector": "Communication Services",
+        "raw_p": 0.009940185694510504,
+        "half_life": 13.046189552056356,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CSCO",
+        "ticker_b": "MCHP",
+        "sector": "Information Technology",
+        "raw_p": 0.009993042464607943,
+        "half_life": 11.854008466949233,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ANET",
+        "ticker_b": "AVGO",
+        "sector": "Information Technology",
+        "raw_p": 0.010063880325261775,
+        "half_life": 11.790500586447184,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "APP",
+        "ticker_b": "PLTR",
+        "sector": "Information Technology",
+        "raw_p": 0.010191469098569482,
+        "half_life": 10.15265949372065,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BIIB",
+        "ticker_b": "VEEV",
+        "sector": "Health Care",
+        "raw_p": 0.010265545152727856,
+        "half_life": 14.510184941504953,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CB",
+        "ticker_b": "PGR",
+        "sector": "Financials",
+        "raw_p": 0.01030469460892837,
+        "half_life": 13.029595114934873,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "TXT",
+        "ticker_b": "UBER",
+        "sector": "Industrials",
+        "raw_p": 0.010350391933156088,
+        "half_life": 15.580147217341967,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HSIC",
+        "ticker_b": "LLY",
+        "sector": "Health Care",
+        "raw_p": 0.0103688956613393,
+        "half_life": 12.56994012452567,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CMS",
+        "ticker_b": "DTE",
+        "sector": "Utilities",
+        "raw_p": 0.010513313590043543,
+        "half_life": 11.600063412179082,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "APA",
+        "ticker_b": "SLB",
+        "sector": "Energy",
+        "raw_p": 0.01054175006437847,
+        "half_life": 13.219217998839826,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ROP",
+        "ticker_b": "SNPS",
+        "sector": "Information Technology",
+        "raw_p": 0.010646597064262391,
+        "half_life": 12.075737726901298,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AXON",
+        "ticker_b": "NOC",
+        "sector": "Industrials",
+        "raw_p": 0.010662078748578422,
+        "half_life": 15.85189386942588,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GOOGL",
+        "ticker_b": "WBD",
+        "sector": "Communication Services",
+        "raw_p": 0.010985889378481618,
+        "half_life": 13.22736568033547,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EW",
+        "ticker_b": "UNH",
+        "sector": "Health Care",
+        "raw_p": 0.010997010142287204,
+        "half_life": 11.461052098730342,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "IR",
+        "ticker_b": "RSG",
+        "sector": "Industrials",
+        "raw_p": 0.011173649001225427,
+        "half_life": 9.731605233709963,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "IVZ",
+        "ticker_b": "XYZ",
+        "sector": "Financials",
+        "raw_p": 0.01156916049082084,
+        "half_life": 16.000221050067353,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GE",
+        "ticker_b": "LDOS",
+        "sector": "Industrials",
+        "raw_p": 0.01167738272960492,
+        "half_life": 17.245046856885764,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GNRC",
+        "ticker_b": "MMM",
+        "sector": "Industrials",
+        "raw_p": 0.0116890864147341,
+        "half_life": 14.901123195565175,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BLDR",
+        "ticker_b": "NSC",
+        "sector": "Industrials",
+        "raw_p": 0.011694716268551474,
+        "half_life": 29.966138078407347,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DOC",
+        "ticker_b": "UDR",
+        "sector": "Real Estate",
+        "raw_p": 0.011790777338085813,
+        "half_life": 35.43850744555328,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "IT",
+        "ticker_b": "PANW",
+        "sector": "Information Technology",
+        "raw_p": 0.011838631420876504,
+        "half_life": 13.34484893209145,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ADP",
+        "ticker_b": "PNR",
+        "sector": "Industrials",
+        "raw_p": 0.011860447660650563,
+        "half_life": 15.222850862870716,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LLY",
+        "ticker_b": "VRTX",
+        "sector": "Health Care",
+        "raw_p": 0.012073150737599743,
+        "half_life": 14.359715588846484,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FAST",
+        "ticker_b": "ITW",
+        "sector": "Industrials",
+        "raw_p": 0.012384786757977962,
+        "half_life": 11.917420568251671,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "IR",
+        "ticker_b": "WM",
+        "sector": "Industrials",
+        "raw_p": 0.012537690785334328,
+        "half_life": 8.145092187601048,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FDX",
+        "ticker_b": "LII",
+        "sector": "Industrials",
+        "raw_p": 0.01272720519800856,
+        "half_life": 13.884125827464484,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CTAS",
+        "ticker_b": "LDOS",
+        "sector": "Industrials",
+        "raw_p": 0.012812754473907988,
+        "half_life": 16.142530078752596,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "TSCO",
+        "ticker_b": "YUM",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.013016356606407695,
+        "half_life": 13.390061864784043,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MU",
+        "ticker_b": "VRSN",
+        "sector": "Information Technology",
+        "raw_p": 0.013329020675315042,
+        "half_life": 12.442155014320782,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "OTIS",
+        "ticker_b": "ROL",
+        "sector": "Industrials",
+        "raw_p": 0.014195246497661755,
+        "half_life": 11.968642629710219,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CIEN",
+        "ticker_b": "MCHP",
+        "sector": "Information Technology",
+        "raw_p": 0.0142246759669921,
+        "half_life": 12.729272572739038,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ALL",
+        "ticker_b": "WRB",
+        "sector": "Financials",
+        "raw_p": 0.014226776325874213,
+        "half_life": 12.072896179053942,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CFG",
+        "ticker_b": "JKHY",
+        "sector": "Financials",
+        "raw_p": 0.01433357055151849,
+        "half_life": 12.212295275094533,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HSIC",
+        "ticker_b": "TECH",
+        "sector": "Health Care",
+        "raw_p": 0.01436744520451627,
+        "half_life": 15.41474429277484,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CI",
+        "ticker_b": "DHR",
+        "sector": "Health Care",
+        "raw_p": 0.014813572776082131,
+        "half_life": 12.141262393943501,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ALGN",
+        "ticker_b": "ZBH",
+        "sector": "Health Care",
+        "raw_p": 0.014865565094690095,
+        "half_life": 14.704211184288278,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPD",
+        "ticker_b": "NDSN",
+        "sector": "Industrials",
+        "raw_p": 0.014953696355057557,
+        "half_life": 14.165743930792654,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CNC",
+        "ticker_b": "IQV",
+        "sector": "Health Care",
+        "raw_p": 0.015138161864785683,
+        "half_life": 13.890458968575933,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "RMD",
+        "ticker_b": "WST",
+        "sector": "Health Care",
+        "raw_p": 0.01514248927786862,
+        "half_life": 16.55706699998762,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPD",
+        "ticker_b": "HII",
+        "sector": "Industrials",
+        "raw_p": 0.015189862269525213,
+        "half_life": 12.548746201480444,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DE",
+        "ticker_b": "LUV",
+        "sector": "Industrials",
+        "raw_p": 0.015280016893861038,
+        "half_life": 12.358282577990815,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DELL",
+        "ticker_b": "TEL",
+        "sector": "Information Technology",
+        "raw_p": 0.01528853925115602,
+        "half_life": 13.25658742072757,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HON",
+        "ticker_b": "SNA",
+        "sector": "Industrials",
+        "raw_p": 0.015410700864719087,
+        "half_life": 14.922227604575676,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "JKHY",
+        "ticker_b": "XYZ",
+        "sector": "Financials",
+        "raw_p": 0.015418430837325957,
+        "half_life": 13.009468923344565,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "JKHY",
+        "ticker_b": "WTW",
+        "sector": "Financials",
+        "raw_p": 0.015477178564773784,
+        "half_life": 12.953944731500707,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GPC",
+        "ticker_b": "WYNN",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.015529686066388822,
+        "half_life": 14.703155205075268,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GD",
+        "ticker_b": "ROK",
+        "sector": "Industrials",
+        "raw_p": 0.015573904013065226,
+        "half_life": 9.805900124844824,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HPE",
+        "ticker_b": "ORCL",
+        "sector": "Information Technology",
+        "raw_p": 0.015702361124855953,
+        "half_life": 12.428971317353664,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BLDR",
+        "ticker_b": "EXPD",
+        "sector": "Industrials",
+        "raw_p": 0.015766519004712206,
+        "half_life": 10.796490896328043,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ETR",
+        "ticker_b": "SRE",
+        "sector": "Utilities",
+        "raw_p": 0.01584727838813208,
+        "half_life": 10.914699448801272,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CPRT",
+        "ticker_b": "EMR",
+        "sector": "Industrials",
+        "raw_p": 0.01587746968068708,
+        "half_life": 20.811191659837217,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BLDR",
+        "ticker_b": "CSX",
+        "sector": "Industrials",
+        "raw_p": 0.01588557357673792,
+        "half_life": 11.261701224459209,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FDX",
+        "ticker_b": "ROL",
+        "sector": "Industrials",
+        "raw_p": 0.01628892867498056,
+        "half_life": 14.410347748358948,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "NTRS",
+        "ticker_b": "STT",
+        "sector": "Financials",
+        "raw_p": 0.0163235126726495,
+        "half_life": 12.628132889125196,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AME",
+        "ticker_b": "EMR",
+        "sector": "Industrials",
+        "raw_p": 0.01650153845638312,
+        "half_life": 14.257631549506701,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PH",
+        "ticker_b": "PNR",
+        "sector": "Industrials",
+        "raw_p": 0.016512732090464183,
+        "half_life": 12.244585873132635,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DXCM",
+        "ticker_b": "UNH",
+        "sector": "Health Care",
+        "raw_p": 0.016551901700389973,
+        "half_life": 11.721698386056463,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AME",
+        "ticker_b": "CPRT",
+        "sector": "Industrials",
+        "raw_p": 0.016614285710836427,
+        "half_life": 14.072890122592577,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PODD",
+        "ticker_b": "TECH",
+        "sector": "Health Care",
+        "raw_p": 0.016874471402823357,
+        "half_life": 15.17435521741954,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AZO",
+        "ticker_b": "HLT",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.016964532635057917,
+        "half_life": 12.58794805843314,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "NOC",
+        "ticker_b": "RTX",
+        "sector": "Industrials",
+        "raw_p": 0.017000167822965855,
+        "half_life": 16.536207652148384,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "COF",
+        "ticker_b": "PNC",
+        "sector": "Financials",
+        "raw_p": 0.01722286334573175,
+        "half_life": 24.091307688591236,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "STX",
+        "ticker_b": "VRSN",
+        "sector": "Information Technology",
+        "raw_p": 0.017361277294149574,
+        "half_life": 12.991790972918995,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "JKHY",
+        "ticker_b": "TROW",
+        "sector": "Financials",
+        "raw_p": 0.017501065608554682,
+        "half_life": 12.819631110250471,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ABT",
+        "ticker_b": "COO",
+        "sector": "Health Care",
+        "raw_p": 0.017607027629815666,
+        "half_life": 13.810428747831946,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HSIC",
+        "ticker_b": "VRTX",
+        "sector": "Health Care",
+        "raw_p": 0.017775644544030248,
+        "half_life": 13.936948011946587,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MPWR",
+        "ticker_b": "VRSN",
+        "sector": "Information Technology",
+        "raw_p": 0.018168690309371013,
+        "half_life": 13.288836922622393,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMT",
+        "ticker_b": "EXR",
+        "sector": "Real Estate",
+        "raw_p": 0.018180822055399712,
+        "half_life": 19.462477794104093,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FIX",
+        "ticker_b": "PWR",
+        "sector": "Industrials",
+        "raw_p": 0.018228218281882737,
+        "half_life": 10.776526580947648,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DPZ",
+        "ticker_b": "SBUX",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.018607416846808916,
+        "half_life": 12.670756481665208,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BAX",
+        "ticker_b": "HSIC",
+        "sector": "Health Care",
+        "raw_p": 0.018697123402155555,
+        "half_life": 12.945814950021532,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "RMD",
+        "ticker_b": "TECH",
+        "sector": "Health Care",
+        "raw_p": 0.018700757944439875,
+        "half_life": 16.50055423369849,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BDX",
+        "ticker_b": "WAT",
+        "sector": "Health Care",
+        "raw_p": 0.018762832536973587,
+        "half_life": 13.431859467736295,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PNC",
+        "ticker_b": "WTW",
+        "sector": "Financials",
+        "raw_p": 0.018783680599455243,
+        "half_life": 15.32669781498722,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CINF",
+        "ticker_b": "PNC",
+        "sector": "Financials",
+        "raw_p": 0.018973146877243573,
+        "half_life": 15.189172667119973,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CMG",
+        "ticker_b": "YUM",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.01903919614394549,
+        "half_life": 14.655753221064115,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CPT",
+        "ticker_b": "UDR",
+        "sector": "Real Estate",
+        "raw_p": 0.01920951255931643,
+        "half_life": 17.52185770730058,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ADI",
+        "ticker_b": "TEL",
+        "sector": "Information Technology",
+        "raw_p": 0.01931397826653968,
+        "half_life": 13.246889703630622,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GD",
+        "ticker_b": "UBER",
+        "sector": "Industrials",
+        "raw_p": 0.019500517784320184,
+        "half_life": 18.81504252255331,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "JKHY",
+        "ticker_b": "SPGI",
+        "sector": "Financials",
+        "raw_p": 0.019685347466254808,
+        "half_life": 15.263905211074826,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DECK",
+        "ticker_b": "WSM",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.019785691096166087,
+        "half_life": 12.89574033068285,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BALL",
+        "ticker_b": "FCX",
+        "sector": "Materials",
+        "raw_p": 0.01980104621666979,
+        "half_life": 12.742866766959938,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DGX",
+        "ticker_b": "WST",
+        "sector": "Health Care",
+        "raw_p": 0.01990167016957588,
+        "half_life": 11.606181889218815,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GDDY",
+        "ticker_b": "ON",
+        "sector": "Information Technology",
+        "raw_p": 0.019975033633393917,
+        "half_life": 13.47560693910137,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMCR",
+        "ticker_b": "NEM",
+        "sector": "Materials",
+        "raw_p": 0.020106784956002627,
+        "half_life": 9.09015505570566,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "INCY",
+        "ticker_b": "RVTY",
+        "sector": "Health Care",
+        "raw_p": 0.020303487928422955,
+        "half_life": 12.845865850886485,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MAS",
+        "ticker_b": "URI",
+        "sector": "Industrials",
+        "raw_p": 0.020400827134946016,
+        "half_life": 13.055366021563014,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HSIC",
+        "ticker_b": "ZBH",
+        "sector": "Health Care",
+        "raw_p": 0.020623624276002995,
+        "half_life": 13.096651086927698,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HON",
+        "ticker_b": "HWM",
+        "sector": "Industrials",
+        "raw_p": 0.02097428791127754,
+        "half_life": 15.113366187796203,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ADP",
+        "ticker_b": "FDX",
+        "sector": "Industrials",
+        "raw_p": 0.021362665209384978,
+        "half_life": 18.641316967445906,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HUM",
+        "ticker_b": "PFE",
+        "sector": "Health Care",
+        "raw_p": 0.021370882027480227,
+        "half_life": 29.906843265101383,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HLT",
+        "ticker_b": "RL",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.021417222019349615,
+        "half_life": 13.769735233112415,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CDNS",
+        "ticker_b": "MSFT",
+        "sector": "Information Technology",
+        "raw_p": 0.021559978784834677,
+        "half_life": 13.445783904347886,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DVA",
+        "ticker_b": "SYK",
+        "sector": "Health Care",
+        "raw_p": 0.021570777011702194,
+        "half_life": 13.398671221525614,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ABBV",
+        "ticker_b": "PFE",
+        "sector": "Health Care",
+        "raw_p": 0.021600820451440378,
+        "half_life": 28.30926666827013,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "OMC",
+        "ticker_b": "VZ",
+        "sector": "Communication Services",
+        "raw_p": 0.02182088992622956,
+        "half_life": 13.680114485073045,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LH",
+        "ticker_b": "VTRS",
+        "sector": "Health Care",
+        "raw_p": 0.021909788701408695,
+        "half_life": 13.454938630095755,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CSX",
+        "ticker_b": "UBER",
+        "sector": "Industrials",
+        "raw_p": 0.02195601278263869,
+        "half_life": 13.044398649296223,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CDNS",
+        "ticker_b": "DDOG",
+        "sector": "Information Technology",
+        "raw_p": 0.022008038059864652,
+        "half_life": 14.621028085399933,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ON",
+        "ticker_b": "STX",
+        "sector": "Information Technology",
+        "raw_p": 0.022022748878161504,
+        "half_life": 13.278866571655778,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CTSH",
+        "ticker_b": "IBM",
+        "sector": "Information Technology",
+        "raw_p": 0.02209517983720227,
+        "half_life": 15.308142078870526,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "IVZ",
+        "ticker_b": "PYPL",
+        "sector": "Financials",
+        "raw_p": 0.022301166790326538,
+        "half_life": 13.246566572972188,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MGM",
+        "ticker_b": "ULTA",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.022694248763254897,
+        "half_life": 14.646061789208877,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "KMI",
+        "ticker_b": "OXY",
+        "sector": "Energy",
+        "raw_p": 0.022714128639092508,
+        "half_life": 13.161064815865824,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HPE",
+        "ticker_b": "NVDA",
+        "sector": "Information Technology",
+        "raw_p": 0.02349973644044513,
+        "half_life": 13.292320667771548,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BKNG",
+        "ticker_b": "RCL",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.02351299798252802,
+        "half_life": 13.885013449754066,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MSCI",
+        "ticker_b": "USB",
+        "sector": "Financials",
+        "raw_p": 0.023520717461354156,
+        "half_life": 13.324953570434154,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GNRC",
+        "ticker_b": "LHX",
+        "sector": "Industrials",
+        "raw_p": 0.02361181537880483,
+        "half_life": 14.05458887019996,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MCO",
+        "ticker_b": "PNC",
+        "sector": "Financials",
+        "raw_p": 0.023869035190048866,
+        "half_life": 26.267981953261273,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CHD",
+        "ticker_b": "PG",
+        "sector": "Consumer Staples",
+        "raw_p": 0.024039738945361176,
+        "half_life": 18.00675774468741,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CDNS",
+        "ticker_b": "PTC",
+        "sector": "Information Technology",
+        "raw_p": 0.024044278779228427,
+        "half_life": 14.796415477012427,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "JKHY",
+        "ticker_b": "KEY",
+        "sector": "Financials",
+        "raw_p": 0.02409614553917311,
+        "half_life": 13.315120571572551,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BR",
+        "ticker_b": "FDX",
+        "sector": "Industrials",
+        "raw_p": 0.02411973601198839,
+        "half_life": 14.612713165694734,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EIX",
+        "ticker_b": "FE",
+        "sector": "Utilities",
+        "raw_p": 0.02419578574128258,
+        "half_life": 20.704470817476015,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "IVZ",
+        "ticker_b": "JKHY",
+        "sector": "Financials",
+        "raw_p": 0.02423252486706475,
+        "half_life": 13.514071880140236,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ALLE",
+        "ticker_b": "NOC",
+        "sector": "Industrials",
+        "raw_p": 0.024549146241506396,
+        "half_life": 12.643129662083437,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LOW",
+        "ticker_b": "YUM",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.025255693622455534,
+        "half_life": 16.22824091321214,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ACN",
+        "ticker_b": "WDAY",
+        "sector": "Information Technology",
+        "raw_p": 0.025307040910838807,
+        "half_life": 13.823477218108069,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "JKHY",
+        "ticker_b": "MCO",
+        "sector": "Financials",
+        "raw_p": 0.025851624612420215,
+        "half_life": 16.066879144090574,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "JKHY",
+        "ticker_b": "MS",
+        "sector": "Financials",
+        "raw_p": 0.025864569477122873,
+        "half_life": 14.543774886383087,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DASH",
+        "ticker_b": "MAR",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.02598504227566945,
+        "half_life": 14.110387630798394,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ALGN",
+        "ticker_b": "BDX",
+        "sector": "Health Care",
+        "raw_p": 0.02608472047566232,
+        "half_life": 15.059280743246678,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LUV",
+        "ticker_b": "ROK",
+        "sector": "Industrials",
+        "raw_p": 0.02611742415992793,
+        "half_life": 11.148519350333672,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BLDR",
+        "ticker_b": "ITW",
+        "sector": "Industrials",
+        "raw_p": 0.02618951036987339,
+        "half_life": 13.338416515883345,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MCHP",
+        "ticker_b": "TDY",
+        "sector": "Information Technology",
+        "raw_p": 0.026342016293266327,
+        "half_life": 11.631117268575403,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CINF",
+        "ticker_b": "MTB",
+        "sector": "Financials",
+        "raw_p": 0.026592681529723928,
+        "half_life": 12.09219963077855,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GOOG",
+        "ticker_b": "GOOGL",
+        "sector": "Communication Services",
+        "raw_p": 0.02668039337015929,
+        "half_life": 3.8264678544712307,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LLY",
+        "ticker_b": "PFE",
+        "sector": "Health Care",
+        "raw_p": 0.026766160027762234,
+        "half_life": 21.6178757367091,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "KLAC",
+        "ticker_b": "TEL",
+        "sector": "Information Technology",
+        "raw_p": 0.026858724596507764,
+        "half_life": 14.639594347087716,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "IR",
+        "ticker_b": "TDG",
+        "sector": "Industrials",
+        "raw_p": 0.026947379017031217,
+        "half_life": 13.906305642699767,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CSX",
+        "ticker_b": "NDSN",
+        "sector": "Industrials",
+        "raw_p": 0.026998461105588362,
+        "half_life": 12.329024497592435,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ABT",
+        "ticker_b": "VTRS",
+        "sector": "Health Care",
+        "raw_p": 0.02711276722746738,
+        "half_life": 13.619933910411275,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EMR",
+        "ticker_b": "PWR",
+        "sector": "Industrials",
+        "raw_p": 0.0273526447456897,
+        "half_life": 17.758843271035854,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CARR",
+        "ticker_b": "FDX",
+        "sector": "Industrials",
+        "raw_p": 0.027369637640469822,
+        "half_life": 16.17582624005265,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EFX",
+        "ticker_b": "NSC",
+        "sector": "Industrials",
+        "raw_p": 0.02741715271082707,
+        "half_life": 16.232740622648336,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LNT",
+        "ticker_b": "PNW",
+        "sector": "Utilities",
+        "raw_p": 0.027445847825512806,
+        "half_life": 16.486684877999828,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BDX",
+        "ticker_b": "JNJ",
+        "sector": "Health Care",
+        "raw_p": 0.02768447348895754,
+        "half_life": 16.397883633111938,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "IBM",
+        "ticker_b": "PANW",
+        "sector": "Information Technology",
+        "raw_p": 0.027841815335587283,
+        "half_life": 17.306359635948652,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "QCOM",
+        "ticker_b": "TEL",
+        "sector": "Information Technology",
+        "raw_p": 0.02801825106836067,
+        "half_life": 15.018084069772785,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PFE",
+        "ticker_b": "VEEV",
+        "sector": "Health Care",
+        "raw_p": 0.028485522618845245,
+        "half_life": 15.675212462565344,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "TEL",
+        "ticker_b": "WDC",
+        "sector": "Information Technology",
+        "raw_p": 0.028505326043188624,
+        "half_life": 14.480375026445323,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HPQ",
+        "ticker_b": "TXN",
+        "sector": "Information Technology",
+        "raw_p": 0.028706788876322817,
+        "half_life": 9.382912538107748,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ABBV",
+        "ticker_b": "SYK",
+        "sector": "Health Care",
+        "raw_p": 0.028774528341706837,
+        "half_life": 20.011735162419185,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPD",
+        "ticker_b": "ROL",
+        "sector": "Industrials",
+        "raw_p": 0.02927403131460217,
+        "half_life": 11.69988530616402,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AAPL",
+        "ticker_b": "HPE",
+        "sector": "Information Technology",
+        "raw_p": 0.029669070029655124,
+        "half_life": 15.142653722610703,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MSFT",
+        "ticker_b": "ROP",
+        "sector": "Information Technology",
+        "raw_p": 0.02994673862552753,
+        "half_life": 13.289379852573553,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPD",
+        "ticker_b": "UBER",
+        "sector": "Industrials",
+        "raw_p": 0.03011724603649329,
+        "half_life": 11.226383971310101,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ALLE",
+        "ticker_b": "EFX",
+        "sector": "Industrials",
+        "raw_p": 0.030437765224344375,
+        "half_life": 17.119070658475597,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DOV",
+        "ticker_b": "LDOS",
+        "sector": "Industrials",
+        "raw_p": 0.03050031833956836,
+        "half_life": 12.367558578321571,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMGN",
+        "ticker_b": "PFE",
+        "sector": "Health Care",
+        "raw_p": 0.030819866323190385,
+        "half_life": 25.740338904821126,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "STX",
+        "ticker_b": "TEL",
+        "sector": "Information Technology",
+        "raw_p": 0.030951378835050454,
+        "half_life": 14.462101816258834,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AOS",
+        "ticker_b": "EXPD",
+        "sector": "Industrials",
+        "raw_p": 0.03135731519690746,
+        "half_life": 11.780847279002302,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DOC",
+        "ticker_b": "MAA",
+        "sector": "Real Estate",
+        "raw_p": 0.031822473257365654,
+        "half_life": 24.52311565437948,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "KLAC",
+        "ticker_b": "STX",
+        "sector": "Information Technology",
+        "raw_p": 0.03183222207230845,
+        "half_life": 14.51127423875438,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FDX",
+        "ticker_b": "WM",
+        "sector": "Industrials",
+        "raw_p": 0.03184215049759983,
+        "half_life": 17.34215095712409,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "COHR",
+        "ticker_b": "HPE",
+        "sector": "Information Technology",
+        "raw_p": 0.03185829526064308,
+        "half_life": 14.017824518566957,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPD",
+        "ticker_b": "SWK",
+        "sector": "Industrials",
+        "raw_p": 0.03194193551918655,
+        "half_life": 13.637453217722005,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CTSH",
+        "ticker_b": "PANW",
+        "sector": "Information Technology",
+        "raw_p": 0.03202747476248484,
+        "half_life": 14.2003135471528,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MRNA",
+        "ticker_b": "UNH",
+        "sector": "Health Care",
+        "raw_p": 0.032670859376517425,
+        "half_life": 17.03844408696977,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "SYY",
+        "ticker_b": "TGT",
+        "sector": "Consumer Staples",
+        "raw_p": 0.03303923411298857,
+        "half_life": 13.735220708513728,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CSX",
+        "ticker_b": "ITW",
+        "sector": "Industrials",
+        "raw_p": 0.03306726511385245,
+        "half_life": 14.74064922388884,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "SCHW",
+        "ticker_b": "XYZ",
+        "sector": "Financials",
+        "raw_p": 0.033758526767817626,
+        "half_life": 18.75799216397221,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GEHC",
+        "ticker_b": "MDT",
+        "sector": "Health Care",
+        "raw_p": 0.033875193101622326,
+        "half_life": 19.752219749921263,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "NDSN",
+        "ticker_b": "SWK",
+        "sector": "Industrials",
+        "raw_p": 0.034409193226614496,
+        "half_life": 16.272248510002665,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PNR",
+        "ticker_b": "PWR",
+        "sector": "Industrials",
+        "raw_p": 0.034520801359351955,
+        "half_life": 10.261157730842669,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HII",
+        "ticker_b": "SWK",
+        "sector": "Industrials",
+        "raw_p": 0.034672872139211185,
+        "half_life": 15.665441742946745,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ECHO",
+        "ticker_b": "FOXA",
+        "sector": "Communication Services",
+        "raw_p": 0.035051967877851344,
+        "half_life": 11.996363319098494,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FIX",
+        "ticker_b": "HON",
+        "sector": "Industrials",
+        "raw_p": 0.035299409224587325,
+        "half_life": 16.77953268023166,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "APTV",
+        "ticker_b": "GPC",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.03546135507525127,
+        "half_life": 14.951233755125353,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "VTRS",
+        "ticker_b": "WAT",
+        "sector": "Health Care",
+        "raw_p": 0.03554254760549499,
+        "half_life": 11.074348916517613,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CARR",
+        "ticker_b": "PAYX",
+        "sector": "Industrials",
+        "raw_p": 0.0356422036235335,
+        "half_life": 12.179436150446216,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AVGO",
+        "ticker_b": "GDDY",
+        "sector": "Information Technology",
+        "raw_p": 0.035849143692677825,
+        "half_life": 18.497342793746345,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HON",
+        "ticker_b": "ITW",
+        "sector": "Industrials",
+        "raw_p": 0.03629025742500261,
+        "half_life": 19.035097580970348,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GEHC",
+        "ticker_b": "TMO",
+        "sector": "Health Care",
+        "raw_p": 0.036415162039928,
+        "half_life": 17.774208062843528,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPD",
+        "ticker_b": "UNP",
+        "sector": "Industrials",
+        "raw_p": 0.03654477575223147,
+        "half_life": 10.814470053265255,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMAT",
+        "ticker_b": "MU",
+        "sector": "Information Technology",
+        "raw_p": 0.036597740192130426,
+        "half_life": 15.014091346182537,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "JBL",
+        "ticker_b": "WDAY",
+        "sector": "Information Technology",
+        "raw_p": 0.036931825419394985,
+        "half_life": 14.256325893000328,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FDX",
+        "ticker_b": "MMM",
+        "sector": "Industrials",
+        "raw_p": 0.03724490970327229,
+        "half_life": 23.440483699145993,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CRL",
+        "ticker_b": "IDXX",
+        "sector": "Health Care",
+        "raw_p": 0.03729727096105689,
+        "half_life": 17.13523086545233,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "JKHY",
+        "ticker_b": "MSCI",
+        "sector": "Financials",
+        "raw_p": 0.03738189494660438,
+        "half_life": 16.92977470790466,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AVGO",
+        "ticker_b": "NOW",
+        "sector": "Information Technology",
+        "raw_p": 0.037733751702772995,
+        "half_life": 15.286515569153188,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CPRT",
+        "ticker_b": "FDX",
+        "sector": "Industrials",
+        "raw_p": 0.03783753783244428,
+        "half_life": 15.435661813020287,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CINF",
+        "ticker_b": "HBAN",
+        "sector": "Financials",
+        "raw_p": 0.03790316309682452,
+        "half_life": 17.944372203626035,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "SBAC",
+        "ticker_b": "VICI",
+        "sector": "Real Estate",
+        "raw_p": 0.03848214610207112,
+        "half_life": 18.61671877534449,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LDOS",
+        "ticker_b": "TDG",
+        "sector": "Industrials",
+        "raw_p": 0.03866917583311048,
+        "half_life": 22.64543135699946,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AXON",
+        "ticker_b": "PAYX",
+        "sector": "Industrials",
+        "raw_p": 0.03869972298428544,
+        "half_life": 14.600159630614442,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CINF",
+        "ticker_b": "JKHY",
+        "sector": "Financials",
+        "raw_p": 0.038866532913813236,
+        "half_life": 16.214471710495676,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "OTIS",
+        "ticker_b": "TDG",
+        "sector": "Industrials",
+        "raw_p": 0.03918825077464949,
+        "half_life": 14.32677968247776,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MPC",
+        "ticker_b": "PSX",
+        "sector": "Energy",
+        "raw_p": 0.03962302925807013,
+        "half_life": 16.288469020431457,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AZO",
+        "ticker_b": "RL",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.03968843996518608,
+        "half_life": 14.483701595524513,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ULTA",
+        "ticker_b": "WYNN",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.04036584490473699,
+        "half_life": 17.051459076911065,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "D",
+        "ticker_b": "NEE",
+        "sector": "Utilities",
+        "raw_p": 0.04037975732363978,
+        "half_life": 15.735921138376645,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPE",
+        "ticker_b": "GPC",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.040672483225890635,
+        "half_life": 14.873318836430698,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ITW",
+        "ticker_b": "PCAR",
+        "sector": "Industrials",
+        "raw_p": 0.04110692596152532,
+        "half_life": 15.15400380196597,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ALL",
+        "ticker_b": "L",
+        "sector": "Financials",
+        "raw_p": 0.04136065396162876,
+        "half_life": 19.681194700335375,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CPAY",
+        "ticker_b": "JKHY",
+        "sector": "Financials",
+        "raw_p": 0.04160606691234972,
+        "half_life": 17.678471894731945,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FSLR",
+        "ticker_b": "TXN",
+        "sector": "Information Technology",
+        "raw_p": 0.04185322808132392,
+        "half_life": 14.816881540542289,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "IBKR",
+        "ticker_b": "JKHY",
+        "sector": "Financials",
+        "raw_p": 0.042138895626421986,
+        "half_life": 16.639244880267768,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PYPL",
+        "ticker_b": "STT",
+        "sector": "Financials",
+        "raw_p": 0.04215036185032474,
+        "half_life": 15.459644128874437,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMGN",
+        "ticker_b": "HSIC",
+        "sector": "Health Care",
+        "raw_p": 0.0423869428213697,
+        "half_life": 14.496305115104246,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CFG",
+        "ticker_b": "CINF",
+        "sector": "Financials",
+        "raw_p": 0.04261693429626295,
+        "half_life": 20.256282896268196,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AOS",
+        "ticker_b": "GD",
+        "sector": "Industrials",
+        "raw_p": 0.04290087888215611,
+        "half_life": 18.19029313975457,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ESS",
+        "ticker_b": "INVH",
+        "sector": "Real Estate",
+        "raw_p": 0.043258396755769236,
+        "half_life": 15.648776574023762,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EME",
+        "ticker_b": "HON",
+        "sector": "Industrials",
+        "raw_p": 0.043716368223970854,
+        "half_life": 17.864757969152357,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ABBV",
+        "ticker_b": "DHR",
+        "sector": "Health Care",
+        "raw_p": 0.04373496426889422,
+        "half_life": 14.188728024713983,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ELV",
+        "ticker_b": "GILD",
+        "sector": "Health Care",
+        "raw_p": 0.04455334708547103,
+        "half_life": 16.371492210104233,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CI",
+        "ticker_b": "PFE",
+        "sector": "Health Care",
+        "raw_p": 0.044673992235516005,
+        "half_life": 24.30727927202363,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FLEX",
+        "ticker_b": "HPE",
+        "sector": "Information Technology",
+        "raw_p": 0.04487385043033726,
+        "half_life": 15.344895828208672,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EMR",
+        "ticker_b": "ETN",
+        "sector": "Industrials",
+        "raw_p": 0.04512913797026746,
+        "half_life": 19.31009835423138,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMGN",
+        "ticker_b": "VRTX",
+        "sector": "Health Care",
+        "raw_p": 0.04593881749540926,
+        "half_life": 18.422587337152727,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PFG",
+        "ticker_b": "TROW",
+        "sector": "Financials",
+        "raw_p": 0.0460754354287573,
+        "half_life": 13.011407705260352,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EMR",
+        "ticker_b": "HUBB",
+        "sector": "Industrials",
+        "raw_p": 0.046374163139681436,
+        "half_life": 24.123048458009144,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CDNS",
+        "ticker_b": "CRWD",
+        "sector": "Information Technology",
+        "raw_p": 0.04657237889197728,
+        "half_life": 9.17815337492637,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CAT",
+        "ticker_b": "ITW",
+        "sector": "Industrials",
+        "raw_p": 0.04681622690216099,
+        "half_life": 16.482879478518036,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FSLR",
+        "ticker_b": "HPQ",
+        "sector": "Information Technology",
+        "raw_p": 0.04752205270266981,
+        "half_life": 15.189675382633828,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ECHO",
+        "ticker_b": "FOX",
+        "sector": "Communication Services",
+        "raw_p": 0.04758911746915575,
+        "half_life": 12.845369659202023,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ADBE",
+        "ticker_b": "AKAM",
+        "sector": "Information Technology",
+        "raw_p": 0.04775409565943199,
+        "half_life": 16.64689370749099,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AOS",
+        "ticker_b": "TXT",
+        "sector": "Industrials",
+        "raw_p": 0.047988850337408934,
+        "half_life": 17.05997479470935,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "INTU",
+        "ticker_b": "SNPS",
+        "sector": "Information Technology",
+        "raw_p": 0.048179803985057404,
+        "half_life": 16.76187763372906,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "KEY",
+        "ticker_b": "MSCI",
+        "sector": "Financials",
+        "raw_p": 0.048221938591763595,
+        "half_life": 15.065945077525177,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FTV",
+        "ticker_b": "ODFL",
+        "sector": "Industrials",
+        "raw_p": 0.048263041592289314,
+        "half_life": 16.2436950069068,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GNRC",
+        "ticker_b": "PAYX",
+        "sector": "Industrials",
+        "raw_p": 0.04837016028396831,
+        "half_life": 13.389539918300684,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "STE",
+        "ticker_b": "ZTS",
+        "sector": "Health Care",
+        "raw_p": 0.04869549626151697,
+        "half_life": 16.435098820267623,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ROST",
+        "ticker_b": "WYNN",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.049453525346214486,
+        "half_life": 17.06477427748061,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EMR",
+        "ticker_b": "ITW",
+        "sector": "Industrials",
+        "raw_p": 0.049463468240933506,
+        "half_life": 17.841725709708356,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MSFT",
+        "ticker_b": "TEL",
+        "sector": "Information Technology",
+        "raw_p": 0.04975632906915824,
+        "half_life": 15.676347629104459,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "INCY",
+        "ticker_b": "WST",
+        "sector": "Health Care",
+        "raw_p": 0.05008470869684239,
+        "half_life": 17.873886523610892,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MCO",
+        "ticker_b": "MET",
+        "sector": "Financials",
+        "raw_p": 0.050089988747975545,
+        "half_life": 26.43099183379005,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HON",
+        "ticker_b": "VRT",
+        "sector": "Industrials",
+        "raw_p": 0.05010282994350181,
+        "half_life": 17.74803790127615,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PFG",
+        "ticker_b": "SCHW",
+        "sector": "Financials",
+        "raw_p": 0.05018552174389722,
+        "half_life": 14.954934543156613,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FFIV",
+        "ticker_b": "NOW",
+        "sector": "Information Technology",
+        "raw_p": 0.050222451300989485,
+        "half_life": 11.702593217037382,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BA",
+        "ticker_b": "ROK",
+        "sector": "Industrials",
+        "raw_p": 0.05025594657101868,
+        "half_life": 11.751596808940747,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "APH",
+        "ticker_b": "HPE",
+        "sector": "Information Technology",
+        "raw_p": 0.05048631783813576,
+        "half_life": 15.303775106139854,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMZN",
+        "ticker_b": "MAR",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.05050796442958458,
+        "half_life": 12.277160033405952,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ADP",
+        "ticker_b": "ITW",
+        "sector": "Industrials",
+        "raw_p": 0.051125089605864815,
+        "half_life": 17.743726749803006,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HSIC",
+        "ticker_b": "JNJ",
+        "sector": "Health Care",
+        "raw_p": 0.05134774585839434,
+        "half_life": 17.933159892736782,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DOC",
+        "ticker_b": "VICI",
+        "sector": "Real Estate",
+        "raw_p": 0.05189802016725364,
+        "half_life": 16.50972735579087,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ALGN",
+        "ticker_b": "UNH",
+        "sector": "Health Care",
+        "raw_p": 0.05249644715286592,
+        "half_life": 15.265670246011753,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LRCX",
+        "ticker_b": "SMCI",
+        "sector": "Information Technology",
+        "raw_p": 0.05365921503390311,
+        "half_life": 11.268082031457162,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EME",
+        "ticker_b": "EMR",
+        "sector": "Industrials",
+        "raw_p": 0.05388514007348337,
+        "half_life": 17.168852778803174,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MCHP",
+        "ticker_b": "PLTR",
+        "sector": "Information Technology",
+        "raw_p": 0.054051673802554115,
+        "half_life": 17.38265561050461,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MTD",
+        "ticker_b": "WST",
+        "sector": "Health Care",
+        "raw_p": 0.054260740448374555,
+        "half_life": 15.730433903887462,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HSIC",
+        "ticker_b": "RVTY",
+        "sector": "Health Care",
+        "raw_p": 0.054278426190368496,
+        "half_life": 17.66184417284474,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DHR",
+        "ticker_b": "HCA",
+        "sector": "Health Care",
+        "raw_p": 0.054728042325966154,
+        "half_life": 15.625373539985773,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "NSC",
+        "ticker_b": "SWK",
+        "sector": "Industrials",
+        "raw_p": 0.05494020869722985,
+        "half_life": 17.867403419035977,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HON",
+        "ticker_b": "TT",
+        "sector": "Industrials",
+        "raw_p": 0.055833568411692985,
+        "half_life": 18.06387113520258,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DDOG",
+        "ticker_b": "PANW",
+        "sector": "Information Technology",
+        "raw_p": 0.05734361578910834,
+        "half_life": 13.75671001759722,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EMR",
+        "ticker_b": "GWW",
+        "sector": "Industrials",
+        "raw_p": 0.05783415059088713,
+        "half_life": 24.020696625248895,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ITW",
+        "ticker_b": "UBER",
+        "sector": "Industrials",
+        "raw_p": 0.05835066499732123,
+        "half_life": 16.336580706899362,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ADP",
+        "ticker_b": "GNRC",
+        "sector": "Industrials",
+        "raw_p": 0.0586981336938413,
+        "half_life": 17.515766638313483,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "JKHY",
+        "ticker_b": "SCHW",
+        "sector": "Financials",
+        "raw_p": 0.0587266734504361,
+        "half_life": 13.491891044527225,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EMR",
+        "ticker_b": "PH",
+        "sector": "Industrials",
+        "raw_p": 0.059834059469655594,
+        "half_life": 24.123523648880038,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MSCI",
+        "ticker_b": "PNC",
+        "sector": "Financials",
+        "raw_p": 0.06096942849482122,
+        "half_life": 15.018033847587164,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EOG",
+        "ticker_b": "XOM",
+        "sector": "Energy",
+        "raw_p": 0.06129195777432024,
+        "half_life": 22.26787032055257,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CCI",
+        "ticker_b": "VICI",
+        "sector": "Real Estate",
+        "raw_p": 0.06130596969445272,
+        "half_life": 17.694005954831162,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EQR",
+        "ticker_b": "INVH",
+        "sector": "Real Estate",
+        "raw_p": 0.062288593533510725,
+        "half_life": 17.314268298549113,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HBAN",
+        "ticker_b": "PNC",
+        "sector": "Financials",
+        "raw_p": 0.06248703254994622,
+        "half_life": 20.149058319929946,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ED",
+        "ticker_b": "NEE",
+        "sector": "Utilities",
+        "raw_p": 0.06252962764389691,
+        "half_life": 18.148457700536504,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GNRC",
+        "ticker_b": "ROL",
+        "sector": "Industrials",
+        "raw_p": 0.06365120159786186,
+        "half_life": 16.31396575488766,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LRCX",
+        "ticker_b": "NXPI",
+        "sector": "Information Technology",
+        "raw_p": 0.0636720958999418,
+        "half_life": 16.435546567040227,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MSCI",
+        "ticker_b": "RF",
+        "sector": "Financials",
+        "raw_p": 0.06378397215592156,
+        "half_life": 15.275763851787813,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "KEY",
+        "ticker_b": "USB",
+        "sector": "Financials",
+        "raw_p": 0.06467351137414828,
+        "half_life": 10.210580229981808,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BAX",
+        "ticker_b": "JNJ",
+        "sector": "Health Care",
+        "raw_p": 0.06470951149007431,
+        "half_life": 14.676925204057456,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPD",
+        "ticker_b": "TXT",
+        "sector": "Industrials",
+        "raw_p": 0.0647615704147938,
+        "half_life": 14.747259975792772,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CMI",
+        "ticker_b": "ITW",
+        "sector": "Industrials",
+        "raw_p": 0.0651960117853218,
+        "half_life": 18.21949949415191,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DELL",
+        "ticker_b": "INTU",
+        "sector": "Information Technology",
+        "raw_p": 0.06552611006777483,
+        "half_life": 19.824321257642197,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AOS",
+        "ticker_b": "XYL",
+        "sector": "Industrials",
+        "raw_p": 0.06603939745555829,
+        "half_life": 20.403991939710423,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DGX",
+        "ticker_b": "RMD",
+        "sector": "Health Care",
+        "raw_p": 0.06624305709306354,
+        "half_life": 13.64554512843591,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AVB",
+        "ticker_b": "INVH",
+        "sector": "Real Estate",
+        "raw_p": 0.06638402845338855,
+        "half_life": 16.72401221015677,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MAS",
+        "ticker_b": "UBER",
+        "sector": "Industrials",
+        "raw_p": 0.06799252595662082,
+        "half_life": 16.861819153241235,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HON",
+        "ticker_b": "LDOS",
+        "sector": "Industrials",
+        "raw_p": 0.06833875321890172,
+        "half_life": 21.035095948447115,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CNC",
+        "ticker_b": "CRL",
+        "sector": "Health Care",
+        "raw_p": 0.06846452861003362,
+        "half_life": 16.99896224808054,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "RVTY",
+        "ticker_b": "TECH",
+        "sector": "Health Care",
+        "raw_p": 0.0687133715434408,
+        "half_life": 16.86386098572206,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PNC",
+        "ticker_b": "SPGI",
+        "sector": "Financials",
+        "raw_p": 0.06885773560177229,
+        "half_life": 27.628962470610528,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LH",
+        "ticker_b": "VEEV",
+        "sector": "Health Care",
+        "raw_p": 0.06897745977583061,
+        "half_life": 18.780244955305534,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "D",
+        "ticker_b": "FE",
+        "sector": "Utilities",
+        "raw_p": 0.06997783664239926,
+        "half_life": 19.422383746395802,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DHI",
+        "ticker_b": "WYNN",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.07018065196828603,
+        "half_life": 19.05846004591766,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CFG",
+        "ticker_b": "MSCI",
+        "sector": "Financials",
+        "raw_p": 0.07039932188782767,
+        "half_life": 16.06894121812544,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AME",
+        "ticker_b": "FAST",
+        "sector": "Industrials",
+        "raw_p": 0.07139703534400603,
+        "half_life": 13.068986005851427,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HPQ",
+        "ticker_b": "TER",
+        "sector": "Information Technology",
+        "raw_p": 0.07154886260272184,
+        "half_life": 19.883824076568,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CINF",
+        "ticker_b": "KEY",
+        "sector": "Financials",
+        "raw_p": 0.07165511626080164,
+        "half_life": 23.451013847117906,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ADI",
+        "ticker_b": "TER",
+        "sector": "Information Technology",
+        "raw_p": 0.07166016475782114,
+        "half_life": 17.25568773493428,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CAT",
+        "ticker_b": "MAS",
+        "sector": "Industrials",
+        "raw_p": 0.07186183676101437,
+        "half_life": 17.88394633919685,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMT",
+        "ticker_b": "PSA",
+        "sector": "Real Estate",
+        "raw_p": 0.07188583928616746,
+        "half_life": 26.07115450961336,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BR",
+        "ticker_b": "UPS",
+        "sector": "Industrials",
+        "raw_p": 0.07230392964482456,
+        "half_life": 12.509693816692334,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPD",
+        "ticker_b": "VRSK",
+        "sector": "Industrials",
+        "raw_p": 0.07295368082672134,
+        "half_life": 12.502740180883796,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CTAS",
+        "ticker_b": "EXPD",
+        "sector": "Industrials",
+        "raw_p": 0.07371739554078811,
+        "half_life": 14.4768029125882,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MET",
+        "ticker_b": "SPGI",
+        "sector": "Financials",
+        "raw_p": 0.0739032992047039,
+        "half_life": 27.556957384437457,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EME",
+        "ticker_b": "LDOS",
+        "sector": "Industrials",
+        "raw_p": 0.07432355826537848,
+        "half_life": 21.956527636816357,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FTNT",
+        "ticker_b": "TDY",
+        "sector": "Information Technology",
+        "raw_p": 0.07473380652796086,
+        "half_life": 14.210055510170292,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MPWR",
+        "ticker_b": "TEL",
+        "sector": "Information Technology",
+        "raw_p": 0.07536856176620395,
+        "half_life": 17.284019034092307,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CSX",
+        "ticker_b": "PCAR",
+        "sector": "Industrials",
+        "raw_p": 0.07537861638912477,
+        "half_life": 16.52650656030584,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HBAN",
+        "ticker_b": "WTW",
+        "sector": "Financials",
+        "raw_p": 0.07840679920254547,
+        "half_life": 21.187079074752614,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MU",
+        "ticker_b": "TEL",
+        "sector": "Information Technology",
+        "raw_p": 0.0789899493319074,
+        "half_life": 18.255138612109324,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FE",
+        "ticker_b": "NEE",
+        "sector": "Utilities",
+        "raw_p": 0.07935829004244666,
+        "half_life": 17.488187297477438,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MSCI",
+        "ticker_b": "MTB",
+        "sector": "Financials",
+        "raw_p": 0.08042427229036264,
+        "half_life": 14.863802852761474,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ADP",
+        "ticker_b": "CARR",
+        "sector": "Industrials",
+        "raw_p": 0.08049573589426451,
+        "half_life": 17.68543604308073,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PFE",
+        "ticker_b": "VRTX",
+        "sector": "Health Care",
+        "raw_p": 0.08076461024395754,
+        "half_life": 23.722139182079157,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "IVZ",
+        "ticker_b": "TROW",
+        "sector": "Financials",
+        "raw_p": 0.08114174503534194,
+        "half_life": 18.630956614907372,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ABBV",
+        "ticker_b": "WAT",
+        "sector": "Health Care",
+        "raw_p": 0.0817850902011224,
+        "half_life": 17.494371431289608,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BNY",
+        "ticker_b": "CINF",
+        "sector": "Financials",
+        "raw_p": 0.08246633418704635,
+        "half_life": 14.864664667695562,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "SYY",
+        "ticker_b": "TSN",
+        "sector": "Consumer Staples",
+        "raw_p": 0.08363240257741311,
+        "half_life": 15.793449929610466,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPD",
+        "ticker_b": "FDX",
+        "sector": "Industrials",
+        "raw_p": 0.08387497200302396,
+        "half_life": 15.639239629989097,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LVS",
+        "ticker_b": "SBUX",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.08405088021189827,
+        "half_life": 18.250407396594838,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EFX",
+        "ticker_b": "ITW",
+        "sector": "Industrials",
+        "raw_p": 0.08575074558570617,
+        "half_life": 19.432168619081548,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MTD",
+        "ticker_b": "RVTY",
+        "sector": "Health Care",
+        "raw_p": 0.0860526313309738,
+        "half_life": 21.24462798012289,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LH",
+        "ticker_b": "UNH",
+        "sector": "Health Care",
+        "raw_p": 0.08618794792949153,
+        "half_life": 17.120523370398928,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "JBHT",
+        "ticker_b": "ROK",
+        "sector": "Industrials",
+        "raw_p": 0.08636756293718906,
+        "half_life": 24.669542514720312,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CIEN",
+        "ticker_b": "PLTR",
+        "sector": "Information Technology",
+        "raw_p": 0.08779302532641459,
+        "half_life": 18.489921476361275,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BLK",
+        "ticker_b": "MSCI",
+        "sector": "Financials",
+        "raw_p": 0.08781256981512447,
+        "half_life": 14.279029287275527,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LH",
+        "ticker_b": "WAT",
+        "sector": "Health Care",
+        "raw_p": 0.0880302318996879,
+        "half_life": 19.31777274465985,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PFE",
+        "ticker_b": "SYK",
+        "sector": "Health Care",
+        "raw_p": 0.08810469838815538,
+        "half_life": 26.726895324388472,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "OTIS",
+        "ticker_b": "UBER",
+        "sector": "Industrials",
+        "raw_p": 0.08861592010026015,
+        "half_life": 18.029910488390374,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AEP",
+        "ticker_b": "D",
+        "sector": "Utilities",
+        "raw_p": 0.08908479703122452,
+        "half_life": 23.59096197261146,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EMR",
+        "ticker_b": "FAST",
+        "sector": "Industrials",
+        "raw_p": 0.09005231267662417,
+        "half_life": 24.358419903487555,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CBOE",
+        "ticker_b": "WRB",
+        "sector": "Financials",
+        "raw_p": 0.09043447182321246,
+        "half_life": 23.148490005592475,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HSIC",
+        "ticker_b": "PODD",
+        "sector": "Health Care",
+        "raw_p": 0.090516633010226,
+        "half_life": 16.80897087329539,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPD",
+        "ticker_b": "FTV",
+        "sector": "Industrials",
+        "raw_p": 0.09187415347841232,
+        "half_life": 16.82564423180573,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HPE",
+        "ticker_b": "NTAP",
+        "sector": "Information Technology",
+        "raw_p": 0.09550173336164286,
+        "half_life": 17.33673476063501,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMP",
+        "ticker_b": "HOOD",
+        "sector": "Financials",
+        "raw_p": 0.09591589726620892,
+        "half_life": 17.202212237713475,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CTAS",
+        "ticker_b": "HON",
+        "sector": "Industrials",
+        "raw_p": 0.09639156716280883,
+        "half_life": 20.001479684240326,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "NSC",
+        "ticker_b": "UBER",
+        "sector": "Industrials",
+        "raw_p": 0.09684818034789638,
+        "half_life": 23.194502772439957,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "JNJ",
+        "ticker_b": "RVTY",
+        "sector": "Health Care",
+        "raw_p": 0.0980950512093049,
+        "half_life": 18.1976412554361,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPD",
+        "ticker_b": "PCAR",
+        "sector": "Industrials",
+        "raw_p": 0.099306830469922,
+        "half_life": 14.420365499790181,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ADI",
+        "ticker_b": "HPQ",
+        "sector": "Information Technology",
+        "raw_p": 0.10025765574253176,
+        "half_life": 8.957565643741475,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMAT",
+        "ticker_b": "TEL",
+        "sector": "Information Technology",
+        "raw_p": 0.10046844567078506,
+        "half_life": 18.858472733284504,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPD",
+        "ticker_b": "OTIS",
+        "sector": "Industrials",
+        "raw_p": 0.10188755083758355,
+        "half_life": 15.817395602129668,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMGN",
+        "ticker_b": "BMY",
+        "sector": "Health Care",
+        "raw_p": 0.10200691847133148,
+        "half_life": 22.229726436266283,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BDX",
+        "ticker_b": "PFE",
+        "sector": "Health Care",
+        "raw_p": 0.10258860688587385,
+        "half_life": 31.46336084630128,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "UBER",
+        "ticker_b": "WM",
+        "sector": "Industrials",
+        "raw_p": 0.10283631541939214,
+        "half_life": 17.785704863290626,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FDX",
+        "ticker_b": "UBER",
+        "sector": "Industrials",
+        "raw_p": 0.10338552939317869,
+        "half_life": 20.44989222681987,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPD",
+        "ticker_b": "IR",
+        "sector": "Industrials",
+        "raw_p": 0.10421136912045925,
+        "half_life": 14.1204698277808,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GEHC",
+        "ticker_b": "VEEV",
+        "sector": "Health Care",
+        "raw_p": 0.1047644253704515,
+        "half_life": 22.80013744403305,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "STE",
+        "ticker_b": "VEEV",
+        "sector": "Health Care",
+        "raw_p": 0.10675383095118163,
+        "half_life": 18.57188345782702,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ALGN",
+        "ticker_b": "WST",
+        "sector": "Health Care",
+        "raw_p": 0.10735264835554925,
+        "half_life": 19.817315376580414,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ADI",
+        "ticker_b": "VRSN",
+        "sector": "Information Technology",
+        "raw_p": 0.10765754997051952,
+        "half_life": 13.0733760032093,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPD",
+        "ticker_b": "TDG",
+        "sector": "Industrials",
+        "raw_p": 0.10769024238985186,
+        "half_life": 13.626524536844526,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EFX",
+        "ticker_b": "EXPD",
+        "sector": "Industrials",
+        "raw_p": 0.10789724990144434,
+        "half_life": 14.587718060237906,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ES",
+        "ticker_b": "EXC",
+        "sector": "Utilities",
+        "raw_p": 0.10959770528016932,
+        "half_life": 18.826686432154116,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CMG",
+        "ticker_b": "SBUX",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.11008655574874376,
+        "half_life": 19.437121057830463,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ICE",
+        "ticker_b": "MET",
+        "sector": "Financials",
+        "raw_p": 0.1127110071102525,
+        "half_life": 29.014146751760578,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CAT",
+        "ticker_b": "EMR",
+        "sector": "Industrials",
+        "raw_p": 0.11409078682041673,
+        "half_life": 20.666627036271993,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ELV",
+        "ticker_b": "REGN",
+        "sector": "Health Care",
+        "raw_p": 0.11486628302543428,
+        "half_life": 23.631073060194222,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "TGT",
+        "ticker_b": "TSN",
+        "sector": "Consumer Staples",
+        "raw_p": 0.11617823425611234,
+        "half_life": 20.646759321470004,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CSX",
+        "ticker_b": "NSC",
+        "sector": "Industrials",
+        "raw_p": 0.11646827853484282,
+        "half_life": 21.971788526309872,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FTV",
+        "ticker_b": "ITW",
+        "sector": "Industrials",
+        "raw_p": 0.11700227361049897,
+        "half_life": 20.30348639772376,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FIX",
+        "ticker_b": "PH",
+        "sector": "Industrials",
+        "raw_p": 0.119778408628608,
+        "half_life": 13.855372638746838,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "NSC",
+        "ticker_b": "PNR",
+        "sector": "Industrials",
+        "raw_p": 0.11992096232696742,
+        "half_life": 24.385516465507713,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HRL",
+        "ticker_b": "PG",
+        "sector": "Consumer Staples",
+        "raw_p": 0.12231966343067502,
+        "half_life": 25.229846654648558,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CCI",
+        "ticker_b": "PLD",
+        "sector": "Real Estate",
+        "raw_p": 0.12251901600022774,
+        "half_life": 22.709577267544898,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "WEC",
+        "ticker_b": "XEL",
+        "sector": "Utilities",
+        "raw_p": 0.1230350277077576,
+        "half_life": 30.887117804081296,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CPRT",
+        "ticker_b": "EXPD",
+        "sector": "Industrials",
+        "raw_p": 0.12341607584279851,
+        "half_life": 14.971602212279299,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "IR",
+        "ticker_b": "UBER",
+        "sector": "Industrials",
+        "raw_p": 0.12355397992296402,
+        "half_life": 19.838776720650422,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CFG",
+        "ticker_b": "FIS",
+        "sector": "Financials",
+        "raw_p": 0.12430839330758936,
+        "half_life": 20.912495192494994,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BLDR",
+        "ticker_b": "FTV",
+        "sector": "Industrials",
+        "raw_p": 0.12449716995993088,
+        "half_life": 19.85936748864278,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BLK",
+        "ticker_b": "CINF",
+        "sector": "Financials",
+        "raw_p": 0.12451919049703342,
+        "half_life": 20.22298780011416,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "COO",
+        "ticker_b": "VEEV",
+        "sector": "Health Care",
+        "raw_p": 0.12551124985595757,
+        "half_life": 20.82828568955286,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "TROW",
+        "ticker_b": "XYZ",
+        "sector": "Financials",
+        "raw_p": 0.1269206924808311,
+        "half_life": 11.201817820616679,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CSX",
+        "ticker_b": "FTV",
+        "sector": "Industrials",
+        "raw_p": 0.12729748940175512,
+        "half_life": 19.77944268290546,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPD",
+        "ticker_b": "MAS",
+        "sector": "Industrials",
+        "raw_p": 0.1286486546574664,
+        "half_life": 13.891643699027266,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CPRT",
+        "ticker_b": "FAST",
+        "sector": "Industrials",
+        "raw_p": 0.1311602475769576,
+        "half_life": 25.25174668607202,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "JBHT",
+        "ticker_b": "ODFL",
+        "sector": "Industrials",
+        "raw_p": 0.13268575239408942,
+        "half_life": 28.07799466474406,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ADI",
+        "ticker_b": "HPE",
+        "sector": "Information Technology",
+        "raw_p": 0.13342295167247853,
+        "half_life": 18.937609031132514,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMD",
+        "ticker_b": "SMCI",
+        "sector": "Information Technology",
+        "raw_p": 0.13620573575514827,
+        "half_life": 21.159692725162753,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LOW",
+        "ticker_b": "NVR",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.1383302318348612,
+        "half_life": 21.195929118304736,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MET",
+        "ticker_b": "MRSH",
+        "sector": "Financials",
+        "raw_p": 0.14119480537228846,
+        "half_life": 35.34486030270661,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CDNS",
+        "ticker_b": "HPE",
+        "sector": "Information Technology",
+        "raw_p": 0.1412312597355057,
+        "half_life": 34.37010642121681,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AKAM",
+        "ticker_b": "WDAY",
+        "sector": "Information Technology",
+        "raw_p": 0.14147448178272298,
+        "half_life": 21.549419095320008,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "INTC",
+        "ticker_b": "ZBRA",
+        "sector": "Information Technology",
+        "raw_p": 0.14163436894834297,
+        "half_life": 19.176839988113084,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CDNS",
+        "ticker_b": "ROP",
+        "sector": "Information Technology",
+        "raw_p": 0.1488233912443972,
+        "half_life": 16.73775502628806,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPD",
+        "ticker_b": "URI",
+        "sector": "Industrials",
+        "raw_p": 0.15145895211792476,
+        "half_life": 15.264447433151432,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FIS",
+        "ticker_b": "HBAN",
+        "sector": "Financials",
+        "raw_p": 0.15448365533544556,
+        "half_life": 21.176676848795427,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "NVR",
+        "ticker_b": "ORLY",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.15488308888152663,
+        "half_life": 15.247582843947711,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "GWW",
+        "ticker_b": "PWR",
+        "sector": "Industrials",
+        "raw_p": 0.15563035258684765,
+        "half_life": 21.576108007091765,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMCR",
+        "ticker_b": "CTVA",
+        "sector": "Materials",
+        "raw_p": 0.15833809719350223,
+        "half_life": 19.943344269419498,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ALLE",
+        "ticker_b": "ROL",
+        "sector": "Industrials",
+        "raw_p": 0.16085199988816207,
+        "half_life": 22.495463940441756,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CAT",
+        "ticker_b": "EXPD",
+        "sector": "Industrials",
+        "raw_p": 0.16217142440182963,
+        "half_life": 15.616044535913804,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CAT",
+        "ticker_b": "UNP",
+        "sector": "Industrials",
+        "raw_p": 0.1635921451311177,
+        "half_life": 20.96783805933959,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CINF",
+        "ticker_b": "FIS",
+        "sector": "Financials",
+        "raw_p": 0.16551271269200984,
+        "half_life": 19.860571167330484,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HON",
+        "ticker_b": "WM",
+        "sector": "Industrials",
+        "raw_p": 0.16561557011864608,
+        "half_life": 22.552513665967915,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPD",
+        "ticker_b": "ODFL",
+        "sector": "Industrials",
+        "raw_p": 0.16595510579524303,
+        "half_life": 24.493386735671223,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CINF",
+        "ticker_b": "FITB",
+        "sector": "Financials",
+        "raw_p": 0.17021044854364575,
+        "half_life": 21.99056589782459,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PH",
+        "ticker_b": "VRT",
+        "sector": "Industrials",
+        "raw_p": 0.17051316247169257,
+        "half_life": 15.40677359886495,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMP",
+        "ticker_b": "WFC",
+        "sector": "Financials",
+        "raw_p": 0.17115165229746737,
+        "half_life": 15.581464785292967,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EMR",
+        "ticker_b": "IR",
+        "sector": "Industrials",
+        "raw_p": 0.17759177200213289,
+        "half_life": 27.749378808362437,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CDW",
+        "ticker_b": "VRSN",
+        "sector": "Information Technology",
+        "raw_p": 0.17787304161077205,
+        "half_life": 24.372957730280543,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "WTW",
+        "ticker_b": "XYZ",
+        "sector": "Financials",
+        "raw_p": 0.18006395877415904,
+        "half_life": 22.722772187900773,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LDOS",
+        "ticker_b": "UBER",
+        "sector": "Industrials",
+        "raw_p": 0.1860050586005797,
+        "half_life": 31.901931954467884,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "IQV",
+        "ticker_b": "TMO",
+        "sector": "Health Care",
+        "raw_p": 0.1881104627200561,
+        "half_life": 23.631258530723123,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HD",
+        "ticker_b": "MAR",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.18812388472316444,
+        "half_life": 17.069969726678544,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CMI",
+        "ticker_b": "NSC",
+        "sector": "Industrials",
+        "raw_p": 0.18957885695922655,
+        "half_life": 23.73555643419921,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "RVTY",
+        "ticker_b": "TMO",
+        "sector": "Health Care",
+        "raw_p": 0.18989191712448283,
+        "half_life": 34.46531961636646,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BMY",
+        "ticker_b": "JNJ",
+        "sector": "Health Care",
+        "raw_p": 0.19041621365674588,
+        "half_life": 23.536666123056374,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FFIV",
+        "ticker_b": "FICO",
+        "sector": "Information Technology",
+        "raw_p": 0.19055158276425477,
+        "half_life": 24.09833765234898,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CME",
+        "ticker_b": "MSCI",
+        "sector": "Financials",
+        "raw_p": 0.1959231973497868,
+        "half_life": 15.734352858295606,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PFE",
+        "ticker_b": "STE",
+        "sector": "Health Care",
+        "raw_p": 0.19652294529000863,
+        "half_life": 22.175299642177336,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BALL",
+        "ticker_b": "DD",
+        "sector": "Materials",
+        "raw_p": 0.20508155509752507,
+        "half_life": 24.11313887768629,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "JNJ",
+        "ticker_b": "PFE",
+        "sector": "Health Care",
+        "raw_p": 0.20767740426642795,
+        "half_life": 23.5376383831108,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BAX",
+        "ticker_b": "BDX",
+        "sector": "Health Care",
+        "raw_p": 0.2079350606510761,
+        "half_life": 20.86964950303554,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DAL",
+        "ticker_b": "NSC",
+        "sector": "Industrials",
+        "raw_p": 0.2107056461827142,
+        "half_life": 27.087147211835415,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ALLE",
+        "ticker_b": "EXPD",
+        "sector": "Industrials",
+        "raw_p": 0.21334601098317524,
+        "half_life": 15.881955765556569,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MSCI",
+        "ticker_b": "SPGI",
+        "sector": "Financials",
+        "raw_p": 0.2156688598424762,
+        "half_life": 21.771593986285872,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "D",
+        "ticker_b": "ED",
+        "sector": "Utilities",
+        "raw_p": 0.22045456213054804,
+        "half_life": 24.67100459843918,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMT",
+        "ticker_b": "UDR",
+        "sector": "Real Estate",
+        "raw_p": 0.222301772809684,
+        "half_life": 41.89063460671119,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BLDR",
+        "ticker_b": "PCAR",
+        "sector": "Industrials",
+        "raw_p": 0.22619497640317798,
+        "half_life": 19.56806609594997,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CMG",
+        "ticker_b": "NKE",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.22622269466254497,
+        "half_life": 29.44648979205189,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CAT",
+        "ticker_b": "CSX",
+        "sector": "Industrials",
+        "raw_p": 0.22624263674321132,
+        "half_life": 23.316416888014135,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FIS",
+        "ticker_b": "RF",
+        "sector": "Financials",
+        "raw_p": 0.23298014877886197,
+        "half_life": 25.736048363803132,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "SNPS",
+        "ticker_b": "TEL",
+        "sector": "Information Technology",
+        "raw_p": 0.2363333458511246,
+        "half_life": 25.61006278726082,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PLD",
+        "ticker_b": "WY",
+        "sector": "Real Estate",
+        "raw_p": 0.24608050762321682,
+        "half_life": 25.36030146213584,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PFE",
+        "ticker_b": "RVTY",
+        "sector": "Health Care",
+        "raw_p": 0.2494876156223374,
+        "half_life": 25.940065249553566,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "VLO",
+        "ticker_b": "XOM",
+        "sector": "Energy",
+        "raw_p": 0.2504497682333025,
+        "half_life": 21.38490873409298,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "UBER",
+        "ticker_b": "URI",
+        "sector": "Industrials",
+        "raw_p": 0.25159487033928285,
+        "half_life": 29.175561296486464,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMD",
+        "ticker_b": "TEL",
+        "sector": "Information Technology",
+        "raw_p": 0.2524083660737265,
+        "half_life": 26.097101924087983,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXPD",
+        "ticker_b": "ITW",
+        "sector": "Industrials",
+        "raw_p": 0.2574532779472495,
+        "half_life": 24.83204928393888,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BMY",
+        "ticker_b": "VRTX",
+        "sector": "Health Care",
+        "raw_p": 0.2627457607570918,
+        "half_life": 30.06703091845959,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EMR",
+        "ticker_b": "UBER",
+        "sector": "Industrials",
+        "raw_p": 0.26398770311389236,
+        "half_life": 38.33698742554221,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMT",
+        "ticker_b": "DOC",
+        "sector": "Real Estate",
+        "raw_p": 0.26410178247476174,
+        "half_life": 49.0832007745528,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BMY",
+        "ticker_b": "DHR",
+        "sector": "Health Care",
+        "raw_p": 0.26477051727531453,
+        "half_life": 28.112445362879313,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMT",
+        "ticker_b": "VICI",
+        "sector": "Real Estate",
+        "raw_p": 0.26548864384303966,
+        "half_life": 26.824260103574854,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CB",
+        "ticker_b": "FIS",
+        "sector": "Financials",
+        "raw_p": 0.26561913493009703,
+        "half_life": 18.354798419487405,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CAT",
+        "ticker_b": "UBER",
+        "sector": "Industrials",
+        "raw_p": 0.2680000944610923,
+        "half_life": 29.34996260956148,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HPE",
+        "ticker_b": "MSFT",
+        "sector": "Information Technology",
+        "raw_p": 0.26810978672280017,
+        "half_life": 35.98910040121851,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PNR",
+        "ticker_b": "ROL",
+        "sector": "Industrials",
+        "raw_p": 0.26944865997091183,
+        "half_life": 25.042483680550834,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "PCAR",
+        "ticker_b": "UBER",
+        "sector": "Industrials",
+        "raw_p": 0.2694875835527034,
+        "half_life": 16.79350302738063,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BLDR",
+        "ticker_b": "SWK",
+        "sector": "Industrials",
+        "raw_p": 0.2701807245309666,
+        "half_life": 19.137003935331194,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FAST",
+        "ticker_b": "UBER",
+        "sector": "Industrials",
+        "raw_p": 0.2733863462410546,
+        "half_life": 26.166839682969748,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HD",
+        "ticker_b": "PHM",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.2767842890961877,
+        "half_life": 38.005646507507365,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BEN",
+        "ticker_b": "BLK",
+        "sector": "Financials",
+        "raw_p": 0.2804406945244866,
+        "half_life": 32.2081980076528,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FIS",
+        "ticker_b": "MTB",
+        "sector": "Financials",
+        "raw_p": 0.28281284452144995,
+        "half_life": 17.790677059139778,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ECHO",
+        "ticker_b": "OMC",
+        "sector": "Communication Services",
+        "raw_p": 0.29777379223001954,
+        "half_life": 27.125279137199925,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MRVL",
+        "ticker_b": "PLTR",
+        "sector": "Information Technology",
+        "raw_p": 0.302798598123182,
+        "half_life": 10.205670571300818,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DHI",
+        "ticker_b": "HD",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.30478649086148296,
+        "half_life": 45.86197300415599,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CTVA",
+        "ticker_b": "IFF",
+        "sector": "Materials",
+        "raw_p": 0.31243328826826716,
+        "half_life": 21.783769259274223,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "EXR",
+        "ticker_b": "UDR",
+        "sector": "Real Estate",
+        "raw_p": 0.31255273926606164,
+        "half_life": 27.488494210171435,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "MCO",
+        "ticker_b": "MSCI",
+        "sector": "Financials",
+        "raw_p": 0.31910445953569255,
+        "half_life": 21.365182292062794,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BA",
+        "ticker_b": "TXT",
+        "sector": "Industrials",
+        "raw_p": 0.3316369458685345,
+        "half_life": 31.684346584228347,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BX",
+        "ticker_b": "SPGI",
+        "sector": "Financials",
+        "raw_p": 0.3360456014664088,
+        "half_life": 29.73509570186789,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HPE",
+        "ticker_b": "SNPS",
+        "sector": "Information Technology",
+        "raw_p": 0.36087785595513455,
+        "half_life": 41.633019517925064,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BLDR",
+        "ticker_b": "EMR",
+        "sector": "Industrials",
+        "raw_p": 0.36330282914225587,
+        "half_life": 42.18794390460707,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ADP",
+        "ticker_b": "ROL",
+        "sector": "Industrials",
+        "raw_p": 0.3773635548185609,
+        "half_life": 40.382594940821306,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DXCM",
+        "ticker_b": "MRNA",
+        "sector": "Health Care",
+        "raw_p": 0.381994319048101,
+        "half_life": 34.760104161830576,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BAX",
+        "ticker_b": "PFE",
+        "sector": "Health Care",
+        "raw_p": 0.385443936736624,
+        "half_life": 42.44988264687457,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DGX",
+        "ticker_b": "INCY",
+        "sector": "Health Care",
+        "raw_p": 0.388343098740198,
+        "half_life": 36.40955120676079,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HPE",
+        "ticker_b": "WDC",
+        "sector": "Information Technology",
+        "raw_p": 0.39338367426657755,
+        "half_life": 28.626306178282523,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "CMI",
+        "ticker_b": "CSX",
+        "sector": "Industrials",
+        "raw_p": 0.4015772118642069,
+        "half_life": 31.463702197829377,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AME",
+        "ticker_b": "UBER",
+        "sector": "Industrials",
+        "raw_p": 0.4233035899989382,
+        "half_life": 22.953992731674035,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AOS",
+        "ticker_b": "CTAS",
+        "sector": "Industrials",
+        "raw_p": 0.43667442163715187,
+        "half_life": 35.76120862889184,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HPQ",
+        "ticker_b": "QCOM",
+        "sector": "Information Technology",
+        "raw_p": 0.44742442224798307,
+        "half_life": 26.826527590927455,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BMY",
+        "ticker_b": "INCY",
+        "sector": "Health Care",
+        "raw_p": 0.475157403247471,
+        "half_life": 35.00052489088327,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "FICO",
+        "ticker_b": "MRVL",
+        "sector": "Information Technology",
+        "raw_p": 0.48967077374114737,
+        "half_life": 27.46597237791567,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BLDR",
+        "ticker_b": "CAT",
+        "sector": "Industrials",
+        "raw_p": 0.4965574001592392,
+        "half_life": 35.191188059910964,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HPE",
+        "ticker_b": "KLAC",
+        "sector": "Information Technology",
+        "raw_p": 0.49898541495274984,
+        "half_life": 33.33844649246981,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ADBE",
+        "ticker_b": "WDAY",
+        "sector": "Information Technology",
+        "raw_p": 0.5041450185877115,
+        "half_life": 35.844329880891365,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HUBB",
+        "ticker_b": "MAS",
+        "sector": "Industrials",
+        "raw_p": 0.5245247423685367,
+        "half_life": 21.756437731922002,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "DHI",
+        "ticker_b": "LOW",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.5351073060437231,
+        "half_life": 44.48187138079009,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ADBE",
+        "ticker_b": "CTSH",
+        "sector": "Information Technology",
+        "raw_p": 0.545238201142371,
+        "half_life": 37.87193875562547,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "AMAT",
+        "ticker_b": "HPE",
+        "sector": "Information Technology",
+        "raw_p": 0.5453118485827879,
+        "half_life": 47.411095008024674,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "OMC",
+        "ticker_b": "TKO",
+        "sector": "Communication Services",
+        "raw_p": 0.558669706890153,
+        "half_life": 36.18352474142991,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ADI",
+        "ticker_b": "QCOM",
+        "sector": "Information Technology",
+        "raw_p": 0.5655884343662936,
+        "half_life": 18.399287716919886,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "ETN",
+        "ticker_b": "UBER",
+        "sector": "Industrials",
+        "raw_p": 0.6294048827640937,
+        "half_life": 33.756792850376414,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "LEN",
+        "ticker_b": "LOW",
+        "sector": "Consumer Discretionary",
+        "raw_p": 0.6528665533837579,
+        "half_life": 40.62586771476492,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "HCA",
+        "ticker_b": "REGN",
+        "sector": "Health Care",
+        "raw_p": 0.6694558531589418,
+        "half_life": 59.51175002409665,
+        "johansen_significant": true
+      },
+      {
+        "ticker_a": "BLDR",
+        "ticker_b": "HUBB",
+        "sector": "Industrials",
+        "raw_p": 0.7596073392107517,
+        "half_life": 29.725490138437454,
+        "johansen_significant": true
+      }
+    ],
+    "grid": {
+      "0.5": {
+        "n_pairs": 8279,
+        "n_tests_old": 8279,
+        "n_tests_new": 16558,
+        "survivors_old": [],
+        "survivors_new": []
+      },
+      "0.6": {
+        "n_pairs": 6932,
+        "n_tests_old": 6932,
+        "n_tests_new": 13864,
+        "survivors_old": [],
+        "survivors_new": []
+      },
+      "0.7": {
+        "n_pairs": 5497,
+        "n_tests_old": 5497,
+        "n_tests_new": 10994,
+        "survivors_old": [],
+        "survivors_new": []
+      },
+      "0.8": {
+        "n_pairs": 3724,
+        "n_tests_old": 3724,
+        "n_tests_new": 7448,
+        "survivors_old": [],
+        "survivors_new": []
+      },
+      "0.9": {
+        "n_pairs": 1418,
+        "n_tests_old": 1418,
+        "n_tests_new": 2836,
+        "survivors_old": [],
+        "survivors_new": []
+      }
+    }
+  }
+}

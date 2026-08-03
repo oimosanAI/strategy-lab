@@ -25,7 +25,7 @@ and forcing both onto one universe would silently change published
 numbers for no methodological reason.
 
 RUNTIME: roughly 45-60 minutes on a warm cache. The two full-universe
-pairs_trading artifacts dominate -- select_pairs across ~5,551 pair-tests
+pairs_trading artifacts dominate -- select_pairs across ~5,551 candidate pairs
 takes ~5 minutes per call, and they need 4 (walk-forward windows) + 5
 (correlation-prefilter grid points) of them. scripts/generate_figures.py
 transcribes those results rather than re-deriving them for a chart; this
@@ -386,8 +386,12 @@ def _generate_fast_reports(
         description="S&P 500 Utilities/Communication Services subset; single pair, static hedge.",
         limitations=[
             SURVIVORSHIP_LIMITATION,
-            "Candidate pool: single surviving pair (AEP-FE) after full-universe Bonferroni "
-            "correction across 5,551 tests -- see strategies/pairs_trading/README.md.",
+            "Candidate pool: AEP-FE is the single pair surviving Bonferroni correction within "
+            "the NARROW 2-sector scan (308 pairs = 616 tests, adjusted p=0.0472 -- barely "
+            "inside alpha=0.05). It does NOT survive the full-universe family (5,551 pairs = "
+            "11,102 tests), where zero pairs survive. The family size counts 2 tests per pair "
+            "because engle_granger_test selects the stronger of both regression directions -- "
+            "see strategies/pairs_trading/README.md Step F.",
             "Static hedge ratio frozen from in-sample OLS; not re-estimated OOS.",
         ],
     )
@@ -495,7 +499,7 @@ def _generate_full_universe_pair_reports(
     needs 4 (walk-forward windows) + 5 (prefilter grid points) of them."""
     written: list[str] = []
 
-    _log("Walk-forward: pairs_trading (FULL universe, ~5,551 pair-tests x 4 windows)...")
+    _log("Walk-forward: pairs_trading (FULL universe, ~5,551 candidate pairs x 4 windows)...")
     pt_full_windows = run_pairs_trading_walk_forward(
         panels.close_wf,
         panels.open_wf,

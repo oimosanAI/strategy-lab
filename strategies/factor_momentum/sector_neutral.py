@@ -58,6 +58,16 @@ def build_sector_neutral_signal(
     equal budget per sector. See module docstring for the normalization
     rationale and the NaN/threshold contract."""
     groups = _group_tickers_by_sector(momentum.columns, sector_map)
+    if not groups:
+        # Skipping SOME unmapped tickers is legitimate; a sector_map that
+        # matches NOTHING is a configuration error (e.g. keyed on company
+        # names instead of tickers). Returning an all-zero signal would let
+        # that masquerade as "the strategy chose to stay flat" -- the same
+        # silent-failure mode guarded against in VolArbitrageStrategy.
+        raise ValueError(
+            "sector_map matched none of the score columns; expected keys drawn from "
+            f"{list(momentum.columns)[:5]}... but got {list(sector_map)[:5]}..."
+        )
 
     per_sector_signals: list[pd.DataFrame] = []
     for tickers in groups.values():

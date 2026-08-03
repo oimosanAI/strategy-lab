@@ -11,10 +11,13 @@ not modify or depend on that module's logic.
 
 One deliberate exception: the full-universe pairs_trading walk-forward
 (Step D in strategies/pairs_trading/README.md) re-runs select_pairs across
-~5,551 pair-tests per window (4 windows) -- prohibitively expensive to
+~5,551 candidate pairs per window (4 windows) -- prohibitively expensive to
 redo just for a chart. Its 4 window results and the two Bonferroni scan
-points (n_tests=308/5,551) are transcribed verbatim from the real,
-already-verified results in strategies/pairs_trading/README.md and
+points (308 pairs = 616 tests / 5,551 pairs = 11,102 tests -- the family
+size counts 2 tests per pair because engle_granger_test selects the
+stronger of both regression directions, see that README's Step F) are
+transcribed verbatim from the real, already-verified results in
+strategies/pairs_trading/README.md and
 reports/pairs_trading_walk_forward_full_universe.md, not re-derived here.
 Everything else in this script is computed fresh from real data.
 
@@ -241,8 +244,11 @@ def main() -> None:
     print("Plotting (d) multiple testing visualization...")
     raw_p = 7.666e-05  # AEP-FE's raw Engle-Granger p-value, see strategies/pairs_trading/README.md Sec 3-1
     scans = [
-        BonferroniScanPoint(n_tests=308, survivors_before=18, survivors_after=1, label="2-sector\n(n=308)"),
-        BonferroniScanPoint(n_tests=5551, survivors_before=237, survivors_after=0, label="full-universe\n(n=5,551)"),
+        # n_tests counts TESTS, not pairs: engle_granger_test runs coint()
+        # in both directions and keeps the stronger, so each pair costs 2
+        # (see strategies/pairs_trading/README.md Step F).
+        BonferroniScanPoint(n_tests=616, survivors_before=18, survivors_after=1, label="2-sector\n(308 pairs\n=616 tests)"),
+        BonferroniScanPoint(n_tests=11102, survivors_before=237, survivors_after=0, label="full-universe\n(5,551 pairs\n=11,102 tests)"),
     ]
     fig_d = plot_multiple_testing_bonferroni(raw_p, scans)
     fig_d.savefig(FIGURES_DIR / "multiple_testing_bonferroni.png", dpi=150)

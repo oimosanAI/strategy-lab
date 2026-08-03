@@ -33,12 +33,12 @@ Phase 3の実データE2E検証では、いずれもユニットテストの粒�
 
 候補ペアのスクリーニングにおいて、検定対象を2セクター（54銘柄）に限定した場合と、全11セクター（503銘柄）に拡張した場合とで、統計的結論が反転する現象を実データで確認した。
 
-| 検定範囲 | 検定数（n_tests） | 生存ペア数（Bonferroni補正後） |
-|---|---|---|
-| 2セクター（54銘柄） | 308 | 1（AEP-FE） |
-| 全宇宙（495銘柄） | 5,551 | **0** |
+| 検定範囲 | ペア数 | 検定数（n_tests） | 生存ペア数（Bonferroni補正後） |
+|---|---|---|---|
+| 2セクター（54銘柄） | 308 | 616 | 1（AEP-FE） |
+| 全宇宙（495銘柄） | 5,551 | 11,102 | **0** |
 
-同一の生データ・同一の生p値（7.666e-05）が、検定族の定義次第で「有意」（adjusted p=0.024）にも「有意でない」（adjusted p=0.43）にもなる。「候補プールを広げれば良いペアが見つかりやすくなる」という直感は、多重検定補正の厳格化と正面から相殺するという教訓を、実データで定量的に示した。
+同一の生データ・同一の生p値（7.666e-05）が、検定族の定義次第で「有意」（adjusted p=0.047）にも「有意でない」（adjusted p=0.85）にもなる。n_testsがペア数の2倍なのは、`engle_granger_test`が両方向で検定して強い方を採用するため（1ペア＝2検定）——当初これを見落としペア数をそのままn_testsとしていた誤りは、`strategies/pairs_trading/README.md` Step Fで訂正し、実データで再検証済み（全宇宙の「0本」は不変、2セクターのAEP-FEはadjusted p=0.0236→0.0472で辛うじて生存）。「候補プールを広げれば良いペアが見つかりやすくなる」という直感は、多重検定補正の厳格化と正面から相殺するという教訓を、実データで定量的に示した。
 
 ![Multiple Testing: Bonferroni-Adjusted p-value vs n_tests](reports/figures/multiple_testing_bonferroni.png)
 
@@ -99,7 +99,7 @@ pairs_tradingのentry_threshold × exit_thresholdについては、実際にテ�
 
 インタラクティブ版（plotly、ダウンロードしてブラウザで開くと回転・ホバー操作が可能）：[reports/figures/interactive/pairs_trading_entry_exit_3d.html](reports/figures/interactive/pairs_trading_entry_exit_3d.html)
 
-生成スクリプト：[scripts/generate_figures.py](scripts/generate_figures.py)（`DataLoader`/`YFinanceProvider`/`UniverseLoader`を通じて実データを取得し直す、フレッシュクローンからも再現可能な構成。ただしpairs_trading全宇宙walk-forwardと多重検定の2スキャン点は、5,551検定×4ウィンドウの再実行が非現実的なコストのため、`strategies/pairs_trading/README.md`記載の実測値をそのまま転記している——詳細はスクリプト内のコメントを参照）。なお図と異なりレポート側（§3-6・§3-8）は転記をやめており、[scripts/generate_reports.py](scripts/generate_reports.py)はこの全宇宙walk-forwardを実際に再計算している（約21分）。その再計算で転記値が完全に再現されることも確認済み。
+生成スクリプト：[scripts/generate_figures.py](scripts/generate_figures.py)（`DataLoader`/`YFinanceProvider`/`UniverseLoader`を通じて実データを取得し直す、フレッシュクローンからも再現可能な構成。ただしpairs_trading全宇宙walk-forwardと多重検定の2スキャン点は、5,551ペア（＝11,102検定）×4ウィンドウの再実行が非現実的なコストのため、`strategies/pairs_trading/README.md`記載の実測値をそのまま転記している——詳細はスクリプト内のコメントを参照）。なお図と異なりレポート側（§3-6・§3-8）は転記をやめており、[scripts/generate_reports.py](scripts/generate_reports.py)はこの全宇宙walk-forwardを実際に再計算している（約21分）。その再計算で転記値が完全に再現されることも確認済み。
 
 ### 3-6. 生成済みレポート
 
@@ -171,7 +171,7 @@ pairs_tradingのentry_threshold × exit_thresholdについては、実際にテ�
 
 今回、`reports/*.md`が場当たり的に生成され手で維持されていたことが問題として顕在化した。評価ロジックが変わった瞬間、コミット済みレポートは**コードがもう主張していないことを主張し続ける**状態になり、直す手段が「手で数値を書き直す（＝でっち上げる）」か「陳腐化を放置する」しかなくなる。数値の再現性が存在意義であるリポジトリで、どちらも許容できない。
 
-`scripts/generate_reports.py`を新設し、全13レポートを実データから単一コマンドで再生成できるようにした。以後レポートは**再生成するものであって編集するものではない**。`generate_figures.py`が「5,551検定×4ウィンドウは再実行が非現実的」として転記していた全宇宙walk-forwardも、本スクリプトでは実際に再計算している（約21分）——他のレポートから数値を黙って写すのは、まさにこのスクリプトが解消しようとしている失敗そのものだからである。1ファイルの修正でも手編集に戻らないよう、`--only {all,fast,full-universe-pairs}`で部分再生成を正式な機能とした。
+`scripts/generate_reports.py`を新設し、全13レポートを実データから単一コマンドで再生成できるようにした。以後レポートは**再生成するものであって編集するものではない**。`generate_figures.py`が「5,551ペア×4ウィンドウは再実行が非現実的」として転記していた全宇宙walk-forwardも、本スクリプトでは実際に再計算している（約21分）——他のレポートから数値を黙って写すのは、まさにこのスクリプトが解消しようとしている失敗そのものだからである。1ファイルの修正でも手編集に戻らないよう、`--only {all,fast,full-universe-pairs}`で部分再生成を正式な機能とした。
 
 この作業自体が、**陳腐化した記述を2件検出した**：
 
@@ -179,6 +179,46 @@ pairs_tradingのentry_threshold × exit_thresholdについては、実際にテ�
 - `vol_arbitrage_vrp.md`の「この戦略にはwalk-forward・パラメータ感度分析が未実施」——`reports/vol_arbitrage_walk_forward.md`と`reports/sensitivity_vol_arbitrage_vrp_threshold.md`が同じディレクトリに存在しており偽。加えて`generate_reports.py`自体が**`vol_arbitrage_walk_forward.md`を生成対象から取りこぼしていた**ことも判明し（13件中12件しか生成していなかった）、生成対象に追加した上で既存数値をバイト単位で再現することを確認した。
 
 **今後の既知の課題として記録**：同レビューのMEDIUM-5（`render_comparison_report`が約125行でハウスルールの50行上限超過）とLOW 6件（`sensitivity.py`のグリッド点間でのparamsキー不揃い、`visualization.py`が実行時の型ナローイングに`assert`を使用し`python -O`で除去される、`Figure`の未close、空入力でのクラッシュ、`periods_per_year=0`での`ZeroDivisionError`、空`returns`での`IndexError`）は今回のスコープ外とした。また`tests/dashboard/test_pages.py`のStreamlit `AppTest`の3秒タイムアウトによるflakinessは、本作業以前から存在することを`git stash`での切り分けで確認済みであり、別途対応する。
+
+### 3-9. コードレビューで発覚した、多重検定補正そのものの過小評価（`strategies/`）
+
+§3-7・§3-8に続き、`strategies/`に対する`/code-review`（2026-08-01実施）でHIGH 2件・MEDIUM 3件が見つかった。CRITICALはなし。**うちHIGH-1は、このプロジェクトの中心的な発見（§3-1の多重検定問題）の土台にある計算そのものの欠陥**だった。
+
+**HIGH-1：Bonferroni検定族を2分の1に過小評価していた**
+
+`engle_granger_test`はEngle-Granger検定が非対称であることに対処するため`coint()`を**両方向**で実行し、p値の小さい方を採用している。この「2つのp値の最小値を取る」操作自体が第2の多重検定であり、1ペアあたりの検定数は2である。ところが`select_pairs`は`n_tests`にプレフィルタ通過**ペア数**を設定しており、族サイズを半分に数えていた。adjusted p値は反保守側（偽陽性寄り）に偏っていたことになる。Johansen側の補正が不可能であることはモジュールdocstringに明記されていたのに、この方向選択の分だけが未開示だった、という不整合でもある。
+
+修正は`n_tests = 2 × ペア数`。**方向選択の設計自体は変更していない**——方向は`dependent`/`independent`を決め、ひいてはヘッジ比率を決めるため、方向規則を変えると全バックテスト数値が動く。直すべきは補正の族サイズだけであり、「1つの問題に1つの修正」を優先した。
+
+**実データでの再検証**（`scripts/verify_h1_family_size.py`、結果は`reports/h1_reverification.json`）：
+
+| プール | プレフィルタ | ペア数 | 生存数（旧 n=ペア数） | 生存数（新 n=2×ペア数） |
+|---|---|---|---|---|
+| 2セクター | 0.5 / 0.6 | 461 / 374 | 1 (AEP-FE) | **0** |
+| 2セクター | **0.7**（既定） | 308 | 1 (AEP-FE, 0.0236) | 1 (AEP-FE, **0.0472**) |
+| 2セクター | 0.8 / 0.9 | 201 / 67 | 1 (AEP-FE) | 1 (AEP-FE) |
+| 全宇宙 | 0.5〜0.9 全点 | 1,418〜8,279 | **0** | **0** |
+
+- **全宇宙の「生存ペア0本」は不変**。§3-1の中心的な主張は影響を受けない。13レポートを再生成した結果、**数値は1つも変化しなかった**（変わったのは制約文の記述のみ）。
+- **2セクターのAEP-FEは adjusted p=0.0472 で辛うじて生存**するが、プレフィルタを0.5/0.6に緩めると1→0に反転する。訂正前は5点全てで1本だったため見えていなかった脆弱性であり、**「唯一の生存候補ですら、その生存が閾値の些細な選択に依存する」**という形で§3-1の主張をむしろ補強する結果となった。
+
+**副次的に発見した事実誤認**：`reports/pairs_trading_aep_fe.md`・`strategy_comparison.md`の制約文が「AEP-FEは全宇宙5,551検定のBonferroni補正を生き残った唯一のペア」と記述していたが、`strategies/pairs_trading/README.md` §3-1の通りAEP-FEは全宇宙補正では生存しない。事実に反する記述であり、正しい内容に修正した。
+
+**再現性の注記**：再検証は実行時点のS&P 500構成銘柄（494銘柄）で行っており、公表時（495銘柄）と1銘柄異なる。`core/data/universe.py`が常に「現在の」構成銘柄を取得する設計（§6のLevel A survivorship bias）によるもので、修正の副作用ではない。2セクタープールは完全再現した（718ペア／308通過／18候補／生p=7.666e-05／adjusted p=0.0236）。全宇宙側は5,497ペア・無補正236候補（公表5,551・237）と1銘柄分ずれる。
+
+**HIGH-2：`VolArbitrageStrategy`の設定ミスが「フラットな成績」に化ける経路**
+
+`signal[traded_ticker] = ...`は`prices`に存在しないtickerに対して**新しい列を作る**。`run_backtest`は`prices.columns`のみを回すためその列は無視され、バックテストは完走してリターン全ゼロ・「エッジなし」の戦略として報告される。一方`vix_column`/`spy_column`側は`prices[...]`のため`KeyError`で落ちる——**同じ設定ミスが片方はcrash、片方はsilent**という非対称だった。結果の正直性を存在意義とするリポジトリで、設定ミスが正常に見える成績に化けるのは最も危険な失敗様式である。
+
+`generate_signals`冒頭で3列すべての存在を検証し`ValueError`を投げるよう修正。**過去の実行がこの経路を踏んでいなかったことは実測で確認済み**：全call siteがデフォルト設定で、パネル列は`['VIX','SPY','SVXY']`、SVXYは892日中779日（87.3%）で建玉していた。既存結果への影響はない。
+
+**MEDIUM-1：`build_sector_neutral_signal`が`prices`と異なる列集合を返す**
+
+`strategies/base.py`の契約は「same shape as prices」でグローバルモードは満たしていたが、セクター中立モードはセクター単位のconcatで構成するため`sector_map`にない銘柄が出力から消えていた（`VolTargetSizer`のpandas列アラインが偶然0.0で埋めていたために表面化していなかった）。`sector_map`が1銘柄も一致しない場合は`pd.concat([])`が不透明な`ValueError`を投げていた。契約境界（`FactorMomentumStrategy.generate_signals`）で`prices.columns`にreindexし、全不一致はHIGH-2と同じ原則で明示的な`ValueError`とした（全ゼロを返すと「戦略がフラットを選んだ」ように見えるため）。
+
+**テスト設計上の教訓**：この3件を通じて、既存テストが「正しさ」ではなく「自己無矛盾性」しか検証していない箇所が見つかった。特にHIGH-1では`expected_adjusted = min(1.0, ab.engle_granger.p_value * ab.n_tests)`と、検証対象自身が記録した`n_tests`から期待値を組み立てており、族サイズがペア数でも検定数でも通ってしまう構造だった。修正では期待値をフィクスチャから独立に導出し直し、「旧規則なら採択・新規則なら棄却される」境界ペアのテストを追加した（詳細は`strategies/pairs_trading/README.md` §4-4）。
+
+**今後の既知の課題として記録**：MEDIUM-2（`PairsTradingStrategy.generate_signals`がインスタンス状態を書き換えるため、`assert_causal`実行後に`last_forced_exit_dates`が摂動試行の値で汚染される。現状`strategies/`外に読み出し箇所はなく潜在的）、MEDIUM-3（`run_correlation_prefilter_grid`が`PairSelectionConfig`を`dataclasses.replace`ではなく手書きコピーしており、フィールド追加時に無言でデフォルトに戻る）、LOW 3件（`realized_volatility`の実装が3箇所に複製されているのにdocstringは「reused」と記述、グローバルモードに`min_names_per_sector`相当の下限なし、`max_holding_periods`がエントリーバーを含め実質+1バー）は今回のスコープ外とした。
 
 ## 4. 技術スタック・アーキテクチャ概要
 

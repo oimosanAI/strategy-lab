@@ -72,6 +72,34 @@ def test_vol_arbitrage_strategy_signals_svxy_when_vrp_above_threshold() -> None:
     assert (result["SVXY"].iloc[10:] == 1.0).all()
 
 
+@pytest.mark.parametrize("missing", ["SVXY", "VIX", "SPY"])
+def test_vol_arbitrage_strategy_rejects_panel_missing_a_required_column(missing: str) -> None:
+    # Arrange: a misconfigured traded_ticker used to be SILENT -- assigning
+    # signal[traded_ticker] created a brand-new column that run_backtest
+    # (which iterates prices.columns) then ignored, so the backtest
+    # completed and reported an all-zero-return "no edge" strategy instead
+    # of failing. The VIX/SPY columns raised KeyError on the same mistake.
+    # All three must now fail the same way, loudly, before any number is
+    # produced.
+    prices = _synthetic_price_panel().drop(columns=[missing])
+    strategy = VolArbitrageStrategy(config=_TEST_CONFIG)
+
+    # Act / Assert
+    with pytest.raises(ValueError, match=missing):
+        strategy.generate_signals(prices)
+
+
+def test_vol_arbitrage_strategy_error_names_every_missing_column() -> None:
+    prices = _synthetic_price_panel().drop(columns=["SVXY", "VIX"])
+    strategy = VolArbitrageStrategy(config=_TEST_CONFIG)
+
+    with pytest.raises(ValueError) as excinfo:
+        strategy.generate_signals(prices)
+
+    message = str(excinfo.value)
+    assert "SVXY" in message and "VIX" in message
+
+
 def test_vol_arbitrage_strategy_passes_assert_causal() -> None:
     prices = _synthetic_price_panel()
     strategy = VolArbitrageStrategy(config=_TEST_CONFIG)

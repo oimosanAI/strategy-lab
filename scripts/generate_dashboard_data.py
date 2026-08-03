@@ -11,7 +11,7 @@ Tier 1 (precomputed, non-reactive in the app): pairs_trading's
 full-universe walk-forward and the two Bonferroni scan points are
 transcribed from the real, already-verified results in
 strategies/pairs_trading/README.md -- re-deriving them here would mean
-re-running select_pairs across ~5,551 pair-tests x 4 windows, the same
+re-running select_pairs across ~5,551 candidate pairs x 4 windows, the same
 cost concern already documented in scripts/generate_figures.py.
 factor_momentum's and vol_arbitrage's walk-forward ARE recomputed fresh
 here (cheap, single continuous run_backtest + window slicing).
@@ -75,8 +75,10 @@ PAIRS_TRADING_FULL_UNIVERSE_WALK_FORWARD = [
 ]
 RAW_P = 7.666e-05
 BONFERRONI_SCANS = [
-    {"n_tests": 308, "survivors_before": 18, "survivors_after": 1, "label": "2-sector"},
-    {"n_tests": 5551, "survivors_before": 237, "survivors_after": 0, "label": "full-universe"},
+    # n_tests counts TESTS, not pairs (2 per pair -- engle_granger_test
+    # keeps the stronger of both directions). See pairs_trading README Step F.
+    {"n_tests": 616, "survivors_before": 18, "survivors_after": 1, "label": "2-sector"},
+    {"n_tests": 11102, "survivors_before": 237, "survivors_after": 0, "label": "full-universe"},
 ]
 
 

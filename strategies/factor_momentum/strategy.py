@@ -69,6 +69,16 @@ class FactorMomentumStrategy:
         if self._mode == "sector_neutral":
             assert self._sector_map is not None  # guaranteed by __init__
             daily_signal = build_sector_neutral_signal(momentum, low_vol, self._sector_map, self._config)
+            # build_sector_neutral_signal legitimately returns only the
+            # tickers it could group (an unmapped ticker is skipped, not an
+            # error -- see its own contract), and concatenates sector by
+            # sector, so neither the column SET nor their ORDER is
+            # guaranteed to match `prices`. strategies.base.Strategy
+            # requires "same shape as prices", which global mode satisfies
+            # for free. Restoring it here -- rather than relying on the
+            # sizer's pandas alignment to silently refill the gaps -- keeps
+            # the contract true of the Strategy itself, in both modes.
+            daily_signal = daily_signal.reindex(columns=prices.columns).fillna(0.0)
         else:
             daily_signal = build_long_short_signal(momentum, low_vol, self._config)
         # DataLoader's price panels are always datetime-indexed at

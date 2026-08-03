@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+import pytest
 
 from strategies.factor_momentum.ranking import FactorMomentumConfig, build_long_short_signal
 from strategies.factor_momentum.sector_neutral import build_sector_neutral_signal
@@ -123,6 +124,24 @@ def test_build_sector_neutral_signal_ignores_tickers_missing_from_sector_map() -
     result = build_sector_neutral_signal(momentum, low_vol, sector_map, config)
 
     assert "Unknown" not in result.columns
+
+
+def test_build_sector_neutral_signal_raises_when_no_ticker_has_a_sector() -> None:
+    # Skipping SOME unmapped tickers is legitimate (the test above). A
+    # sector_map matching NOTHING is a configuration error -- e.g. a map
+    # keyed on company names instead of tickers. Returning an all-zero
+    # signal there would let a misconfiguration masquerade as "the
+    # strategy chose to stay flat", the same silent-failure mode fixed in
+    # VolArbitrageStrategy. It previously surfaced as pandas' opaque
+    # "No objects to concatenate" from pd.concat([]).
+    idx = pd.bdate_range("2020-01-01", periods=1)
+    tickers = [f"A{i}" for i in range(5)]
+    momentum = pd.DataFrame([[0.01 * (i + 1) for i in range(5)]], index=idx, columns=tickers)
+    low_vol = pd.DataFrame([[0.30 - 0.02 * i for i in range(5)]], index=idx, columns=tickers)
+    config = FactorMomentumConfig(min_names_per_sector=2)
+
+    with pytest.raises(ValueError, match="sector_map"):
+        build_sector_neutral_signal(momentum, low_vol, {"NotAColumn": "SectorA"}, config)
 
 
 # ---------------------------------------------------------------------------

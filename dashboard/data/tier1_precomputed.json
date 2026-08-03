@@ -73,13 +73,13 @@
   "raw_p": 7.666e-05,
   "bonferroni_scans": [
     {
-      "n_tests": 308,
+      "n_tests": 616,
       "survivors_before": 18,
       "survivors_after": 1,
       "label": "2-sector"
     },
     {
-      "n_tests": 5551,
+      "n_tests": 11102,
       "survivors_before": 237,
       "survivors_after": 0,
       "label": "full-universe"

@@ -57,6 +57,27 @@ def test_factor_momentum_strategy_generate_signals_shape_matches_prices() -> Non
     assert list(result.columns) == list(prices.columns)
 
 
+def test_factor_momentum_strategy_sector_neutral_shape_matches_prices() -> None:
+    # strategies.base.Strategy's contract is "same shape as prices", and
+    # global mode already honours it. Sector-neutral mode builds its output
+    # by concatenating per-sector frames, so a ticker absent from
+    # sector_map used to vanish from the returned columns entirely --
+    # surviving only because VolTargetSizer's pandas alignment happened to
+    # refill it with 0.0. The contract must hold on its own, in BOTH modes.
+    prices = _synthetic_price_panel()
+    sector_map = {t: ("SectorA" if i % 2 else "SectorB") for i, t in enumerate(prices.columns)}
+    unmapped = str(prices.columns[0])
+    del sector_map[unmapped]
+    strategy = FactorMomentumStrategy(config=_TEST_CONFIG, mode="sector_neutral", sector_map=sector_map)
+
+    result = strategy.generate_signals(prices)
+
+    assert list(result.columns) == list(prices.columns)
+    assert list(result.index) == list(prices.index)
+    assert (result[unmapped] == 0.0).all()
+    assert not result.isna().to_numpy().any()
+
+
 def test_factor_momentum_strategy_each_leg_normalizes_to_one_or_zero() -> None:
     # ranking.build_long_short_signal normalizes each leg to sum to
     # 1.0 (long) / -1.0 (short), or 0.0 on a day with no qualifying

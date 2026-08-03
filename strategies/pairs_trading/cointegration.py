@@ -35,10 +35,39 @@ only wired up and fixture-verified.
 MULTIPLE-TESTING CORRECTION (``PairSelectionConfig.multiple_testing_correction``,
 default ``"bonferroni"``): scanning a sector for candidate pairs means
 running a cointegration test on every pair that survives the correlation
-pre-filter -- e.g. 308 tests in a real 54-ticker/2-sector run during this
-project's own E2E validation. At alpha=0.05 with 308 tests, ~15 false
-positives are expected by CHANCE ALONE, uncorrected -- and 18 candidates
-were found in that run, meaning a substantial fraction could be spurious.
+pre-filter -- e.g. 308 candidate pairs in a real 54-ticker/2-sector run
+during this project's own E2E validation. At alpha=0.05 with hundreds of
+tests, a substantial number of false positives is expected by CHANCE
+ALONE, uncorrected -- 18 candidates were found in that run, meaning a
+large fraction could be spurious.
+
+DIRECTION SELECTION COUNTS TOWARDS THE FAMILY (``n_tests = 2 * pairs``):
+``engle_granger_test`` runs ``coint()`` in BOTH regression directions and
+reports whichever gave the LOWER p-value, because the Engle-Granger test
+is not symmetric. That minimum-of-two is itself a selection, so each
+candidate pair costs TWO tests, not one, and the Bonferroni family size
+is ``2 * (pairs surviving the pre-filter)``. Counting pairs instead of
+tests -- as this module originally did -- understates the family by a
+factor of 2 and makes ``adjusted_engle_granger_p_value``
+anti-conservative. The 308-pair run above is a 616-test family.
+
+Equivalently, and perhaps more transparently, this is a two-stage
+correction collapsed into one factor: correct the within-pair
+minimum-of-two (``min(1, 2 * p_min)``), then Bonferroni across the pairs
+(``* n_pairs``). ``min(1, p_min * 2 * n_pairs)`` is identical either way.
+
+This is CONSERVATIVE, not exact. The two directional tests run on the
+same two price series and are therefore strongly dependent, so the true
+effective family size lies somewhere between ``n_pairs`` and
+``2 * n_pairs``. Bonferroni deliberately does not exploit that dependence
+-- which is the same reason it is preferred over Sidak here -- so 2 is an
+upper bound rather than a tuned constant. Erring conservative is the
+right direction for a selection step whose false positive turns into a
+real trade; do not present the factor of 2 as an exact effective family
+size. (``multiple_testing_correction="sidak"`` inherits the same doubling
+but is doubly inappropriate here, since its independence assumption is
+violated both across pairs sharing a ticker AND within a pair's own two
+directional tests.)
 One confirmed case: a pair with strong price-LEVEL correlation (a classic
 spurious-regression trap -- two trending series look "related" in levels)
 but a daily-RETURN correlation of only 0.15, i.e. no real short-term
@@ -119,6 +148,9 @@ class PairCandidate:
     johansen: JohansenResult  # raw; NOT multiple-testing corrected (see module docstring)
     half_life: float
     adjusted_engle_granger_p_value: float
+    # TESTS, not pairs: 2 per pre-filter-surviving pair, because
+    # engle_granger_test runs coint() in both directions and keeps the
+    # lower p-value (see the module docstring's DIRECTION SELECTION note).
     n_tests: int
 
 
@@ -131,7 +163,17 @@ def engle_granger_test(
 ) -> EngleGrangerResult:
     """Engle-Granger 2-step cointegration test, tried in both directions
     (the test is not symmetric); reports whichever direction gave the
-    stronger (lower p-value) result."""
+    stronger (lower p-value) result.
+
+    ``p_value`` is therefore a MINIMUM OF TWO tests, not a single test's
+    p-value. Callers running this across many pairs must count 2 tests per
+    pair in their multiple-testing family -- see the module docstring's
+    "DIRECTION SELECTION COUNTS TOWARDS THE FAMILY" section; ``select_pairs``
+    does this. The direction chosen here also determines which ticker is
+    the dependent variable downstream (``static_hedge_ratio``,
+    ``calibrate_kalman_hyperparameters``), so it is not a purely
+    statistical choice.
+    """
     stat_b_on_a, pval_b_on_a, _ = coint(series_b, series_a)
     stat_a_on_b, pval_a_on_b, _ = coint(series_a, series_b)
 
@@ -294,7 +336,14 @@ def select_pairs(
                     continue
             surviving_pairs.append((sector, ticker_a, ticker_b))
 
-    n_tests = len(surviving_pairs)
+    # TESTS, not pairs: engle_granger_test runs coint() in BOTH directions
+    # per pair and reports the lower of the two p-values (see that
+    # function and the module docstring's DIRECTION SELECTION note). That
+    # minimum-of-two is itself a selection, so the family size is 2 per
+    # surviving pair. Counting pairs here would understate the family by
+    # a factor of 2 and make adjusted_engle_granger_p_value
+    # anti-conservative.
+    n_tests = 2 * len(surviving_pairs)
 
     candidates: list[PairCandidate] = []
     for sector, ticker_a, ticker_b in surviving_pairs:

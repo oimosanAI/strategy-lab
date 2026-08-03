@@ -63,6 +63,26 @@ class VolArbitrageStrategy:
         return "vol-arbitrage"
 
     def generate_signals(self, prices: pd.DataFrame) -> pd.DataFrame:
+        # Fail loudly and identically for all three required columns.
+        # Without this, a misconfigured traded_ticker was SILENT: the
+        # assignment below would create a brand-new column, run_backtest
+        # (which iterates prices.columns) would never see it, and the run
+        # would complete reporting an all-zero-return "no edge" strategy
+        # rather than a configuration error -- while the same mistake in
+        # vix_column/spy_column raised a bare KeyError from the lookups.
+        # A misconfiguration must never be able to masquerade as a result.
+        missing = sorted(
+            {self._config.traded_ticker, self._config.vix_column, self._config.spy_column}
+            - set(prices.columns)
+        )
+        if missing:
+            raise ValueError(
+                f"prices is missing required column(s) {missing}; "
+                f"expected the traded ticker ({self._config.traded_ticker!r}) plus the "
+                f"reference-only VRP inputs ({self._config.vix_column!r}, {self._config.spy_column!r}). "
+                f"Got columns: {list(prices.columns)}"
+            )
+
         vrp = compute_vrp(prices[self._config.vix_column], prices[self._config.spy_column], self._config.rv_window)
 
         signal = pd.DataFrame(0.0, index=prices.index, columns=prices.columns)
