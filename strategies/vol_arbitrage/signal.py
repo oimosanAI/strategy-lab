@@ -23,7 +23,10 @@ is usually measured against. Trailing RV assumes some persistence in
 volatility (volatility clustering) to serve as a usable, CAUSAL proxy for
 "what RV is likely to look like going forward" -- an assumption, not a
 certainty. See strategies/vol_arbitrage/README.md for the fuller
-discussion of this distinction.
+discussion of this distinction, including Step F/section 3-7's real-data
+diagnostic showing this trailing-RV design leaves the signal on through
+87% of days and does not de-risk ahead of a spike -- the motivation for
+compute_term_structure_ratio below.
 """
 
 from __future__ import annotations
@@ -46,3 +49,23 @@ def compute_vrp(vix: pd.Series, spy_prices: pd.Series, window: int = 21) -> pd.S
     unit-conversion and trailing-vs-forward-RV caveats."""
     rv = realized_volatility(spy_prices, window)
     return (vix / 100.0) - rv
+
+
+def compute_term_structure_ratio(vix9d: pd.Series, vix: pd.Series) -> pd.Series:
+    """VIX9D / VIX: near-term (9-day) implied volatility relative to the
+    standard 30-day VIX. Both are forward-looking, options-implied
+    quantities in the SAME percentage-point scale, so no unit conversion
+    is needed (unlike compute_vrp, which compares VIX against a
+    decimal-fraction realized volatility).
+
+    ratio < 1 (contango): near-term IV priced below 30-day IV -- the
+    normal, calm-market state. ratio >= 1 (backwardation): near-term IV
+    exceeds 30-day IV -- the market is pricing elevated near-term risk, a
+    well-documented volatility term-structure inversion. Unlike
+    compute_vrp's trailing realized volatility, this has no rolling
+    window and therefore no warm-up period: it is a same-row quantity,
+    causal by construction as long as VIX9D(t) and VIX(t) are both known
+    as of t (the same assumption already made for VIX/SPY elsewhere in
+    this module).
+    """
+    return vix9d / vix

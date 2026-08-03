@@ -14,6 +14,14 @@ Fixes the public API surface:
   VRP is dominated by VIX's raw ~15-30 scale and the RV term becomes
   numerically irrelevant, a "runs but means nothing" bug caught here
   before implementation, not after.
+- compute_term_structure_ratio(vix9d, vix) -> pd.Series: VIX9D / VIX,
+  no window (an instantaneous ratio, not a rolling quantity -- see
+  strategies/vol_arbitrage/README.md Step F/§3-7 for why this was added
+  to address trailing RV's inability to de-risk ahead of a vol spike).
+  UNLIKE compute_vrp, no unit conversion is needed: yfinance's ^VIX9D
+  and ^VIX are both quoted in the same percentage-point scale (confirmed
+  against real data -- mean ~16.5 vs ~17.4 over 2023-2026 -- before
+  implementation), so the ratio is scale-consistent as-is.
 """
 
 from __future__ import annotations
@@ -22,7 +30,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from strategies.vol_arbitrage.signal import compute_vrp, realized_volatility
+from strategies.vol_arbitrage.signal import compute_term_structure_ratio, compute_vrp, realized_volatility
 
 
 def test_realized_volatility_matches_hand_computed_std() -> None:
@@ -79,3 +87,40 @@ def test_compute_vrp_is_nan_during_rv_warmup() -> None:
 
     assert result.iloc[:5].isna().all()
     assert result.iloc[5:].notna().all()
+
+
+def test_compute_term_structure_ratio_matches_hand_computed_division() -> None:
+    idx = pd.bdate_range("2020-01-01", periods=5)
+    vix9d = pd.Series([15.0, 18.0, 20.0, 12.0, 25.0], index=idx)
+    vix = pd.Series([20.0, 20.0, 20.0, 20.0, 20.0], index=idx)
+
+    result = compute_term_structure_ratio(vix9d, vix)
+
+    expected = pd.Series([0.75, 0.90, 1.00, 0.60, 1.25], index=idx)
+    pd.testing.assert_series_equal(result, expected, check_names=False)
+
+
+def test_compute_term_structure_ratio_needs_no_unit_conversion() -> None:
+    # Both ^VIX9D and ^VIX are quoted in the same percentage-point scale
+    # (unlike VIX vs realized_volatility in compute_vrp) -- a naive /100
+    # on only one side would be the equivalent numerically-wrong bug here.
+    idx = pd.bdate_range("2020-01-01", periods=1)
+    vix9d = pd.Series([18.0], index=idx)
+    vix = pd.Series([20.0], index=idx)
+
+    result = compute_term_structure_ratio(vix9d, vix)
+
+    assert result.iloc[0] == pytest.approx(0.9)
+
+
+def test_compute_term_structure_ratio_has_no_warmup_period() -> None:
+    # Unlike compute_vrp (which depends on a rolling RV window and is
+    # therefore NaN for the first `window` rows), the ratio is a same-row
+    # quantity with no lookback -- every row with valid inputs is valid.
+    idx = pd.bdate_range("2020-01-01", periods=3)
+    vix9d = pd.Series([15.0, 16.0, 17.0], index=idx)
+    vix = pd.Series([20.0, 20.0, 20.0], index=idx)
+
+    result = compute_term_structure_ratio(vix9d, vix)
+
+    assert result.notna().all()
